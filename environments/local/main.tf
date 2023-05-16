@@ -26,4 +26,8 @@ provider "docker" {
   alias = "local"
 }
 
+provider "libvirt" {
+  uri = "qemu:///system"
 
+  alias = "vm_host"
+}
