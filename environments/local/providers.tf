@@ -5,8 +5,8 @@ terraform {
       version = "3.0.2"
     }
     libvirt = {
-      source = "dmacvicar/libvirt"
-      version = "0.7.1"
+      source = "github.com/matthewjohn/libvirt"
+      #version = "0.7.1"
     }
     freeipa = {
       version = "3.0.0"
