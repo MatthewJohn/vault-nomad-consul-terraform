@@ -1,8 +1,8 @@
 resource "null_resource" "download_disk_template" {
   connection {
-    type     = "ssh"
-    user     = var.hypervisor_username
-    host     = var.hypervisor_hostname
+    type = "ssh"
+    user = var.hypervisor_username
+    host = var.hypervisor_hostname
   }
 
   provisioner "remote-exec" {
@@ -14,15 +14,15 @@ resource "null_resource" "download_disk_template" {
 
 resource "null_resource" "create_disk" {
   connection {
-    type     = "ssh"
-    user     = var.hypervisor_username
-    host     = var.hypervisor_hostname
+    type = "ssh"
+    user = var.hypervisor_username
+    host = var.hypervisor_hostname
   }
 
   provisioner "remote-exec" {
     inline = local.disk_is_block_device ? [
       # @TODO Handle raw disk creation
-    ] : [
+      ] : [
       "if [ ! -f '${local.base_disk_path}/${local.disk_name}' ]; then dd if=/dev/zero of='${local.base_disk_path}/${local.disk_name}' bs=1M count=${var.disk_size}; fi"
     ]
   }
@@ -30,15 +30,15 @@ resource "null_resource" "create_disk" {
 
 resource "null_resource" "copy_template" {
   connection {
-    type     = "ssh"
-    user     = var.hypervisor_username
-    host     = var.hypervisor_hostname
+    type = "ssh"
+    user = var.hypervisor_username
+    host = var.hypervisor_hostname
   }
 
   provisioner "remote-exec" {
     inline = local.disk_is_block_device ? [
       # @TODO Handle raw disk creation
-    ] : [
+      ] : [
       <<EOF
 
 set -e

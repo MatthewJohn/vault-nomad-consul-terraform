@@ -81,7 +81,7 @@ variable "docker_ssh_key" {
 }
 
 locals {
-  base_disk_path = var.base_disk_path == null ? "/dev/ssd-1" : var.base_disk_path
+  base_disk_path       = var.base_disk_path == null ? "/dev/ssd-1" : var.base_disk_path
   disk_is_block_device = var.base_disk_path == null ? true : false
 
   disk_name = "${var.name}-disk-1"

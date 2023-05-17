@@ -5,7 +5,7 @@ terraform {
       #version = "0.7.1"
     }
     macaddress = {
-      source = "ivoronin/macaddress"
+      source  = "ivoronin/macaddress"
       version = "0.3.2"
     }
     freeipa = {

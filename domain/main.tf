@@ -3,8 +3,8 @@ resource "libvirt_domain" "this" {
 
   memory = var.memory
 
-  running = true
-  autostart = false
+  running     = true
+  autostart   = false
   fw_cfg_name = null
 
 
@@ -19,14 +19,14 @@ resource "libvirt_domain" "this" {
   ## Investigate <driver name='qemu' type='raw' cache='directsync'/>
   disk {
     block_device = local.disk_is_block_device ? "${local.base_disk_path}/${var.name}-disk-1" : null
-    file = local.disk_is_block_device ? null : "${local.base_disk_path}/${var.name}-disk-1"
+    file         = local.disk_is_block_device ? null : "${local.base_disk_path}/${var.name}-disk-1"
   }
 
   cpu {
     mode = "host-passthrough"
   }
 
-  vcpu = var.vcpu_count
+  vcpu    = var.vcpu_count
   machine = "pc-1.0"
 
   graphics {
@@ -40,7 +40,7 @@ resource "libvirt_domain" "this" {
   }
 
   boot_device {
-    dev = [ "cdrom", "hd"]
+    dev = ["cdrom", "hd"]
   }
 
   # serial {

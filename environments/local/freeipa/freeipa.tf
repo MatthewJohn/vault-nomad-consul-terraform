@@ -2,11 +2,11 @@
 resource "docker_container" "freeipa" {
   image = "freeipa/freeipa-server:centos-7-4.6.8"
 
-  name = "freeipa"
-  rm = false
+  name    = "freeipa"
+  rm      = false
   restart = "on-failure"
 
-  hostname = "freeipa.dock.local"
+  hostname   = "freeipa.dock.local"
   domainname = ""
 
   sysctls = {
@@ -14,7 +14,7 @@ resource "docker_container" "freeipa" {
     "net.ipv6.conf.all.disable_ipv6" = "0"
     # Fix error with unusable ipv6 address
     "net.ipv6.conf.eth0.disable_ipv6" = "1"
-    "net.ipv6.conf.lo.disable_ipv6" = "0"
+    "net.ipv6.conf.lo.disable_ipv6"   = "0"
   }
 
   command = concat(
@@ -35,13 +35,13 @@ resource "docker_container" "freeipa" {
 
   volumes {
     container_path = "/sys/fs/cgroup"
-    host_path = "/sys/fs/cgroup"
-    read_only = true
+    host_path      = "/sys/fs/cgroup"
+    read_only      = true
   }
 
   volumes {
     container_path = "/data"
-    host_path = "/local-ds-setup/freeipa-data"
+    host_path      = "/local-ds-setup/freeipa-data"
   }
 
   lifecycle {
