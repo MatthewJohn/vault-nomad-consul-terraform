@@ -13,7 +13,26 @@ users:
     primary_group: ds
     groups: users
     expiredate: '2032-09-01'
-    lock_passwd: false
+    lock_passwd: true
+  - name: docker-connect
+    primary_group: docker-connect
+    groups: users
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${var.docker_ssh_key}
+
+
+runcmd:
+  # Install docker, as per https://docs.docker.com/engine/install/debian/
+  - apt-get update && apt-get install ca-certificates curl gnupg --assume-yes &&
+    install -m 0755 -d /etc/apt/keyrings &&
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg &&
+    chmod a+r /etc/apt/keyrings/docker.gpg &&
+    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" > /etc/apt/sources.list.d/docker.list &&
+    apt-get update &&
+    apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin --assume-yes &&
+    systemctl enable docker && systemctl restart docker &&
+    usermod -aG docker docker-connect
 
 EOF
 }
