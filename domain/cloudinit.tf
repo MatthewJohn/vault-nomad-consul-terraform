@@ -22,10 +22,10 @@ data "template_file" "network_config" {
   template = <<EOF
 version: 2
 ethernets:
-  eth0:
+  ens3:
     dhcp4: false
-    addresses:
-     - ${var.ip_address}
+    dhcp6: false
+    addresses: [${var.ip_address}]
     gateway4: ${var.ip_gateway}
     nameservers:
       search: [${var.domain_name}]
