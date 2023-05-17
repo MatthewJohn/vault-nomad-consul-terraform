@@ -4,16 +4,6 @@ locals {
   freeipa_password = "password"
 }
 
-module "freeipa_initial_setup" {
-  source = "./freeipa"
-
-  # Set to 1 for initial setup
-  count = 0
-
-  initial_setup    = true
-  freeipa_password = local.freeipa_password
-}
-
 module "freeipa" {
   source = "./freeipa"
 

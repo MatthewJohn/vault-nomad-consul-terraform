@@ -2,12 +2,12 @@
 resource "docker_container" "freeipa" {
   image = "freeipa/freeipa-server:centos-7-4.6.8"
 
-  name = "freeipa${var.initial_setup ? "-setup" : ""}"
+  name = "freeipa"
   rm = false
-  restart = var.initial_setup ? "no" : "on-failure"
+  restart = "on-failure"
 
-  hostname = "freeipa"
-  domainname = "dock.local"
+  hostname = "freeipa.dock.local"
+  domainname = ""
 
   sysctls = {
     "net.ipv6.conf.all.disable_ipv6" = "0"
@@ -16,9 +16,6 @@ resource "docker_container" "freeipa" {
   }
 
   command = concat(
-    var.initial_setup ? [
-      "ipa-server-install", "--hostname", "freeipa.dock.local"
-    ] : [],
     [
       "-U", "--auto-forwarders",
       "-r", "DOCK.LOCAL", "--setup-dns", "--ds-password", "dirpassword",
@@ -29,9 +26,9 @@ resource "docker_container" "freeipa" {
 
   env = concat(
     [
-      "DEBUG_TRACE=1"
-    ],
-    var.initial_setup == false ? ["DEBUG_NO_EXIT=1"] : []
+      "DEBUG_TRACE=1",
+      "DEBUG_NO_EXIT=1"
+    ]
   )
 
   volumes {
