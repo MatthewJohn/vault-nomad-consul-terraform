@@ -31,6 +31,8 @@ runcmd:
     echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" > /etc/apt/sources.list.d/docker.list &&
     apt-get update &&
     apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin --assume-yes &&
+    mkdir -p /etc/docker &&
+    echo '{"default-address-pools": [{"base":"10.10.0.0/24","size":24}]}' > /etc/docker/daemon.json &&
     systemctl enable docker && systemctl restart docker &&
     usermod -aG docker docker-connect
 

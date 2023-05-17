@@ -15,9 +15,3 @@ module "vault-1" {
   domain_name         = var.domain_name
 }
 
-module "vault-1-container" {
-  source = "./container"
-
-  docker_host     = "192.168.122.60"
-  docker_username = "docker"
-}
