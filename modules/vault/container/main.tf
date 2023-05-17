@@ -30,7 +30,7 @@ resource "docker_container" "this" {
   }
 
   env = [
-    "VAULT_LOCAL_CONFIG='${local.vault_config_stripped}'",
+    "VAULT_LOCAL_CONFIG=${local.vault_config_stripped}",
   ]
 
   ports {

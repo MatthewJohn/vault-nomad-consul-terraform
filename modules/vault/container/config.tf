@@ -1,5 +1,5 @@
 locals {
-    vault_config = <<EOF
+  vault_config = <<EOF
 {
     "storage": {
         "file": {
@@ -15,5 +15,5 @@ locals {
 }
 EOF
 
-    vault_config_stripped = replace(local.vault_config, "\n", "")
+  vault_config_stripped = replace(local.vault_config, "\n", "")
 }
