@@ -44,4 +44,8 @@ resource "docker_container" "freeipa" {
     container_path = "/data"
     host_path = "/tmp/freeipa-data"
   }
+
+  lifecycle {
+    ignore_changes = [image]
+  }
 }
