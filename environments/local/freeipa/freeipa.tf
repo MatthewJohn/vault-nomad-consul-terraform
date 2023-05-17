@@ -1,6 +1,6 @@
 # Create FreeIPA docker container
 resource "docker_container" "freeipa" {
-  image = "freeipa/freeipa-server:rocky-9"
+  image = "freeipa/freeipa-server:centos-7-4.6.8"
 
   name = "freeipa${var.initial_setup ? "-setup" : ""}"
   rm = false
