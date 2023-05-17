@@ -9,5 +9,11 @@ terraform init
 terraform apply -target=module.freeipa
 docker logs -f freeipa
 # Wait till initiation
+
+# Add hosts entry for freeipa.dock.local:
+echo $(docker inspect freeipa | jq -r '.[0].NetworkSettings.Networks.bridge.IPAddress') freeipa.dock.local >> /etc/hosts
+
+terraform apply
+
 ```
 
