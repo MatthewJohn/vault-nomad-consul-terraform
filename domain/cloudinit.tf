@@ -22,17 +22,38 @@ data "template_file" "network_config" {
   template = <<EOF
 version: 2
 ethernets:
-  ens3:
+  eth0:
     dhcp4: false
-    addresses: [${var.ip_address}]
+    addresses:
+     - ${var.ip_address}
     gateway4: ${var.ip_gateway}
-    nameservers: [${join(", ", var.nameservers)}]
+    nameservers:
+      search: [${var.domain_name}]
+      addresses: [${join(", ", var.nameservers)}]
 
 EOF
 }
+
+resource "random_id" "instance_id" {
+  keepers = {
+    # Generate a new id each time we switch name
+    name = var.name
+  }
+
+  byte_length = 8
+}
+
+data "template_file" "meta_data" {
+  template = <<EOF
+instance-id: i-${random_id.instance_id.hex}
+local-hostname: ${var.name}.${var.domain_name}
+EOF
+}
+
 
 resource "libvirt_cloudinit_disk" "this" {
   name      = "${var.name}.iso"
   user_data = data.template_file.user_data.rendered
   network_config = data.template_file.network_config.rendered
+  meta_data = data.template_file.meta_data.rendered
 }

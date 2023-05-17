@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "domain_name" {
+  description = "Domain name of instance"
+  type        = string
+}
+
 variable "ip_address" {
   description = "IP Address of domain"
   type        = string
@@ -67,6 +72,11 @@ variable "hypervisor_username" {
 variable "base_image_path" {
   description = "Base directory for storing template images"
   default     = null
+  type        = string
+}
+
+variable "docker_ssh_key" {
+  description = "SSH key to connect to docker user"
   type        = string
 }
 

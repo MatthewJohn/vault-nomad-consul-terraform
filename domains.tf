@@ -11,4 +11,13 @@ module "vault-1" {
   base_disk_path = var.base_disk_path
   hypervisor_hostname = var.hypervisor_hostname
   hypervisor_username = var.hypervisor_username
+  docker_ssh_key      = var.docker_ssh_key
+  domain_name         = var.domain_name
+}
+
+module "vault-1-container" {
+  source = "./container"
+
+  docker_host = "192.168.122.60"
+  docker_username = "docker"
 }

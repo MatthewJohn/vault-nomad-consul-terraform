@@ -24,3 +24,13 @@ variable "nameservers" {
   description = "List of DNS servers for the VMs to use"
   type        = list(string)
 }
+
+variable "docker_ssh_key" {
+  description = "SSH key to connect to docker user"
+  type        = string
+}
+
+variable "domain_name" {
+  description = "DNS domain name for instances"
+  type        = string
+}
