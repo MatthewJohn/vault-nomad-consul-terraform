@@ -13,14 +13,14 @@ module "freeipa" {
 resource "libvirt_pool" "local-disks" {
   name = "local-disks"
   type = "dir"
-  path = "/vm-disks"
+  path = "/local-ds-setup/vm-disks"
 }
 
 module "this" {
   source = "../../"
 
-  base_disk_path = "/vm-disks"
-  base_image_path = "/vm-disks"
+  base_disk_path = "/local-ds-setup/vm-disks"
+  base_image_path = "/local-ds-setup/vm-disks"
   hypervisor_hostname = "localhost"
   hypervisor_username = "matthew"
   nameservers = [module.freeipa.ip_address]

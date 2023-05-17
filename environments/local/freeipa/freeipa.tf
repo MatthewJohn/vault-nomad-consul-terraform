@@ -39,7 +39,7 @@ resource "docker_container" "freeipa" {
 
   volumes {
     container_path = "/data"
-    host_path = "/tmp/freeipa-data"
+    host_path = "/local-ds-setup/freeipa-data"
   }
 
   lifecycle {
