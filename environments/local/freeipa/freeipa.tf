@@ -10,7 +10,9 @@ resource "docker_container" "freeipa" {
   domainname = ""
 
   sysctls = {
+    # Fix error with ipv6
     "net.ipv6.conf.all.disable_ipv6" = "0"
+    # Fix error with unusable ipv6 address
     "net.ipv6.conf.eth0.disable_ipv6" = "1"
     "net.ipv6.conf.lo.disable_ipv6" = "0"
   }
@@ -23,17 +25,6 @@ resource "docker_container" "freeipa" {
       "--admin-password", var.freeipa_password
     ]
   )
-
-  # mounts {
-  #   target = "/tmp"
-  #   type = "bind"
-  #   source = "/local-ds-setup/freeipa-data/tmp"
-  # }
-
-  volumes {
-    container_path = "/tmp"
-    host_path = "/local-ds-setup/freeipa-data/tmp"
-  }
 
   env = concat(
     [
