@@ -24,6 +24,17 @@ resource "docker_container" "freeipa" {
     ]
   )
 
+  # mounts {
+  #   target = "/tmp"
+  #   type = "bind"
+  #   source = "/local-ds-setup/freeipa-data/tmp"
+  # }
+
+  volumes {
+    container_path = "/tmp"
+    host_path = "/local-ds-setup/freeipa-data/tmp"
+  }
+
   env = concat(
     [
       "DEBUG_TRACE=1",
