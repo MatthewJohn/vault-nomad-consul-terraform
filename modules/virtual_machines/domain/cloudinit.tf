@@ -21,6 +21,10 @@ users:
     ssh_authorized_keys:
       - ${var.docker_ssh_key}
 
+growpart:
+  mode: auto
+  devices: ["/"]
+  ignore_growroot_disabled: false
 
 runcmd:
   # Install docker, as per https://docs.docker.com/engine/install/debian/

@@ -5,6 +5,10 @@
 # Fix bug with freeipa unable to write to /tmp
 sudo sysctl fs.protected_regular=0
 
+# Install docker
+
+apt-get update && apt-get install libguestfs-tools --assume-yes
+
 terraform init
 terraform apply -target=module.freeipa
 docker logs -f freeipa

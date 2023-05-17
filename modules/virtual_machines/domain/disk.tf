@@ -40,13 +40,13 @@ resource "null_resource" "copy_template" {
       # @TODO Handle raw disk creation
       ] : [
       <<EOF
-
 set -e
 set -x
 
-if [ ! -f '${local.base_disk_path}/.${local.disk_name}-templated' ];
+if [ ! -f '${local.base_disk_path}/.${local.disk_name}-templated' ]
 then
-  qemu-img convert -O raw '${local.base_disk_path}/${var.image_name}' '${local.base_disk_path}/${local.disk_name}'
+  qemu-img convert -n -f qcow2 -O raw '${local.base_disk_path}/${var.image_name}' '${local.base_disk_path}/${local.disk_name}'
+  sudo virt-resize --no-copy-boot-loader --resize /dev/sda1=${var.disk_size - 200}M --output-format raw '${local.base_disk_path}/${var.image_name}' '${local.base_disk_path}/${local.disk_name}'
   touch '${local.base_disk_path}/.${local.disk_name}-templated'
 fi
 EOF
