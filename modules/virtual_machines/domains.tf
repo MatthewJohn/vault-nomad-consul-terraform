@@ -1,6 +1,7 @@
 
 module "vault-1" {
-  source = "./domain"
+  source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
+  version = ">= 0.0.4"
 
   name                = "vault-1"
   ip_address          = "192.168.122.60"
@@ -13,5 +14,10 @@ module "vault-1" {
   hypervisor_username = var.hypervisor_username
   docker_ssh_key      = var.docker_ssh_key
   domain_name         = var.domain_name
+
+  create_directories = [
+    "/vault",
+    "/vault/config.d"
+  ]
 }
 

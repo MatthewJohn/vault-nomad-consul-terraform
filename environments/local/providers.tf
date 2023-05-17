@@ -1,16 +1,16 @@
 terraform {
   required_providers {
     docker = {
-      source  = "kreuzwerker/docker"
+      source  = "terraform-cache.dockstudios.co.uk/kreuzwerker/docker"
       version = "3.0.2"
     }
     libvirt = {
-      source = "github.com/matthewjohn/libvirt"
-      #version = "0.7.1"
+      source = "terraform-cache.dockstudios.co.uk/dockstudios-terraform/libvirt"
+      version = "1.0.0"
     }
     freeipa = {
       version = "3.0.0"
-      source  = "rework-space-com/freeipa"
+      source  = "terraform-cache.dockstudios.co.uk/rework-space-com/freeipa"
     }
   }
 }

@@ -9,14 +9,11 @@ resource "docker_container" "this" {
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""
 
-  #   command = concat(
-  #     [
-  #       "-U", "--auto-forwarders",
-  #       "-r", "DOCK.LOCAL", "--setup-dns", "--ds-password", "dirpassword",
-  #       "--no-dnssec-validation", "--no-host-dns",
-  #       "--admin-password", var.freeipa_password
-  #     ]
-  #   )
+    command = concat(
+      [
+        "server"
+      ]
+    )
 
   #   env = concat(
   #     [
@@ -30,7 +27,9 @@ resource "docker_container" "this" {
   }
 
   env = [
-    "VAULT_LOCAL_CONFIG=${local.vault_config_stripped}",
+    "VAULT_DEV_LISTEN_ADDRESS=",
+    "VAULT_API_ADDR=https://0.0.0.0:8200",
+    "VAULT_CLUSTER_ADDR=http://0.0.0.0:8201"
   ]
 
   ports {
@@ -38,6 +37,11 @@ resource "docker_container" "this" {
     external = 8200
     ip       = "0.0.0.0"
     protocol = "tcp"
+  }
+
+  volumes {
+    container_path = "/vault/config.d"
+    host_path      = "/vault/config.d"
   }
 
   volumes {
