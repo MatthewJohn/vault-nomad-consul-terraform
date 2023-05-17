@@ -5,7 +5,8 @@ locals {
 }
 
 module "freeipa" {
-  source = "./freeipa"
+  source  = "terraform-registry.dockstudios.co.uk/dockstudios/local-freeipa/docker"
+  version = "1.0.0"
 
   freeipa_password = local.freeipa_password
 }
