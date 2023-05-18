@@ -11,7 +11,7 @@ resource "tls_cert_request" "vault_int" {
   # the wildcard here does not have an impact but will help remind that this
   # is an intermediate signing all *.rulz.xyz certificates
   subject {
-    common_name  = "vault.${var.root_cn}"
+    common_name = "vault.${var.root_cn}"
   }
 }
 
@@ -31,17 +31,20 @@ resource "tls_locally_signed_cert" "vault_int" {
 
 # Upload public/private intermediate keys to s3
 resource "aws_s3_bucket_object" "intermediate_public_cert" {
-  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
-  key     = "vault/intermediate-1.crt"
-  content = tls_locally_signed_cert.vault_int.cert_pem
+  bucket       = aws_s3_bucket.intermediate_ca_certs.bucket
+  key          = "vault/intermediate-1.crt"
+  content      = tls_locally_signed_cert.vault_int.cert_pem
+  content_type = "text/plain"
 }
 resource "aws_s3_bucket_object" "intermediate_full_chain" {
-  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
-  key     = "vault/intermediate-1-full-chain.crt"
-  content = join("\n", [tls_self_signed_cert.root.cert_pem, tls_locally_signed_cert.vault_int.cert_pem])
+  bucket       = aws_s3_bucket.intermediate_ca_certs.bucket
+  key          = "vault/intermediate-1-full-chain.crt"
+  content      = join("\n", [tls_self_signed_cert.root.cert_pem, tls_locally_signed_cert.vault_int.cert_pem])
+  content_type = "text/plain"
 }
 resource "aws_s3_bucket_object" "intermediate_private_key" {
-  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
-  key     = "vault/intermediate-1.key"
-  content = tls_private_key.vault_int.private_key_pem
+  bucket       = aws_s3_bucket.intermediate_ca_certs.bucket
+  key          = "vault/intermediate-1.key"
+  content      = tls_private_key.vault_int.private_key_pem
+  content_type = "text/plain"
 }
