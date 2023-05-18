@@ -11,13 +11,13 @@ output "full_chain" {
     "\n",
     [
       tls_locally_signed_cert.server_cert.cert_pem,
-      data.aws_s3_object.intermediate_full_chain.body,
+      data.aws_s3_object.intermediate_public_key.body,
     ]
   )
 }
 
 output "root_ca_cert" {
-  value = data.aws_s3_object.intermediate_full_chain.body
+  #value = data.aws_s3_object.intermediate_full_chain.body
   #value = data.aws_s3_object.intermediate_public_key.body
-  #value = data.aws_s3_object.root_ca_cert.body
+  value = data.aws_s3_object.root_ca_cert.body
 }
