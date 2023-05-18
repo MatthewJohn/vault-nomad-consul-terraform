@@ -18,6 +18,7 @@ EOF
 }
 
 resource "null_resource" "vault_config" {
+
   connection {
     type = "ssh"
     user = var.docker_username

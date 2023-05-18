@@ -44,8 +44,19 @@ if [ "$1" = 'vault' ]; then
         chmod 755 /vault/config.d || echo "Could not chmod /vault/config.d (may not have appropriate permissions)"
         chmod 644 /vault/config.d/* || echo "Could not chmod /vault/config.d/* (may not have appropriate permissions)"
 
-        chown -R :vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
+        chown -R root:vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
         chmod 755 /vault/ssl || echo "Could not chmod /vault/ssl (may not have appropriate permissions)"
+
+        if [ "$SERVER_SSL_KEY" ]
+        then
+            echo "$SERVER_SSL_KEY" > /vault/ssl/server-privkey.pem
+        fi
+
+        if [ "$SERVER_SSL_CERT" ]
+        then
+            echo "$SERVER_SSL_CERT" > /vault/ssl/server-fullchain.pem
+        fi
+
         chmod 644 /vault/ssl/* || echo "Could not chmod /vault/ssl/* (may not have appropriate permissions)"
         
 

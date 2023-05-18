@@ -22,3 +22,7 @@ variable "image" {
   description = "Image to be used"
   type        = string
 }
+
+locals {
+  vault_domain = "vault.${var.domain_name}"
+}
