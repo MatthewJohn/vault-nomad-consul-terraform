@@ -1,8 +1,13 @@
 resource "docker_image" "this" {
   name = "vault-ds:${var.vault_version}"
 
+  keep_locally = true
+
   build {
     context = "${path.module}/context"
+
+    remove = false
+    suppress_output = false
 
     build_arg = {
       VAULT_VERSION = var.vault_version
