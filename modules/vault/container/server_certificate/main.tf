@@ -12,6 +12,10 @@ resource "tls_cert_request" "server_cert" {
   subject {
     common_name  = "${var.hostname}.${var.vault_domain}"
   }
+
+  uris = [
+    "${var.hostname}.${var.vault_domain}"
+  ]
 }
 
 # Sign vault intetermediate certificate 
