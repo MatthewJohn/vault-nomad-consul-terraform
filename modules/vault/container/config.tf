@@ -20,8 +20,8 @@ EOF
 resource "null_resource" "vault_config" {
   connection {
     type = "ssh"
-    user = var.hypervisor_username
-    host = var.hypervisor_hostname
+    user = var.docker_username
+    host = var.docker_host
   }
 
   provisioner "file" {

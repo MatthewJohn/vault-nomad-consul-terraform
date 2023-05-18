@@ -1,6 +1,6 @@
 
 resource "docker_container" "this" {
-  image = "vault:${var.vault_version}"
+  image = var.image
 
   name    = "vault"
   rm      = false
@@ -27,7 +27,6 @@ resource "docker_container" "this" {
   }
 
   env = [
-    "VAULT_DEV_LISTEN_ADDRESS=",
     "VAULT_API_ADDR=https://0.0.0.0:8200",
     "VAULT_CLUSTER_ADDR=http://0.0.0.0:8201"
   ]

@@ -1,12 +1,12 @@
-# variable "docker_username" {
-#   description = "SSH username to connect to docker host"
-#   type        = string
-# }
+variable "docker_username" {
+  description = "SSH username to connect to docker host"
+  type        = string
+}
 
-# variable "docker_host" {
-#   description = "Docker host to connect to"
-#   type        = string
-# }
+variable "docker_host" {
+  description = "Docker host to connect to"
+  type        = string
+}
 
 variable "hostname" {
   description = "Hostname for docker"
@@ -18,7 +18,7 @@ variable "domain_name" {
   type        = string
 }
 
-variable "vault_version" {
-  description = "Version of vault"
+variable "image" {
+  description = "Image to be used"
   type        = string
 }
