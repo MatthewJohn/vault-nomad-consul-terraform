@@ -7,8 +7,6 @@ resource "tls_private_key" "server_cert" {
 resource "tls_cert_request" "server_cert" {
   private_key_pem = tls_private_key.server_cert.private_key_pem
 
-  # the wildcard here does not have an impact but will help remind that this
-  # is an intermediate signing all *.rulz.xyz certificates
   subject {
     common_name  = "${var.hostname}.${var.vault_domain}"
   }
