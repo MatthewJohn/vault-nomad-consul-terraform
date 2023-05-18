@@ -53,6 +53,11 @@ resource "docker_container" "this" {
     host_path      = "/vault/file"
   }
 
+  volumes {
+    container_path = "/vault/raft"
+    host_path      = "/vault/raft"
+  }
+
   lifecycle {
     ignore_changes = [
       image

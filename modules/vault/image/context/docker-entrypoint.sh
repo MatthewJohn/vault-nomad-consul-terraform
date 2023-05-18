@@ -35,6 +35,7 @@ fi
 
 mkdir -p /vault/config.d
 mkdir -p /vault/ssl
+mkdir -p /vault/raft
 
 # If we are running Vault, make sure it executes as the proper user.
 if [ "$1" = 'vault' ]; then
@@ -47,7 +48,9 @@ if [ "$1" = 'vault' ]; then
         chown -R root:vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
         chmod 755 /vault/ssl || echo "Could not chmod /vault/ssl (may not have appropriate permissions)"
 
-        if [ "$SERVER_SSL_KEY" ]
+        chown -R vault:vault /vault/raft || echo "Could not chown /vault/raft (may not have appropriate permissions)"
+
+        if [ "$SERVER_SSL_KEY" != "" ]
         then
             echo "$SERVER_SSL_KEY" > /vault/ssl/server-privkey.pem
         fi

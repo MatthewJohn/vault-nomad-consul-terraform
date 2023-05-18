@@ -7,6 +7,11 @@ ui            = true
 cluster_addr  = "https://${var.docker_ip}:8201"
 api_addr      = "https://${var.docker_ip}:8200"
 
+ha_storage "raft" {
+   path    = "/vault/raft"
+   node_id = "${var.hostname}"
+}
+
 storage "file" {
   path = "/vault/file"
 }
