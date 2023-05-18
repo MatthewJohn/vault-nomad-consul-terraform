@@ -6,7 +6,7 @@ resource "tls_private_key" "vault_int" {
 
 # Once we have the key we can create a request
 resource "tls_cert_request" "vault_int" {
-  private_key_pem = tls_private_key.root.private_key_pem
+  private_key_pem = tls_private_key.vault_int.private_key_pem
 
   # the wildcard here does not have an impact but will help remind that this
   # is an intermediate signing all *.rulz.xyz certificates
