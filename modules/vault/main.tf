@@ -1,17 +1,17 @@
-module "vault-1-image" {
+module "vault_image" {
   source = "./image"
 
   vault_version = var.vault_version
 
   providers = {
-    docker = docker.vault1
+    docker = docker.vault
   }
 }
 
-module "vault-1-container" {
+module "vault_container" {
   source = "./container"
 
-  image       = module.vault-1-image.image_id
+  image       = module.vault_image.image_id
   hostname    = var.hostname
   domain_name = var.domain_name
   docker_ip   = var.docker_ip
@@ -20,10 +20,10 @@ module "vault-1-container" {
   docker_username = var.docker_username
 
   providers = {
-    docker = docker.vault1
+    docker = docker.vault
   }
 
   depends_on = [
-    module.vault-1-image
+    module.vault_image
   ]
 }

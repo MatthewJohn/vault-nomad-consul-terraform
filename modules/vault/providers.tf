@@ -8,7 +8,14 @@ terraform {
 }
 
 provider "docker" {
-  host = "ssh://docker-connect@vault-1.dock.local:22"
+  host = "ssh://${var.docker_username}@${var.docker_host}:22"
+
+  alias = "vault"
+}
+
+
+provider "docker" {
+  host = "ssh://${var.docker_username}@${var.docker_host}:22"
 
   alias = "vault1"
 }

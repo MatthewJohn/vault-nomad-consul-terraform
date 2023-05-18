@@ -35,11 +35,17 @@ module "virtual_machines" {
       ip_address = "192.168.122.60"
       ip_gateway = "192.168.122.1"
       network_bridge = "virbr0"
+      storage_pool = libvirt_pool.local-disks.name
+    }
+    "vault-2" = {
+      ip_address = "192.168.122.61"
+      ip_gateway = "192.168.122.1"
+      network_bridge = "virbr0"
     }
   }
 }
 
-module "vault" {
+module "vault-1" {
   source = "../../modules/vault"
 
   domain_name = local.domain_name
@@ -48,6 +54,17 @@ module "vault" {
   docker_host     = "vault-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.60"
+}
+
+module "vault-2" {
+  source = "../../modules/vault"
+
+  domain_name = local.domain_name
+  hostname    = "vault-2"
+
+  docker_host     = "vault-2.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.61"
 }
 
 
