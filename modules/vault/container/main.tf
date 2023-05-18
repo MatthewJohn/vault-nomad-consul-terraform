@@ -26,13 +26,6 @@ resource "docker_container" "this" {
   # entrypoint change user to "vault" user
   user = "root"
 
-  #   env = concat(
-  #     [
-  #       "DEBUG_TRACE=1",
-  #       "DEBUG_NO_EXIT=1"
-  #     ]
-  #   )
-
   capabilities {
     add = ["IPC_LOCK"]
   }
