@@ -19,6 +19,7 @@ module "s3_configure" {
   root_password = module.s3.root_password
 
   allowed_terraform_buckets_read_only = [
-    "intermediate-ca-certs"
+    "intermediate-ca-certs",
+    "root-ca-certs"
   ]
 }

@@ -12,9 +12,11 @@ storage "file" {
 }
 
 listener "tcp" {
-  address       = "0.0.0.0:8200"
-  tls_cert_file = "/vault/ssl/server-fullchain.pem"
-  tls_key_file  = "/vault/ssl/server-privkey.pem"
+  address            = "0.0.0.0:8200"
+  cluster_address    = "0.0.0.0:8201"
+  tls_cert_file      = "/vault/ssl/server-fullchain.pem"
+  tls_key_file       = "/vault/ssl/server-privkey.pem"
+  tls_client_ca_file = "/vault/ssl/root-ca.pem"
 }
 
 EOF

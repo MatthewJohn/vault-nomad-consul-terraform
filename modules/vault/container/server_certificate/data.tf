@@ -13,6 +13,11 @@ data "aws_s3_object" "intermediate_full_chain" {
   key    = "vault/intermediate-1-full-chain.crt"
 }
 
+data "aws_s3_object" "root_ca_cert" {
+  bucket = "root-ca-certs"
+  key    = "vault/root_ca.crt"
+}
+
 resource "null_resource" "ssl_trigger" {
   # Changes to any instance of the cluster requires re-provisioning
   triggers = {

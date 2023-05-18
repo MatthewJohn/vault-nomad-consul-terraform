@@ -16,7 +16,8 @@ resource "aws_s3_bucket_policy" "root_ca_certs" {
             "Resource": ["${aws_s3_bucket.root_ca_certs.arn}/*"],
             "Action": [
                 "s3:GetObject",
-                "s3:GetObjectVersion"
+                "s3:GetObjectVersion",
+                "s3:GetObjectTagging"
             ]
         }
     ]

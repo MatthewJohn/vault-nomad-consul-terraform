@@ -15,3 +15,7 @@ output "full_chain" {
     ]
   )
 }
+
+output "root_ca_cert" {
+  value = data.aws_s3_object.root_ca_cert.body
+}

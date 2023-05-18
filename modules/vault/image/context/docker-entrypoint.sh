@@ -52,9 +52,14 @@ if [ "$1" = 'vault' ]; then
             echo "$SERVER_SSL_KEY" > /vault/ssl/server-privkey.pem
         fi
 
-        if [ "$SERVER_SSL_CERT" ]
+        if [ "$SERVER_SSL_CERT" != "" ]
         then
             echo "$SERVER_SSL_CERT" > /vault/ssl/server-fullchain.pem
+        fi
+
+        if [ "$ROOT_CA_CERT" != "" ]
+        then
+            echo "${ROOT_CA_CERT}" > /vault/ssl/root-ca.pem
         fi
 
         chmod 644 /vault/ssl/* || echo "Could not chmod /vault/ssl/* (may not have appropriate permissions)"
