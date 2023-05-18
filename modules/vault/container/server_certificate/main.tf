@@ -25,7 +25,7 @@ resource "tls_locally_signed_cert" "server_cert" {
   validity_period_hours = 8760 # One year of validity
 
   allowed_uses = [
-    "cert_signing",
+    "any_extended",
   ]
 
   # Ignore CA certs, due to whitespace changes
