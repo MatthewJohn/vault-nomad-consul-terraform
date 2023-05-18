@@ -11,7 +11,7 @@ resource "docker_container" "this" {
 
     command = concat(
       [
-        "server"
+        "server", "-config", "/vault/config.d/server.hcl"
       ]
     )
 

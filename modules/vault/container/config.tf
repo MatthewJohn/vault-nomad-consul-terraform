@@ -16,3 +16,16 @@ listener "tcp" {
 
 EOF
 }
+
+resource "null_resource" "vault_config" {
+  connection {
+    type = "ssh"
+    user = var.hypervisor_username
+    host = var.hypervisor_hostname
+  }
+
+  provisioner "file" {
+    content = local.config_value
+    destination = "/vault/config.d/server.hcl"
+  }
+}
