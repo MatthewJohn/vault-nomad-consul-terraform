@@ -35,11 +35,13 @@ module "virtual_machines" {
       ip_address = "192.168.122.60"
       ip_gateway = "192.168.122.1"
       network_bridge = "virbr0"
+      additional_dns_hostnames = ["vault-1.vault.dock.local"]
     }
     "vault-2" = {
       ip_address = "192.168.122.61"
       ip_gateway = "192.168.122.1"
       network_bridge = "virbr0"
+      additional_dns_hostnames = ["vault-1.vault.dock.local"]
     }
   }
 }

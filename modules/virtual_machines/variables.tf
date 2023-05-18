@@ -37,14 +37,15 @@ variable "domain_name" {
 
 variable "vault_version" {
   description = "Vault version"
-  type = string
-  default = "1.13.2"
+  type        = string
+  default     = "1.13.2"
 }
 
 variable "vault_hosts" {
   type = map(object({
-    ip_address = string
-    ip_gateway = string
-    network_bridge = optional(string)
+    ip_address               = string
+    ip_gateway               = string
+    network_bridge           = optional(string)
+    additional_dns_hostnames = list(string)
   }))
 }
