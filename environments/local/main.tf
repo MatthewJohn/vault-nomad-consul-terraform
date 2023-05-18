@@ -2,6 +2,7 @@
 locals {
   freeipa_admin    = "admin"
   freeipa_password = "password"
+  domain_name      = "dock.local"
 }
 
 module "freeipa" {
