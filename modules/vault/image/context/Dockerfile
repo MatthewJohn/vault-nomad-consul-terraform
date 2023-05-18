@@ -64,7 +64,3 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 USER 100
-
-# By default you'll get a single-node development server that stores everything
-# in RAM and bootstraps itself. Don't use this configuration for production.
-CMD ["server", "-dev"]
