@@ -27,37 +27,9 @@ if [ -n "$VAULT_CLUSTER_INTERFACE" ]; then
     echo "Using $VAULT_CLUSTER_INTERFACE for VAULT_CLUSTER_ADDR: $VAULT_CLUSTER_ADDR"
 fi
 
-# VAULT_CONFIG_DIR isn't exposed as a volume but you can compose additional
-# config files in there if you use this image as a base, or use
-# VAULT_LOCAL_CONFIG below.
-VAULT_CONFIG_DIR=/vault/config
-
-# You can also set the VAULT_LOCAL_CONFIG environment variable to pass some
-# Vault configuration JSON without having to bind any volumes.
-if [ -n "$VAULT_LOCAL_CONFIG" ]; then
-    echo "$VAULT_LOCAL_CONFIG" > "$VAULT_CONFIG_DIR/local.json"
-fi
-
 # If the user is trying to run Vault directly with some arguments, then
 # pass them to Vault.
 if [ "${1:0:1}" = '-' ]; then
-    set -- vault "$@"
-fi
-
-# Look for Vault subcommands.
-if [ "$1" = 'server' ]; then
-    shift
-    set -- vault server \
-        -config="$VAULT_CONFIG_DIR" \
-        -dev-root-token-id="$VAULT_DEV_ROOT_TOKEN_ID" \
-        -dev-listen-address="${VAULT_DEV_LISTEN_ADDRESS:-"0.0.0.0:8200"}" \
-        "$@"
-elif [ "$1" = 'version' ]; then
-    # This needs a special case because there's no help output.
-    set -- vault "$@"
-elif vault --help "$1" 2>&1 | grep -q "vault $1"; then
-    # We can't use the return code to check for the existence of a subcommand, so
-    # we have to use grep to look for a pattern in the help output.
     set -- vault "$@"
 fi
 
@@ -65,9 +37,14 @@ fi
 if [ "$1" = 'vault' ]; then
     if [ -z "$SKIP_CHOWN" ]; then
         # If the config dir is bind mounted then chown it
-        if [ "$(stat -c %u /vault/config)" != "$(id -u vault)" ]; then
-            chown -R vault:vault /vault/config || echo "Could not chown /vault/config (may not have appropriate permissions)"
-        fi
+        chown -R root:vault /vault/config || echo "Could not chown /vault/config (may not have appropriate permissions)"
+        chmod 755 /vault/config || echo "Could not chmod /vault/config (may not have appropriate permissions)"
+        chmod 644 /vault/config/* || echo "Could not chmod /vault/config/* (may not have appropriate permissions)"
+
+        chown -R root:vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
+        chmod 755 /vault/ssl || echo "Could not chmod /vault/ssl (may not have appropriate permissions)"
+        chmod 644 /vault/ssl/* || echo "Could not chmod /vault/ssl/* (may not have appropriate permissions)"
+        
 
         # If the logs dir is bind mounted then chown it
         if [ "$(stat -c %u /vault/logs)" != "$(id -u vault)" ]; then
