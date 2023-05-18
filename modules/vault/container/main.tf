@@ -9,11 +9,15 @@ resource "docker_container" "this" {
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""
 
-    command = concat(
-      [
-        "server", "-config", "/vault/config.d/server.hcl"
-      ]
-    )
+  command = concat(
+    [
+      "vault", "server", "-config", "/vault/config.d/server.hcl"
+    ]
+  )
+
+  # Use root for setting up permissions and let
+  # entrypoint change user to "vault" user
+  user = "root"
 
   #   env = concat(
   #     [
