@@ -17,4 +17,8 @@ module "s3_configure" {
   domain_name = local.domain_name
   root_username = module.s3.root_username
   root_password = module.s3.root_password
+
+  allowed_terraform_buckets_read_only = [
+    "intermediate-ca-certs"
+  ]
 }
