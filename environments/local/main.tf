@@ -3,6 +3,7 @@ locals {
   freeipa_admin    = "admin"
   freeipa_password = "password"
   domain_name      = "dock.local"
+  docker_username  = "docker-connect"
 }
 
 module "freeipa" {
@@ -33,7 +34,12 @@ module "virtual_machines" {
 module "vault" {
   source = "../../modules/vault"
 
-  domain_name = "dock.local"
+  domain_name = local.domain_name
+  hostname    = "vault-1"
+
+  docker_host     = "vault-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.60"
 }
 
 

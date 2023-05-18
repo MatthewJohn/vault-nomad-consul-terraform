@@ -4,6 +4,9 @@ locals {
 disable_mlock = true
 ui            = true
 
+cluster_addr  = "https://${var.docker_ip}:8201"
+api_addr      = "https://${var.docker_ip}:8200"
+
 storage "file" {
   path = "/vault/file"
 }

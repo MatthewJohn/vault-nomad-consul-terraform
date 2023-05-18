@@ -8,6 +8,11 @@ variable "docker_host" {
   type        = string
 }
 
+variable "docker_ip" {
+  description = "IP Address of docker host"
+  type        = string
+}
+
 variable "hostname" {
   description = "Hostname for docker"
   type        = string
