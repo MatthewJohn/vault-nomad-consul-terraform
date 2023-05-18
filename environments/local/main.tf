@@ -35,7 +35,6 @@ module "virtual_machines" {
       ip_address = "192.168.122.60"
       ip_gateway = "192.168.122.1"
       network_bridge = "virbr0"
-      storage_pool = libvirt_pool.local-disks.name
     }
     "vault-2" = {
       ip_address = "192.168.122.61"
