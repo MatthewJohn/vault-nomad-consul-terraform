@@ -28,6 +28,18 @@ variable "image" {
   type        = string
 }
 
+variable "all_vault_hosts" {
+  description = "List of all vault hostnames"
+  type        = list(string)
+  default     = []
+}
+
+variable "vault_subdomain" {
+  description = "Subdomain of primary domain for vault"
+  type        = string
+  default     = "vault"
+}
+
 locals {
-  vault_domain = "vault.${var.domain_name}"
+  vault_domain = var.vault_subdomain != null ? "${var.vault_subdomain}.${var.domain_name}" : var.domain_name
 }

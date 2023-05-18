@@ -4,12 +4,24 @@ locals {
 disable_mlock = true
 ui            = true
 
-cluster_addr  = "https://${var.docker_ip}:8201"
-api_addr      = "https://${var.docker_ip}:8200"
+cluster_addr  = "https://${var.hostname}.${local.vault_domain}:8201"
+api_addr      = "https://${var.hostname}.${local.vault_domain}:8200"
 
-ha_storage "raft" {
+storage "raft" {
    path    = "/vault/raft"
    node_id = "${var.hostname}"
+
+   %{for neighbour in var.all_vault_hosts}
+   %{if neighbour != var.hostname}
+    retry_join 
+    {
+        leader_api_addr         = "https://${neighbour}.${local.vault_domain}:8200"
+        leader_ca_cert_file     = "/vault/ssl/root-ca.pem"
+        leader_client_cert_file = "/vault/ssl/server-privkey.pem"
+        leader_client_key_file  = "/etc/vault.d/ssl/tls.key"
+    }
+   %{endif}
+   %{endfor}
 }
 
 storage "file" {
@@ -19,6 +31,7 @@ storage "file" {
 listener "tcp" {
   address            = "0.0.0.0:8200"
   cluster_address    = "0.0.0.0:8201"
+  tls_disable        = false
   tls_cert_file      = "/vault/ssl/server-fullchain.pem"
   tls_key_file       = "/vault/ssl/server-privkey.pem"
   tls_client_ca_file = "/vault/ssl/root-ca.pem"
@@ -40,7 +53,7 @@ resource "null_resource" "vault_config" {
   }
 
   provisioner "file" {
-    content = local.config_value
+    content     = local.config_value
     destination = "/vault/config.d/server.hcl"
   }
 }

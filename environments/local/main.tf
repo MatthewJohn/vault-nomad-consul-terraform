@@ -32,25 +32,30 @@ module "virtual_machines" {
 
   vault_hosts = {
     "vault-1" = {
-      ip_address = "192.168.122.60"
-      ip_gateway = "192.168.122.1"
-      network_bridge = "virbr0"
+      ip_address               = "192.168.122.60"
+      ip_gateway               = "192.168.122.1"
+      network_bridge           = "virbr0"
       additional_dns_hostnames = ["vault-1.vault.dock.local"]
     }
     "vault-2" = {
-      ip_address = "192.168.122.61"
-      ip_gateway = "192.168.122.1"
-      network_bridge = "virbr0"
-      additional_dns_hostnames = ["vault-1.vault.dock.local"]
+      ip_address               = "192.168.122.61"
+      ip_gateway               = "192.168.122.1"
+      network_bridge           = "virbr0"
+      additional_dns_hostnames = ["vault-2.vault.dock.local"]
     }
   }
+}
+
+locals {
+  all_vault_hosts = ["vault-1", "vault-2"]
 }
 
 module "vault-1" {
   source = "../../modules/vault"
 
-  domain_name = local.domain_name
-  hostname    = "vault-1"
+  domain_name     = local.domain_name
+  hostname        = "vault-1"
+  all_vault_hosts = local.all_vault_hosts
 
   docker_host     = "vault-1.${local.domain_name}"
   docker_username = local.docker_username
@@ -60,8 +65,9 @@ module "vault-1" {
 module "vault-2" {
   source = "../../modules/vault"
 
-  domain_name = local.domain_name
-  hostname    = "vault-2"
+  domain_name     = local.domain_name
+  hostname        = "vault-2"
+  all_vault_hosts = local.all_vault_hosts
 
   docker_host     = "vault-2.${local.domain_name}"
   docker_username = local.docker_username

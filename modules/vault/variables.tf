@@ -1,7 +1,18 @@
 
+variable "hostname" {
+  description = "Hostname for docker"
+  type        = string
+}
+
 variable "domain_name" {
   description = "DNS domain name for instances"
   type        = string
+}
+
+variable "vault_subdomain" {
+  description = "Subdomain of primary domain for vault"
+  type        = string
+  default     = "vault"
 }
 
 variable "vault_version" {
@@ -10,20 +21,23 @@ variable "vault_version" {
   default = "1.13.2"
 }
 
-variable "hostname" {
-
+variable "docker_username" {
+  description = "SSH username to connect to docker host"
+  type        = string
 }
 
 variable "docker_host" {
-
-}
-
-variable "docker_username" {
-  description = "Username to connect to docker host"
+  description = "Docker host to connect to"
   type        = string
-  default     = "docker-connect"
 }
 
 variable "docker_ip" {
+  description = "IP Address of docker host"
+  type        = string
+}
 
+variable "all_vault_hosts" {
+  description = "List of all vault hostnames"
+  type        = list(string)
+  default     = []
 }
