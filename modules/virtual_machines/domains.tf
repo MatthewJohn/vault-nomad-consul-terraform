@@ -1,11 +1,13 @@
 
-module "vault-1" {
+module "vault" {
+  for_each = var.vault_hosts
+
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.4"
 
-  name                = "vault-1"
-  ip_address          = "192.168.122.60"
-  ip_gateway          = "192.168.122.1"
+  name                = each.key
+  ip_address          = each.value.ip_address
+  ip_gateway          = each.value.ip_gateway
   nameservers         = var.nameservers
   memory              = 256
   disk_size           = 3000
@@ -14,7 +16,7 @@ module "vault-1" {
   hypervisor_username = var.hypervisor_username
   docker_ssh_key      = var.docker_ssh_key
   domain_name         = var.domain_name
-  network_bridge      = "virbr0"
+  network_bridge      = each.value.network_bridge
 
   create_directories = [
     "/vault",
