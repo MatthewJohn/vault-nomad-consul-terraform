@@ -17,5 +17,7 @@ output "full_chain" {
 }
 
 output "root_ca_cert" {
-  value = data.aws_s3_object.root_ca_cert.body
+  value = data.aws_s3_object.intermediate_full_chain.body
+  #value = data.aws_s3_object.intermediate_public_key.body
+  #value = data.aws_s3_object.root_ca_cert.body
 }
