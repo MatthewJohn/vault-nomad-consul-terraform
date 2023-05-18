@@ -30,19 +30,12 @@ resource "docker_container" "this" {
     add = ["IPC_LOCK"]
   }
 
+  network_mode = "host"
+
   env = [
-    "VAULT_API_ADDR=https://0.0.0.0:8200",
-    "VAULT_CLUSTER_ADDR=http://0.0.0.0:8201",
     "SERVER_SSL_KEY=${module.server_certificate.private_key}",
     "SERVER_SSL_CERT=${module.server_certificate.full_chain}"
   ]
-
-  ports {
-    internal = 8200
-    external = 8200
-    ip       = "0.0.0.0"
-    protocol = "tcp"
-  }
 
   volumes {
     container_path = "/vault/config.d"
