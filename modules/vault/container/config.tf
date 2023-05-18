@@ -17,15 +17,11 @@ storage "raft" {
     {
         leader_api_addr         = "https://${neighbour}.${local.vault_domain}:8200"
         leader_ca_cert_file     = "/vault/ssl/root-ca.pem"
-        leader_client_cert_file = "/vault/ssl/server-privkey.pem"
-        leader_client_key_file  = "/etc/vault.d/ssl/tls.key"
+        leader_client_cert_file = "/vault/ssl/server-fullchain.pem"
+        leader_client_key_file  = "/vault/ssl/server-privkey.pem"
     }
    %{endif}
    %{endfor}
-}
-
-storage "file" {
-  path = "/vault/file"
 }
 
 listener "tcp" {
