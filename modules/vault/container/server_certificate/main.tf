@@ -25,4 +25,17 @@ resource "tls_locally_signed_cert" "server_cert" {
   allowed_uses = [
     "cert_signing",
   ]
+
+  # Ignore CA certs, due to whitespace changes
+  lifecycle {
+    ignore_changes = [
+      ca_cert_pem,
+      ca_private_key_pem
+    ] 
+  }
+
+  # Trigger on change to MD5 hash change of s3 file contents
+  depends_on = [
+    null_resource.ssl_trigger
+  ]
 }

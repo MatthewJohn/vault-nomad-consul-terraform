@@ -11,7 +11,7 @@ output "full_chain" {
     "\n",
     [
       data.aws_s3_object.intermediate_full_chain.body,
-      tls_locally_signed_cert.server_cert.cert_pem
+      tls_locally_signed_cert.server_cert.cert_pem,
     ]
   )
 }
