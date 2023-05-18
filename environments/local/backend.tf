@@ -4,6 +4,7 @@ terraform {
     bucket   = "terraform-state"
     endpoint = "http://s3.dock.local:9000"
     key      = "vault-nomad-consul/terraform.tfstate"
+    profile  = "dockstudios-terraform"
 
     region                      = "main"
     skip_credentials_validation = true
