@@ -19,6 +19,10 @@ EOF
 
 resource "null_resource" "vault_config" {
 
+  triggers = {
+    config = local.config_value
+  }
+
   connection {
     type = "ssh"
     user = var.docker_username

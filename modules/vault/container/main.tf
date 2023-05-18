@@ -60,6 +60,12 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
-    ignore_changes = [image]
+    ignore_changes = [
+      image
+    ]
+
+    replace_triggered_by = [
+      null_resource.vault_config
+    ]
   }
 }
