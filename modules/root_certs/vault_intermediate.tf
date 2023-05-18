@@ -39,7 +39,10 @@ resource "aws_s3_bucket_object" "intermediate_public_cert" {
 resource "aws_s3_bucket_object" "intermediate_full_chain" {
   bucket       = aws_s3_bucket.intermediate_ca_certs.bucket
   key          = "vault/intermediate-1-full-chain.crt"
-  content      = join("\n", [tls_self_signed_cert.root.cert_pem, tls_locally_signed_cert.vault_int.cert_pem])
+  content      = join("\n", [
+    tls_locally_signed_cert.vault_int.cert_pem,
+    tls_self_signed_cert.root.cert_pem,
+  ])
   content_type = "text/plain"
 }
 resource "aws_s3_bucket_object" "intermediate_private_key" {
