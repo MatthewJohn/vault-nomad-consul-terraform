@@ -28,3 +28,20 @@ resource "tls_locally_signed_cert" "vault_int" {
     "cert_signing",
   ]
 }
+
+# Upload public/private intermediate keys to s3
+resource "aws_s3_bucket_object" "intermediate_public_cert" {
+  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
+  key     = "vault/intermediate-1.crt"
+  content = tls_locally_signed_cert.vault_int.cert_pem
+}
+resource "aws_s3_bucket_object" "intermediate_full_chain" {
+  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
+  key     = "vault/intermediate-1-full-chain.crt"
+  content = join("\n", [tls_self_signed_cert.root.cert_pem, tls_locally_signed_cert.vault_int.cert_pem])
+}
+resource "aws_s3_bucket_object" "intermediate_private_key" {
+  bucket  = aws_s3_bucket.intermediate_ca_certs.bucket
+  key     = "vault/intermediate-1.key"
+  content = tls_private_key.vault_int.private_key_pem
+}

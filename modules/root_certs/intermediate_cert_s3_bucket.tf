@@ -9,4 +9,3 @@ resource "aws_s3_bucket_versioning" "intermediate_ca_certs" {
     status = "Enabled"
   }
 }
-
