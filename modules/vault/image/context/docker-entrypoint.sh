@@ -33,15 +33,18 @@ if [ "${1:0:1}" = '-' ]; then
     set -- vault "$@"
 fi
 
+mkdir -p /vault/config.d
+mkdir -p /vault/ssl
+
 # If we are running Vault, make sure it executes as the proper user.
 if [ "$1" = 'vault' ]; then
     if [ -z "$SKIP_CHOWN" ]; then
         # If the config dir is bind mounted then chown it
-        chown -R root:vault /vault/config || echo "Could not chown /vault/config (may not have appropriate permissions)"
-        chmod 755 /vault/config || echo "Could not chmod /vault/config (may not have appropriate permissions)"
-        chmod 644 /vault/config/* || echo "Could not chmod /vault/config/* (may not have appropriate permissions)"
+        chown -R :vault /vault/config.d || echo "Could not chown /vault/config.d (may not have appropriate permissions)"
+        chmod 755 /vault/config.d || echo "Could not chmod /vault/config.d (may not have appropriate permissions)"
+        chmod 644 /vault/config.d/* || echo "Could not chmod /vault/config.d/* (may not have appropriate permissions)"
 
-        chown -R root:vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
+        chown -R :vault /vault/ssl || echo "Could not chown /vault/ssl (may not have appropriate permissions)"
         chmod 755 /vault/ssl || echo "Could not chmod /vault/ssl (may not have appropriate permissions)"
         chmod 644 /vault/ssl/* || echo "Could not chmod /vault/ssl/* (may not have appropriate permissions)"
         
