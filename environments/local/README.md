@@ -28,5 +28,8 @@ mv backend.tf.bak backend.tf
 
 terraform apply
 
+# Configure vault
+ssh docker-connect@vault-1.dock.local docker exec -ti -e VAULT_CACERT=/vault/ssl/root-ca.pem -e VAULT_URL=https://vault-1.vault.dock.local:8200 vault vault operator init -key-shares=5 -key-threshold=3
+
 ```
 
