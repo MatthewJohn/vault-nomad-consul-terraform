@@ -8,6 +8,11 @@ variable "vault_domain" {
   type        = string
 }
 
+variable "ip_address" {
+  description = "IP Address of host"
+  type        = string
+}
+
 variable "key_algorithm" {
   description = "Key algorithm used for certificates"
   type        = string

@@ -11,8 +11,11 @@ resource "tls_cert_request" "server_cert" {
     common_name  = "${var.hostname}"
   }
 
-  uris = [
+  dns_names = [
     "${var.hostname}.${var.vault_domain}"
+  ]
+  ip_addresses = [
+    "${var.ip_address}"
   ]
 }
 
