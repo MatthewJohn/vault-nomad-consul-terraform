@@ -34,6 +34,16 @@ variable "all_vault_hosts" {
   default     = []
 }
 
+variable "kms_key_id" {
+  description = "KMS key ID for auto-unseal"
+  type        = string
+}
+
+variable "kms_backing_key_value" {
+  description = "KMS backing key value"
+  type        = string
+}
+
 variable "vault_subdomain" {
   description = "Subdomain of primary domain for vault"
   type        = string

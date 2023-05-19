@@ -32,7 +32,7 @@ module "virtual_machines" {
 
   # Add DNS for fare-docker-reg.dock.studios
   hosts_entries = {
-    "172.16.93.12": ["fare-docker-reg.dock.studios"]
+    "172.16.93.12" : ["fare-docker-reg.dock.studios"]
   }
 
   vault_hosts = {
@@ -76,13 +76,9 @@ module "vault_init" {
   host_ssh_username = "docker-connect"
 }
 
-# module "vault_initial_setup" {
-#   source = "../../modules/vault_initial_setup"
-
-#   vault_host   = "vault-1.vault.dock.local"
-#   root_token   = module.vault_init.root_token
-#   ca_cert_file = module.vault_init.ca_cert_file
-# }
+module "kms_config" {
+  source = "../../modules/kms_config"
+}
 
 module "vault-1" {
   source = "../../modules/vault_node"
@@ -94,6 +90,9 @@ module "vault-1" {
   docker_host     = "vault-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.60"
+
+  kms_key_id            = module.kms_config.key_id
+  kms_backing_key_value = module.kms_config.backing_key_value
 }
 
 module "vault-2" {
@@ -106,6 +105,9 @@ module "vault-2" {
   docker_host     = "vault-2.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.61"
+
+  kms_key_id            = module.kms_config.key_id
+  kms_backing_key_value = module.kms_config.backing_key_value
 }
 
 

@@ -37,7 +37,7 @@ seal "awskms" {
   region     = "us-east-1"
   access_key = "AKIAIOSFODNN7EXAMPLE"
   secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-  kms_key_id = "${local.kms_key_id}"
+  kms_key_id = "${var.kms_key_id}"
   endpoint   = "http://${docker_container.kms.network_data[0].ip_address}:8080"
 }
 
