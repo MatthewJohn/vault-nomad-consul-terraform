@@ -47,8 +47,21 @@ module "virtual_machines" {
 }
 
 locals {
-  all_vault_hosts = ["vault-1", "vault-2"]
+  all_vault_hosts    = ["vault-1", "vault-2"]
   all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
+}
+
+module "vault_init" {
+  source = "../../modules/vault_init"
+
+  # vault-1 IP
+  vault_host        = "vault-1.dock.local"
+  aws_region        = "eu-east-1"
+  aws_endpoint      = "http://s3.dock.local:9000"
+  aws_profile       = "dockstudios-terraform"
+  bucket_name       = "vault-unseal"
+  initial_run       = var.initial_setup
+  host_ssh_username = "docker-connect"
 }
 
 module "vault_cluster" {

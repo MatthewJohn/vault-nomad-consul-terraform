@@ -22,4 +22,7 @@ module "s3_configure" {
     "intermediate-ca-certs",
     "root-ca-certs"
   ]
+  allowed_terraform_buckets_full_access = [
+    "vault-unseal"
+  ]
 }
