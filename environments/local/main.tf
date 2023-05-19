@@ -71,6 +71,21 @@ module "vault_init" {
   host_ssh_username = "docker-connect"
 }
 
+module "vault_init_secondaries" {
+  source = "../../modules/vault_init_secondary"
+
+  for_each = toset(["vault-2"])
+
+  vault_host          = "${each.key}.dock.local"
+  aws_region          = "eu-east-1"
+  aws_endpoint        = "http://s3.dock.local:9000"
+  aws_profile         = "dockstudios-terraform"
+  bucket_name         = module.vault_init.vault_unseal_bucket
+  initial_run         = var.initial_setup
+  host_ssh_username   = "docker-connect"
+  autoseal_token_file = module.vault_init.autoseal_token_file
+}
+
 # module "vault_initial_setup" {
 #   source = "../../modules/vault_initial_setup"
 

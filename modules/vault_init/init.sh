@@ -134,4 +134,4 @@ aws s3 cp ${auto_unseal_token_file} s3://${bucket_name}/auto_unseal.json \
     --endpoint="$aws_endpoint" --profile="$aws_profile" \
     --region="$aws_region" >> $vault_unseal_debug_file 2>&1
 
-echo "{\"root_token\": \"$root_token\", \"ca_cert_file\": \"${ca_cert_file}\"}"
+echo "{\"root_token\": \"$root_token\", \"ca_cert_file\": \"${ca_cert_file}\", \"autoseal_token_file\": \"auto_unseal.json\"}"

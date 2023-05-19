@@ -9,7 +9,7 @@ module "vault" {
   ip_address               = each.value.ip_address
   ip_gateway               = each.value.ip_gateway
   nameservers              = var.nameservers
-  memory                   = 256
+  memory                   = 386
   disk_size                = 3000
   base_disk_path           = var.base_disk_path
   hypervisor_hostname      = var.hypervisor_hostname
