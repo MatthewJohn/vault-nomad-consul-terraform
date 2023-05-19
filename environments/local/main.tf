@@ -131,3 +131,7 @@ module "consul_ca" {
   aws_region = local.aws_region
   aws_endpoint = local.aws_endpoint
 }
+
+module "consul_gossip_encryption" {
+  source = "../../modules/consul/keygen"
+}
