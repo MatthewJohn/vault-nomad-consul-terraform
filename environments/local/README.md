@@ -26,7 +26,8 @@ export AWS_ACCESS_KEY_ID=7L42ZUALDFVYXSQEQIV4; export AWS_SECRET_ACCESS_KEY=nG7Q
 mv backend.tf.bak backend.tf
 
 
-terraform apply
+# Setup initail vault node
+terraform apply -target=module.vault-1 -target=module.vault-N -var initial_setup=true
 
 # Configure vault
 ssh docker-connect@vault-1.dock.local docker exec -ti -e VAULT_CACERT=/vault/ssl/root-ca.pem -e VAULT_URL=https://vault-1.vault.dock.local:8200 vault vault operator init -key-shares=5 -key-threshold=3

@@ -28,6 +28,11 @@ variable "image" {
   type        = string
 }
 
+variable "initial_primary" {
+  description = "Whether the node is currently being used as initial setup"
+  type        = bool
+}
+
 variable "all_vault_hosts" {
   description = "List of all vault hostnames"
   type        = list(string)

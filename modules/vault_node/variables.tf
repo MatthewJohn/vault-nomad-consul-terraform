@@ -21,6 +21,12 @@ variable "vault_version" {
   default = "1.13.2"
 }
 
+variable "initial_primary" {
+  description = "Whether the node is currently being used as initial setup"
+  type        = bool
+  default     = false
+}
+
 variable "docker_username" {
   description = "SSH username to connect to docker host"
   type        = string

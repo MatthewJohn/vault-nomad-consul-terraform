@@ -68,6 +68,9 @@ module "vault-1" {
   docker_host     = "vault-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.60"
+
+  # Use this node as initial primary
+  initial_primary = var.initial_setup
 }
 
 module "vault-2" {

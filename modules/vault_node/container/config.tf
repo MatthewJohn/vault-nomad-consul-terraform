@@ -24,6 +24,7 @@ storage "raft" {
    %{endfor}
 }
 
+%{if var.initial_primary == false}
 seal "transit" {
   address         = "https://${local.vault_domain}:8200"
   disable_renewal = false
@@ -35,6 +36,7 @@ seal "transit" {
   tls_client_cert = "/vault/ssl/server-fullchain.pem"
   tls_client_key  = "/vault/ssl/server-privkey.pem"
 }
+%{endif}
 
 listener "tcp" {
   address            = "0.0.0.0:8200"
