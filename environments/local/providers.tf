@@ -14,3 +14,21 @@ terraform {
     }
   }
 }
+
+provider "docker" {
+  alias = "local"
+}
+
+provider "freeipa" {
+  host     = "freeipa.dock.local"
+  username = local.freeipa_admin
+  password = local.freeipa_password
+  insecure = true
+}
+
+provider "libvirt" {
+  uri = "qemu:///system"
+
+  alias = "vm_host"
+}
+

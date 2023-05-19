@@ -109,21 +109,3 @@ module "vault-2" {
   kms_key_id            = module.kms_config.key_id
   kms_backing_key_value = module.kms_config.backing_key_value
 }
-
-
-provider "docker" {
-  alias = "local"
-}
-
-provider "freeipa" {
-  host     = "freeipa.dock.local"
-  username = local.freeipa_admin
-  password = local.freeipa_password
-  insecure = true
-}
-
-provider "libvirt" {
-  uri = "qemu:///system"
-
-  alias = "vm_host"
-}
