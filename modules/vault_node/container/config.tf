@@ -24,7 +24,7 @@ storage "raft" {
    %{endfor}
 }
 
-%{if var.initial_primary == false}
+%{if var.initial_setup == false}
 seal "transit" {
   address         = "https://${local.vault_domain}:8200"
   disable_renewal = false

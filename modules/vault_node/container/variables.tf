@@ -28,7 +28,7 @@ variable "image" {
   type        = string
 }
 
-variable "initial_primary" {
+variable "initial_setup" {
   description = "Whether the node is currently being used as initial setup"
   type        = bool
 }
