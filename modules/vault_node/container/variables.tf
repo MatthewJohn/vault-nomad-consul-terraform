@@ -38,8 +38,13 @@ variable "vault_subdomain" {
   description = "Subdomain of primary domain for vault"
   type        = string
   default     = "vault"
+
+  validation {
+    condition     = var.vault_subdomain != "" && var.vault_subdomain != null
+    error_message = "The vault_subdomain cannot be empty."
+  }
 }
 
 locals {
-  vault_domain = var.vault_subdomain != null ? "${var.vault_subdomain}.${var.domain_name}" : var.domain_name
+  vault_domain = "${var.vault_subdomain}.${var.domain_name}"
 }

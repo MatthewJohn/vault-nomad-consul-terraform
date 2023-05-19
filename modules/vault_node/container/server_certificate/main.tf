@@ -12,7 +12,11 @@ resource "tls_cert_request" "server_cert" {
   }
 
   dns_names = [
-    "${var.hostname}.${var.vault_domain}"
+    # Domain for client
+    "${var.hostname}.${var.vault_domain}",
+
+    # Domain for all vault nodes
+    var.vault_domain,
   ]
   ip_addresses = [
     # Allow to support localhost connections using vault CLI

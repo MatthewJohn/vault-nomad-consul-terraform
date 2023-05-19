@@ -24,6 +24,18 @@ storage "raft" {
    %{endfor}
 }
 
+seal "transit" {
+  address         = "https://${local.vault_domain}:8200"
+  disable_renewal = false
+  key_name        = "autounseal"
+  mount_path      = "transit/"
+
+  tls_skip_verify = false
+  tls_ca_cert     = "/vault/ssl/root-ca.pem"
+  tls_client_cert = "/vault/ssl/server-fullchain.pem"
+  tls_client_key  = "/vault/ssl/server-privkey.pem"
+}
+
 listener "tcp" {
   address            = "0.0.0.0:8200"
   cluster_address    = "0.0.0.0:8201"

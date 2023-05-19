@@ -48,6 +48,14 @@ module "virtual_machines" {
 
 locals {
   all_vault_hosts = ["vault-1", "vault-2"]
+  all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
+}
+
+module "vault_cluster" {
+  source = "../../modules/vault_cluster"
+
+  domain_name  = local.domain_name
+  ip_addresses = local.all_vault_host_ips
 }
 
 module "vault-1" {
