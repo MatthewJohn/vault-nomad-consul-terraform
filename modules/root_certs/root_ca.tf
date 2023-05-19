@@ -9,7 +9,7 @@ resource "tls_self_signed_cert" "root" {
   is_ca_certificate = true                                 # this is a certificate authority
 
   subject {
-    common_name  = var.root_cn
+    common_name  = "Dockstudios Vault Root CA"
     organization = var.organisation
   }
 
@@ -25,7 +25,7 @@ resource "tls_self_signed_cert" "root" {
 # Upload public key to s3
 resource "aws_s3_bucket_object" "root_ca_cert" {
   bucket       = aws_s3_bucket.root_ca_certs.bucket
-  key          = "vault/root_ca.crt"
+  key          = "vault/root_ca.pem"
   content      = tls_self_signed_cert.root.cert_pem
   content_type = "text/plain"
 }

@@ -8,16 +8,16 @@ output "public_key" {
 
 output "full_chain" {
   value = join(
-    "\n",
+    "",
     [
       tls_locally_signed_cert.server_cert.cert_pem,
-      data.aws_s3_object.intermediate_full_chain.body,
+      data.aws_s3_object.intermediate_ca_bundle.body,
     ]
   )
 }
 
 output "root_ca_cert" {
-  #value = data.aws_s3_object.intermediate_full_chain.body
+  #value = data.aws_s3_object.intermediate_ca_bundle.body
   #value = data.aws_s3_object.intermediate_public_key.body
   value = data.aws_s3_object.root_ca_cert.body
 }

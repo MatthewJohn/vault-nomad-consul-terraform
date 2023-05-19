@@ -8,7 +8,7 @@ resource "tls_cert_request" "server_cert" {
   private_key_pem = tls_private_key.server_cert.private_key_pem
 
   subject {
-    common_name  = "${var.hostname}.${var.vault_domain}"
+    common_name  = "${var.hostname}"
   }
 
   uris = [
