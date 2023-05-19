@@ -51,6 +51,13 @@ locals {
   all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
 }
 
+module "vault_cluster" {
+  source = "../../modules/vault_cluster"
+
+  domain_name  = local.domain_name
+  ip_addresses = local.all_vault_host_ips
+}
+
 module "vault_init" {
   source = "../../modules/vault_init"
 
@@ -64,20 +71,13 @@ module "vault_init" {
   host_ssh_username = "docker-connect"
 }
 
-module "vault_cluster" {
-  source = "../../modules/vault_cluster"
+# module "vault_initial_setup" {
+#   source = "../../modules/vault_initial_setup"
 
-  domain_name  = local.domain_name
-  ip_addresses = local.all_vault_host_ips
-}
-
-module "vault_initial_setup" {
-  source = "../../modules/vault_initial_setup"
-
-  vault_host   = "vault-1.vault.dock.local"
-  root_token   = module.vault_init.root_token
-  ca_cert_file = module.vault_init.ca_cert_file
-}
+#   vault_host   = "vault-1.vault.dock.local"
+#   root_token   = module.vault_init.root_token
+#   ca_cert_file = module.vault_init.ca_cert_file
+# }
 
 module "vault-1" {
   source = "../../modules/vault_node"
