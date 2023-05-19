@@ -71,6 +71,14 @@ module "vault_cluster" {
   ip_addresses = local.all_vault_host_ips
 }
 
+module "vault_initial_setup" {
+  source = "../../modules/vault_initial_setup"
+
+  vault_host   = "vault-1.vault.dock.local"
+  root_token   = module.vault_init.root_token
+  ca_cert_file = module.vault_init.ca_cert_file
+}
+
 module "vault-1" {
   source = "../../modules/vault_node"
 
