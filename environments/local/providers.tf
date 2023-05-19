@@ -31,4 +31,3 @@ provider "libvirt" {
 
   alias = "vm_host"
 }
-

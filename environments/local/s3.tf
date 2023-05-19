@@ -23,6 +23,7 @@ module "s3_configure" {
     "root-ca-certs"
   ]
   allowed_terraform_buckets_full_access = [
-    "vault-unseal"
+    "vault-unseal",
+    "consul-certs",
   ]
 }
