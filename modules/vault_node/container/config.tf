@@ -36,20 +36,14 @@ listener "tcp" {
 EOF
 
   transit_config = <<EOF
-%{if var.initial_setup == false}
-seal "transit" {
-  token           = "%TRANSIT_TOKEN%"
-  address         = "https://${local.vault_domain}:8200"
-  disable_renewal = false
-  key_name        = "autounseal"
-  mount_path      = "transit/"
-
-  tls_skip_verify = false
-  tls_ca_cert     = "/vault/ssl/root-ca.pem"
-  tls_client_cert = "/vault/ssl/server-fullchain.pem"
-  tls_client_key  = "/vault/ssl/server-privkey.pem"
+seal "awskms" {
+  region     = "us-east-1"
+  access_key = "AKIAIOSFODNN7EXAMPLE"
+  secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  kms_key_id = "ff275b92-0def-4dfc-b0f6-87c96b26c6c7"
+  endpoint   = "http://192.168.122.1:8080"
 }
-%{endif}
+
 EOF
 }
 

@@ -70,7 +70,7 @@ else
 
     echo "Setting up initial credentials" >> $vault_unseal_debug_file
     f_execute_vault_command vault operator init \
-        -key-shares=1 -key-threshold=1 \
+        -recovery-shares=1 -recovery-threshold=1 \
         -format=json > ${root_tokens_json_file}
 
     echo "Uploading root tokens to s3" >> $vault_unseal_debug_file
@@ -93,45 +93,45 @@ fi
 
 root_token=$(cat ${root_tokens_json_file} | jq -r '.root_token')
 
-# Setup unseal store
-echo "Checking vault transit enabled" >> $vault_unseal_debug_file
-if ! f_execute_vault_command vault secrets list | grep -E '^transit' >/dev/null 2>&1
-then
-    echo "Enabling vault transit" >> $vault_unseal_debug_file
-    f_execute_vault_command vault secrets enable transit >> $vault_unseal_debug_file 2>&1
-    echo $? >> $vault_unseal_debug_file
-fi
+# # Setup unseal store
+# echo "Checking vault transit enabled" >> $vault_unseal_debug_file
+# if ! f_execute_vault_command vault secrets list | grep -E '^transit' >/dev/null 2>&1
+# then
+#     echo "Enabling vault transit" >> $vault_unseal_debug_file
+#     f_execute_vault_command vault secrets enable transit >> $vault_unseal_debug_file 2>&1
+#     echo $? >> $vault_unseal_debug_file
+# fi
+#
+# echo "Checking autounseal keys" >> $vault_unseal_debug_file
+# if ! f_execute_vault_command vault list transit/keys | grep '^autounseal$' >/dev/null 2>&1
+# then
+#     echo "Creating autounseal keys" >> $vault_unseal_debug_file
+#     f_execute_vault_command vault write -f transit/keys/autounseal >> $vault_unseal_debug_file 2>&1
 
-echo "Checking autounseal keys" >> $vault_unseal_debug_file
-if ! f_execute_vault_command vault list transit/keys | grep '^autounseal$' >/dev/null 2>&1
-then
-    echo "Creating autounseal keys" >> $vault_unseal_debug_file
-    f_execute_vault_command vault write -f transit/keys/autounseal >> $vault_unseal_debug_file 2>&1
+#     echo "Creating policy" >> $vault_unseal_debug_file
+#     cat > ./auto_unseal_policy.json <<EOF
+# path "transit/encrypt/autounseal" {
+#    capabilities = [ "update" ]
+# }
 
-    echo "Creating policy" >> $vault_unseal_debug_file
-    cat > ./auto_unseal_policy.json <<EOF
-path "transit/encrypt/autounseal" {
-   capabilities = [ "update" ]
-}
+# path "transit/decrypt/autounseal" {
+#    capabilities = [ "update" ]
+# }
+# EOF
+#     scp ./auto_unseal_policy.json docker-connect@${vault_host}:~/ >> $vault_unseal_debug_file 2>&1
+#     ssh docker-connect@${vault_host} docker cp ./auto_unseal_policy.json vault:/vault/ >> $vault_unseal_debug_file 2>&1
+#     f_execute_vault_command vault policy write autounseal /vault/auto_unseal_policy.json >> $vault_unseal_debug_file 2>&1
+#     echo "Created policy" >> $vault_unseal_debug_file
+# fi
 
-path "transit/decrypt/autounseal" {
-   capabilities = [ "update" ]
-}
-EOF
-    scp ./auto_unseal_policy.json docker-connect@${vault_host}:~/ >> $vault_unseal_debug_file 2>&1
-    ssh docker-connect@${vault_host} docker cp ./auto_unseal_policy.json vault:/vault/ >> $vault_unseal_debug_file 2>&1
-    f_execute_vault_command vault policy write autounseal /vault/auto_unseal_policy.json >> $vault_unseal_debug_file 2>&1
-    echo "Created policy" >> $vault_unseal_debug_file
-fi
+# echo "Creating unseal token" >> $vault_unseal_debug_file
+# f_execute_vault_command vault token create -orphan \
+#     -policy="autounseal" -format=json \
+#     -wrap-ttl=120 -period=24h > $auto_unseal_token_file 2>> $vault_unseal_debug_file
 
-echo "Creating unseal token" >> $vault_unseal_debug_file
-f_execute_vault_command vault token create -orphan \
-    -policy="autounseal" -format=json \
-    -wrap-ttl=120 -period=24h > $auto_unseal_token_file 2>> $vault_unseal_debug_file
-
-echo "Uploading auto unseal tokens to s3" >> $vault_unseal_debug_file
-aws s3 cp ${auto_unseal_token_file} s3://${bucket_name}/auto_unseal.json \
-    --endpoint="$aws_endpoint" --profile="$aws_profile" \
-    --region="$aws_region" >> $vault_unseal_debug_file 2>&1
+# echo "Uploading auto unseal tokens to s3" >> $vault_unseal_debug_file
+# aws s3 cp ${auto_unseal_token_file} s3://${bucket_name}/auto_unseal.json \
+#     --endpoint="$aws_endpoint" --profile="$aws_profile" \
+#     --region="$aws_region" >> $vault_unseal_debug_file 2>&1
 
 echo "{\"root_token\": \"$root_token\", \"ca_cert_file\": \"${ca_cert_file}\", \"autoseal_token_file\": \"auto_unseal.json\"}"

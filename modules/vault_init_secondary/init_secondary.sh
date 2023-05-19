@@ -31,35 +31,35 @@ function f_execute_vault_command() {
     return $?
 }
 
-echo "Starting secondary" > $vault_unseal_debug_file
+# echo "Starting secondary" > $vault_unseal_debug_file
 
-if [ "$(f_execute_vault_command vault status | grep -E '^Sealed' | awk '{ print $2 }')" != "true" ]
-then
-  echo "Already unsealed" >> $vault_unseal_debug_file
-  exit 0
-fi
+# if [ "$(f_execute_vault_command vault status | grep -E '^Sealed' | awk '{ print $2 }')" != "true" ]
+# then
+#   echo "Already unsealed" >> $vault_unseal_debug_file
+#   exit 0
+# fi
 
-echo "Downloading auto unseal tokens from s3" >> $vault_unseal_debug_file
-aws s3 cp s3://${bucket_name}/${autoseal_file_key} ${auto_unseal_token_file} \
-    --endpoint="$aws_endpoint" --profile="$aws_profile" \
-    --region="$aws_region" >> $vault_unseal_debug_file 2>&1
-echo "Downloaded" >> $vault_unseal_debug_file
+# echo "Downloading auto unseal tokens from s3" >> $vault_unseal_debug_file
+# aws s3 cp s3://${bucket_name}/${autoseal_file_key} ${auto_unseal_token_file} \
+#     --endpoint="$aws_endpoint" --profile="$aws_profile" \
+#     --region="$aws_region" >> $vault_unseal_debug_file 2>&1
+# echo "Downloaded" >> $vault_unseal_debug_file
 
-root_token=$(cat ${auto_unseal_token_file} | jq -r '.wrap_info.token')
+# root_token=$(cat ${auto_unseal_token_file} | jq -r '.wrap_info.token')
 
-echo "Unrwapping token" >> $vault_unseal_debug_file
-current_vault_host=vault-1.dock.local
-f_execute_vault_command vault unwrap -format=json > $vault_unwrapped_token_file 2>> $vault_unseal_debug_file
-current_vault_host=${vault_host}
-echo "Unwrapped token" >> $vault_unseal_debug_file
+# echo "Unrwapping token" >> $vault_unseal_debug_file
+# current_vault_host=vault-1.dock.local
+# f_execute_vault_command vault unwrap -format=json > $vault_unwrapped_token_file 2>> $vault_unseal_debug_file
+# current_vault_host=${vault_host}
+# echo "Unwrapped token" >> $vault_unseal_debug_file
 
-unseal_token=$(cat ${vault_unwrapped_token_file} | jq -r '.auth.client_token')
+# unseal_token=$(cat ${vault_unwrapped_token_file} | jq -r '.auth.client_token')
 
-# Copy unseal token to docker host
-ssh docker-connect@$vault_host "echo $unseal_token > /vault/config.d/unseal-token" >> $vault_unseal_debug_file
+# # Copy unseal token to docker host
+# ssh docker-connect@$vault_host "echo $unseal_token > /vault/config.d/unseal-token" >> $vault_unseal_debug_file
 
-# Restart container
-ssh docker-connect@$vault_host "docker restart vault" >> $vault_unseal_debug_file
+# # Restart container
+# ssh docker-connect@$vault_host "docker restart vault" >> $vault_unseal_debug_file
 
 #f_execute_vault_command vault operator unseal $unseal_token
 # Init
