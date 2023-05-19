@@ -15,6 +15,9 @@ resource "tls_cert_request" "server_cert" {
     "${var.hostname}.${var.vault_domain}"
   ]
   ip_addresses = [
+    # Allow to support localhost connections using vault CLI
+    "127.0.0.1",
+    # Alow for supporting remote connections
     "${var.ip_address}"
   ]
 }
