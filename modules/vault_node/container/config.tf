@@ -40,7 +40,7 @@ seal "awskms" {
   region     = "us-east-1"
   access_key = "AKIAIOSFODNN7EXAMPLE"
   secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-  kms_key_id = "ff275b92-0def-4dfc-b0f6-87c96b26c6c7"
+  kms_key_id = "bc436485-5092-42b8-92a3-0aa8b93536dc"
   endpoint   = "http://192.168.122.1:8080"
 }
 
