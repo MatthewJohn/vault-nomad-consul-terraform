@@ -53,17 +53,24 @@ f_execute_vault_command vault unwrap -format=json > $vault_unwrapped_token_file 
 current_vault_host=${vault_host}
 echo "Unwrapped token" >> $vault_unseal_debug_file
 
-root_token=$(cat ${vault_unwrapped_token_file} | jq -r '.auth.client_token')
+unseal_token=$(cat ${vault_unwrapped_token_file} | jq -r '.auth.client_token')
+
+# Copy unseal token to docker host
+ssh docker-connect@$vault_host "echo $unseal_token > /vault/config.d/unseal-token" >> $vault_unseal_debug_file
+
+# Restart container
+ssh docker-connect@$vault_host "docker restart vault" >> $vault_unseal_debug_file
+
 #f_execute_vault_command vault operator unseal $unseal_token
 # Init
-echo "Performing operator init" >> $vault_unseal_debug_file
-f_execute_vault_command vault operator init -format=json > ${root_tokens_json_file}
-echo "Operator init success" >> $vault_unseal_debug_file
+# echo "Performing operator init" >> $vault_unseal_debug_file
+# f_execute_vault_command vault operator init -format=json > ${root_tokens_json_file}
+# echo "Operator init success" >> $vault_unseal_debug_file
 
-# Upload recovery tokens to s3
-echo "Uploading root tokens to s3" >> $vault_unseal_debug_file
-aws s3 cp ${root_tokens_json_file} s3://${bucket_name}/recovery_tokens-${vault_host}.json \
-    --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $vault_unseal_debug_file
+# # Upload recovery tokens to s3
+# echo "Uploading root tokens to s3" >> $vault_unseal_debug_file
+# aws s3 cp ${root_tokens_json_file} s3://${bucket_name}/recovery_tokens-${vault_host}.json \
+#     --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $vault_unseal_debug_file
 
-return '{}'
+echo '{}'
 
