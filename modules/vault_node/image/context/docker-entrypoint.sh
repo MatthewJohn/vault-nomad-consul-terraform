@@ -53,19 +53,8 @@ if [ "$1" = 'vault' ]; then
 
         chown -R root:vault /vault/config.local || echo "Could not chown /vault/config.d (may not have appropriate permissions)"
         chmod 755 /vault/config.local || echo "Could not chmod /vault/config.d (may not have appropriate permissions)"
-
-        # If vault unseal token exists,
-        # copy template and generate config populated with config
-        if [ -f "/vault/config.d/unseal-token" ]
-        then
-            transit_token="$(cat /vault/config.d/unseal-token)"
-            sed "s/%TRANSIT_TOKEN%/${transit_token}/g" /vault/config.d/transit.hcl.tmpl > /vault/config.local/transit.hcl
-        else
-            # Create file without token attribute
-            sed 's/.*%TRANSIT_TOKEN%.*//g' /vault/config.d/transit.hcl.tmpl > /vault/config.local/transit.hcl
-        fi
-
-        chmod 644 /vault/config.local/* || echo "Could not chmod /vault/config.d/* (may not have appropriate permissions)"
+        # Disabled as there aren't any local configs
+        #chmod 644 /vault/config.local/* || echo "Could not chmod /vault/config.d/* (may not have appropriate permissions)"
 
         if [ "$SERVER_SSL_KEY" != "" ]
         then

@@ -21,12 +21,6 @@ variable "vault_version" {
   default = "1.13.2"
 }
 
-variable "initial_setup" {
-  description = "Whether currently in initial setup"
-  type        = bool
-  default     = false
-}
-
 variable "docker_username" {
   description = "SSH username to connect to docker host"
   type        = string

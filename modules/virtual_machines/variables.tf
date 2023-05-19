@@ -41,6 +41,12 @@ variable "vault_version" {
   default     = "1.13.2"
 }
 
+variable "hosts_entries" {
+  description = "Additional hosts entries for VMs"
+  type        = map(list(string))
+  default     = {}
+}
+
 variable "vault_hosts" {
   type = map(object({
     ip_address               = string

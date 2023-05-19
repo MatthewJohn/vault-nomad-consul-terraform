@@ -30,6 +30,11 @@ module "virtual_machines" {
   docker_ssh_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCcGH/YaonGEDCKOwx8IX9OwihRJ7OkINQYxx1bTnB+9EQQGPEMbzTMWQWFPamlNLdhdutQuRS4CWASAW3S+jDqbEy4KIngW1hNzEdS+pd2xoAm9jdd7Xv46n6YYfC6tTMMY/mvX3cUJmFMDEpHMCEALOkQR55vCNp3ru7Slm5Jb8Ou6QzGrNMYZmrIfgaclq6qHE/eRDqah7vo8ufXwFmtNk7BXc9cV///6fHUg7oGeYgjCtyRiNUIKarI4fFAcsDOfaXX9RQuPUfAs+7qCMJ78dMnjmpQM5YQenuaraunitLVLLTFDXD1tIHV4KUoStOF3aBuonDWshZuE8GntzmY5kKqKWoKcycU/HrlnhMaWlzj1xgh6TwW1XgLrttPqL3+jbBs65Z+1HTWAxjgcm88tSG/3B1+SJCsWGnK6WpESlJ4vpvXbxgJB5nZDXlc/J9ncxD0meCYSMjOvZYjHLOp58n0WAx3JstMVi/BHQ4ekVc+lxwgfFz2VPy8mNO0PWGqSDdWrIUSCjw0+ujvmUgCoj5S/5LwvMyZQj9wyQBwANFeY+D+Dn5vwDK+A7kUz/KM5u6zoU0UF5QwAVmDuChiYnIRI4EtL5DkmclbMKTZcbNQtN4OuliehIZB94sHu9d2L6k10hX/V5NW+ezczu5LQtbxbx9L1CQAXhF3FQqfXw== matthew@laptop21"
   domain_name         = "dock.local"
 
+  # Add DNS for fare-docker-reg.dock.studios
+  hosts_entries = {
+    "172.16.93.12": ["fare-docker-reg.dock.studios"]
+  }
+
   vault_hosts = {
     "vault-1" = {
       ip_address               = "192.168.122.60"
@@ -71,21 +76,6 @@ module "vault_init" {
   host_ssh_username = "docker-connect"
 }
 
-module "vault_init_secondaries" {
-  source = "../../modules/vault_init_secondary"
-
-  for_each = toset(["vault-2"])
-
-  vault_host          = "${each.key}.dock.local"
-  aws_region          = "eu-east-1"
-  aws_endpoint        = "http://s3.dock.local:9000"
-  aws_profile         = "dockstudios-terraform"
-  bucket_name         = module.vault_init.vault_unseal_bucket
-  initial_run         = var.initial_setup
-  host_ssh_username   = "docker-connect"
-  autoseal_token_file = module.vault_init.autoseal_token_file
-}
-
 # module "vault_initial_setup" {
 #   source = "../../modules/vault_initial_setup"
 
@@ -104,8 +94,6 @@ module "vault-1" {
   docker_host     = "vault-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.60"
-
-  initial_setup = var.initial_setup
 }
 
 module "vault-2" {
@@ -118,8 +106,6 @@ module "vault-2" {
   docker_host     = "vault-2.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.61"
-
-  initial_setup = var.initial_setup
 }
 
 

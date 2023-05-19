@@ -33,15 +33,12 @@ listener "tcp" {
   tls_client_ca_file = "/vault/ssl/root-ca.pem"
 }
 
-EOF
-
-  transit_config = <<EOF
 seal "awskms" {
   region     = "us-east-1"
   access_key = "AKIAIOSFODNN7EXAMPLE"
   secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-  kms_key_id = "bc436485-5092-42b8-92a3-0aa8b93536dc"
-  endpoint   = "http://192.168.122.1:8080"
+  kms_key_id = "${local.kms_key_id}"
+  endpoint   = "http://${docker_container.kms.network_data[0].ip_address}:8080"
 }
 
 EOF
@@ -64,22 +61,3 @@ resource "null_resource" "vault_config" {
     destination = "/vault/config.d/server.hcl"
   }
 }
-
-resource "null_resource" "transit_config" {
-
-  triggers = {
-    config = local.transit_config
-  }
-
-  connection {
-    type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
-  }
-
-  provisioner "file" {
-    content     = local.transit_config
-    destination = "/vault/config.d/transit.hcl.tmpl"
-  }
-}
-

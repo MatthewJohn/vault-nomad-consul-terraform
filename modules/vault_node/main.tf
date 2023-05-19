@@ -17,7 +17,6 @@ module "vault_container" {
   docker_ip       = var.docker_ip
   vault_subdomain = var.vault_subdomain
   all_vault_hosts = var.all_vault_hosts
-  initial_setup   = var.initial_setup
 
   docker_host     = var.docker_host
   docker_username = var.docker_username
