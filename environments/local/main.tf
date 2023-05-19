@@ -51,7 +51,7 @@ locals {
 }
 
 module "vault-1" {
-  source = "../../modules/vault"
+  source = "../../modules/vault_node"
 
   domain_name     = local.domain_name
   hostname        = "vault-1"
@@ -63,7 +63,7 @@ module "vault-1" {
 }
 
 module "vault-2" {
-  source = "../../modules/vault"
+  source = "../../modules/vault_node"
 
   domain_name     = local.domain_name
   hostname        = "vault-2"
