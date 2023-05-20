@@ -66,5 +66,12 @@ path "pki_consul/config/urls"
 {
   capabilities = ["update", "read"]
 }
+
+# Generate intermediate CA
+path "pki_consul_int/root/generate/internal"
+{
+  capabilities = ["update"]
+}
+
 EOF
 }
