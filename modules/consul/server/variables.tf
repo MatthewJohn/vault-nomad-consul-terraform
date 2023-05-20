@@ -25,6 +25,11 @@ variable "consul_binary" {
   type        = string
 }
 
+variable "consul_version" {
+  description = "Version of consul"
+  type        = string
+}
+
 variable "initial_run" {
   description = "Whether to allow creation of root CA"
   type        = bool

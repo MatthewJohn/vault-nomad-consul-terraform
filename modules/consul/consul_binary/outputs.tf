@@ -5,3 +5,8 @@ output "binary_path" {
   # has completed
   value = null_resource.download_and_extract.id != "" ? "./consul-${var.consul_version}" : null
 }
+
+output "consul_version" {
+  description = "Version of consul in use"
+  value       = var.consul_version
+}

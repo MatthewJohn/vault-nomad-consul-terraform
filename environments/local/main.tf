@@ -153,8 +153,11 @@ module "consul-1" {
   hostname   = "consul-1"
   root_ca    = module.consul_ca
 
-  consul_binary = module.consul_binary.binary_path
-  initial_run   = var.initial_setup
+  initial_run    = var.initial_setup
+  consul_binary  = module.consul_binary.binary_path
+  # For simplicity, use the same version as was
+  # used for cert generation
+  consul_version = module.consul_binary.consul_version
 
   aws_profile  = local.aws_profile
   aws_region   = local.aws_region

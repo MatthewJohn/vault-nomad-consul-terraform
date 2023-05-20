@@ -13,3 +13,13 @@ module "server_certificate" {
   aws_region   = var.aws_region
   aws_endpoint = var.aws_endpoint
 }
+
+module "consul_image" {
+  source = "./image"
+
+  consul_version = var.consul_version
+
+  providers = {
+    docker = docker.consul
+  }
+}
