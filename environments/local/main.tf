@@ -5,8 +5,8 @@ locals {
   domain_name      = "dock.local"
   docker_username  = "docker-connect"
 
-  aws_profile = "dockstudios-terraform"
-  aws_region = "eu-east-1"
+  aws_profile  = "dockstudios-terraform"
+  aws_region   = "eu-east-1"
   aws_endpoint = "http://s3.dock.local:9000"
 }
 
@@ -123,12 +123,16 @@ module "consul_binary" {
 module "consul_ca" {
   source = "../../modules/consul/root_ca"
 
+  domain = "consul.dock.local"
+
+  initial_run = var.initial_setup
+
   consul_binary = module.consul_binary.binary_path
-  bucket_name = "consul-certs"  # @TODO Change this
+  bucket_name   = "consul-certs" # @TODO Change this
   bucket_prefix = "root_ca"
 
-  aws_profile = local.aws_profile
-  aws_region = local.aws_region
+  aws_profile  = local.aws_profile
+  aws_region   = local.aws_region
   aws_endpoint = local.aws_endpoint
 }
 

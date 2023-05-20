@@ -8,7 +8,12 @@ data "external" "root_ca" {
     var.bucket_prefix,
     var.aws_profile,
     var.aws_region,
-    var.aws_endpoint
+    var.aws_endpoint,
+    var.common_name,
+    var.domain,
+    join(",", var.additional_domains),
+    var.expiry_days,
+    var.initial_run == true ? "1" : "0",
   ]
 
   depends_on = [
