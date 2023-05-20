@@ -30,7 +30,10 @@ terraform apply -target=module.virtual_machines
 # Setup initail vault node
 terraform apply -target=module.vault-1 -target=module.vault-N -var initial_setup=true
 
-terraform apply -var initial_setup=true
+terraform apply -target=module.vault_cluster -var initial_setup=true
+
+terraform apply -target=module.consul_certificate_authority
+terraform apply -target=module.dc1
 
 terraform apply
 

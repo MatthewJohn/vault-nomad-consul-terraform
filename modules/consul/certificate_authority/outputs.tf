@@ -17,3 +17,8 @@ output "ou" {
   description = "Certificate OU"
   value       = var.ou
 }
+
+output "public_key" {
+  description = "Public key for root CA"
+  value       = tls_self_signed_cert.this.cert_pem
+}
