@@ -124,6 +124,12 @@ ui_config {
 }
 ui = true
 
+acl {
+  enabled = true
+  default_policy = "deny"
+  enable_token_persistence = true
+}
+
 data_dir = "/consul/data"
 
 verify_incoming        = true
