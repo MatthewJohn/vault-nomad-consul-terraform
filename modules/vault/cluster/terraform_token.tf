@@ -73,6 +73,16 @@ path "pki_consul/roles/*"
   capabilities = ["read", "create", "update"]
 }
 
+# Read PKI issues and update config
+path "pki_consul/issues"
+{
+  capabilities = ["read"]
+}
+path "pki_consul/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
 # Update certificate URLs
 path "pki_consul/config/urls"
 {
