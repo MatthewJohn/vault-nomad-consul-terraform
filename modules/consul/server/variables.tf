@@ -9,31 +9,9 @@ variable "datacenter" {
   type        = string
 }
 
-variable "root_ca" {
-  description = "Output of root CA module"
-  type = object({
-    domain_name        = string
-    s3_bucket          = string
-    s3_prefix = string
-    s3_key_public_key  = string
-    s3_key_private_key = string
-  })
-}
-
-variable "consul_binary" {
-  description = "Consul binary path"
-  type        = string
-}
-
 variable "consul_version" {
   description = "Version of consul"
   type        = string
-}
-
-variable "initial_run" {
-  description = "Whether to allow creation of root CA"
-  type        = bool
-  default     = false
 }
 
 variable "aws_profile" {

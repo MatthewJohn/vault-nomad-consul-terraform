@@ -122,26 +122,11 @@ module "vault-2" {
   kms_backing_key_value = module.kms_config.backing_key_value
 }
 
-module "consul_binary" {
-  source = "../../modules/consul/consul_binary"
+module "consul_certificate_authority" {
+  source = "../../modules/consul/certificate_authority"
 
-  consul_version = "1.15.2"
-}
-
-module "consul_ca" {
-  source = "../../modules/consul/root_ca"
-
-  domain = "consul.${local.domain_name}"
-
-  initial_run = var.initial_setup
-
-  consul_binary = module.consul_binary.binary_path
-  bucket_name   = "consul-certs" # @TODO Change this
-  bucket_prefix = "root_ca"
-
-  aws_profile  = local.aws_profile
-  aws_region   = local.aws_region
-  aws_endpoint = local.aws_endpoint
+  common_name   = "consul.${local.domain_name}"
+  vault_cluster = module.vault_cluster
 }
 
 module "consul_gossip_encryption" {
@@ -153,13 +138,8 @@ module "consul-1" {
 
   datacenter = "dc"
   hostname   = "consul-1"
-  root_ca    = module.consul_ca
 
-  initial_run    = var.initial_setup
-  consul_binary  = module.consul_binary.binary_path
-  # For simplicity, use the same version as was
-  # used for cert generation
-  consul_version = module.consul_binary.consul_version
+  consul_version = "1.15.2"
 
   aws_profile  = local.aws_profile
   aws_region   = local.aws_region
