@@ -12,6 +12,11 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}"
 path "sys/leases/renew" {
   capabilities = [ "update" ]
 }
+
+path "auth/token/renew-self" {
+  capabilities = [ "update" ]
+}
+
 EOF
 }
 
