@@ -4,7 +4,7 @@
 
 # Create bucket for unseal tokens
 resource "aws_s3_bucket" "vault_unseal" {
-  bucket = "vault-unseal"
+  bucket = var.bucket_name
 }
 
 resource "aws_s3_bucket_versioning" "vault_unseal" {

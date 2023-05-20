@@ -147,6 +147,18 @@ module "consul_gossip_encryption" {
   source = "../../modules/consul/keygen"
 }
 
+module "consul_boostrap" {
+  source = "../../modules/consul/bootstrap"
+
+  consul_host        = "consul-1.dock.local"
+  aws_region        = local.aws_region
+  aws_endpoint      = local.aws_endpoint
+  aws_profile       = local.aws_profile
+  bucket_name       = "consul-bootstrap"
+  initial_run       = var.initial_setup
+  host_ssh_username = "docker-connect"
+}
+
 module "consul-1" {
   source = "../../modules/consul/server"
 

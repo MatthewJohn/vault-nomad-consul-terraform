@@ -25,5 +25,6 @@ module "s3_configure" {
   allowed_terraform_buckets_full_access = [
     "vault-unseal",
     "consul-certs",
+    "consul-bootstrap",
   ]
 }
