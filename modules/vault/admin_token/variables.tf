@@ -4,12 +4,6 @@ variable "admin_policy_name" {
   default     = "vault-admin"
 }
 
-variable "admin_role_name" {
-  description = "Name of admin role to create"
-  type        = string
-  default     = "vault-admin"
-}
-
 variable "root_token" {
   description = "Root token to authenticate to cluster"
   type        = string

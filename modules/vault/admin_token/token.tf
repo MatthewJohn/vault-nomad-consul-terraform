@@ -1,6 +1,4 @@
 resource "vault_token" "admin" {
-  role_name = var.admin_role_name
-
   policies = [vault_policy.admin.name]
 
   renewable = true

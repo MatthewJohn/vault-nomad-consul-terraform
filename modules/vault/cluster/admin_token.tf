@@ -2,7 +2,6 @@ module "admin_token" {
   source = "../admin_token"
 
   admin_policy_name = var.admin_policy_name
-  admin_role_name   = var.admin_role_name
 
   root_token = var.root_token
 

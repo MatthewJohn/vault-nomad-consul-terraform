@@ -13,11 +13,6 @@ output "admin_policy" {
   value       = module.admin_token.admin_policy
 }
 
-output "admin_role" {
-  description = "Name of admin role"
-  value       = module.admin_token.admin_role
-}
-
 output "admin_token" {
   description = "Admin token"
   value       = module.admin_token.admin_token
