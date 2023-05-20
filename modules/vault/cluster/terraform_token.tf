@@ -80,6 +80,11 @@ path "pki_consul_int_${datacenter}/intermediate/generate/internal"
   capabilities = ["update"]
 }
 
+path "pki_consul_int_${datacenter}/intermediate/set-signed"
+{
+  capabilities = ["update"]
+}
+
 path "pki_consul_int_${datacenter}/roles/*"
 {
   capabilities = ["update", "read", "delete"]
