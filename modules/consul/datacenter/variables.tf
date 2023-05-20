@@ -6,11 +6,11 @@ variable "datacenter" {
 
 variable "root_cert" {
   description = "Root certificate object"
-  type        = object({
+  type = object({
     pki_mount_path = string
-    common_name = string
-    organisation = string
-    ou = string
+    common_name    = string
+    organisation   = string
+    ou             = string
   })
 }
 

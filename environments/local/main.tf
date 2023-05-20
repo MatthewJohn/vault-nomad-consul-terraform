@@ -147,14 +147,12 @@ module "consul_gossip_encryption" {
 module "consul-1" {
   source = "../../modules/consul/server"
 
-  datacenter = "dc"
-  hostname   = "consul-1"
+  datacenter    = module.dc1
+  vault_cluster = module.vault_cluster
+  root_cert     = module.consul_certificate_authority
+  hostname      = "consul-1"
 
   consul_version = "1.15.2"
-
-  aws_profile  = local.aws_profile
-  aws_region   = local.aws_region
-  aws_endpoint = local.aws_endpoint
 
   docker_host     = "consul-1.${local.domain_name}"
   docker_username = local.docker_username

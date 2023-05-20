@@ -85,6 +85,11 @@ path "pki_consul_int_${datacenter}/roles/*"
   capabilities = ["update", "read", "delete"]
 }
 
+path "sys/policies/acl/consul-cert-${datacenter}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 %{endfor}
 
 EOF

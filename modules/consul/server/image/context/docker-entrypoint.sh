@@ -47,16 +47,30 @@ fi
 CONSUL_DATA_DIR=/consul/data
 CONSUL_CONFIG_DIR=/consul/config
 
-# You can also set the CONSUL_LOCAL_CONFIG environemnt variable to pass some
-# Consul configuration JSON without having to bind any volumes.
-if [ -n "$CONSUL_LOCAL_CONFIG" ]; then
-	echo "$CONSUL_LOCAL_CONFIG" > "$CONSUL_CONFIG_DIR/local.json"
-fi
 
 # If the user is trying to run Consul directly with some arguments, then
 # pass them to Consul.
 if [ "${1:0:1}" = '-' ]; then
     set -- consul "$@"
+fi
+
+# Set file permissions
+if [ "$1" = 'consul' ]; then
+    if [ -z "$SKIP_CHOWN" ]; then
+        chown -R :consul /consul/config
+        chmod 755 /consul/config
+        chmod 644 /consul/config/*
+        chown -R :consul /consul/config/templates
+        chmod 755 /consul/config/templates
+        chmod 644 /consul/config/templates/*
+
+        chown -R consul: /consul/config/agent-certs
+        chmod 755 /consul/config/agent-certs
+        chmod 644 /consul/config/agent-certs/*
+
+        chown -R consul: /consul/data
+        chmod 755 /consul/data
+    fi
 fi
 
 # Look for Consul subcommands.
@@ -82,4 +96,11 @@ fi
 # won't run this container as root and so we can't change data dir ownership,
 # and there's no need to use su-exec.
 
-exec "$@"
+if [[ "$(id -u)" == '0' ]]
+then
+    export SKIP_CHOWN="true"
+    export SKIP_SETCAP="true"
+    exec su consul -p "$0" -- "$@"
+else
+    exec "$@" 
+fi

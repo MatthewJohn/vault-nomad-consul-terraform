@@ -1,6 +1,10 @@
-
 variable "hostname" {
-  description = "Hostname for docker"
+  description = "Hostname for consul"
+  type        = string
+}
+
+variable "image" {
+  description = "Image to be used"
   type        = string
 }
 
@@ -31,11 +35,6 @@ variable "root_cert" {
     organisation   = string
     ou             = string
   })
-}
-
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
 }
 
 variable "docker_username" {

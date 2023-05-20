@@ -15,7 +15,8 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 # This is the release of Consul to pull in.
-ARG CONSUL_VERSION=1.10.0
+ARG CONSUL_VERSION=1.15.2
+ARG CONSUL_TEMPLATE_VERSION=0.32.0
 
 LABEL org.opencontainers.image.version=$CONSUL_VERSION \
       org.opencontainers.image.authors="Consul Team <consul@hashicorp.com>" \
@@ -60,6 +61,25 @@ RUN set -eux && \
 # tiny smoke test to ensure the binary we downloaded runs
     consul version
 
+# Download consul-template
+RUN set -eux && \
+    mkdir -p /tmp/build && \
+    cd /tmp/build && \
+    consulArch=amd64 && \
+    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip \
+    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
+    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig && \
+    gpg --batch --verify consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
+    grep consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS | sha256sum -c && \
+    unzip -d /tmp/build consul_${CONSUL_VERSION}_linux_${consulArch}.zip && \
+    cp /tmp/build/consul-template /bin/consul-template && \
+    cd /tmp && \
+    rm -rf /tmp/build && \
+    gpgconf --kill all && \
+    rm -rf /root/.gnupg && \
+# tiny smoke test to ensure the binary we downloaded runs
+    consul-template version
+
 # Create a non-root user to run the software. On OpenShift, this
 # will not matter since the container is run as a random user and group
 # but this is kept for consistency with our other images.
@@ -103,7 +123,4 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 # scanner requires that containers set a non-root user.
 USER 100
 
-# By default you'll get an insecure single-node development server that stores
-# everything in RAM, exposes a web UI and HTTP endpoints, and bootstraps itself.
-# Don't use this configuration for production.
-CMD ["agent", "-dev", "-client", "0.0.0.0"]
+CMD []

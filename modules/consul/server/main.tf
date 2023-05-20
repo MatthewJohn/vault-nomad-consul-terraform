@@ -8,3 +8,21 @@ module "consul_image" {
     docker = docker.consul
   }
 }
+
+module "container" {
+  source = "./container"
+
+  image         = module.consul_image.image_id
+  hostname      = var.hostname
+  datacenter    = var.datacenter
+  vault_cluster = var.vault_cluster
+  root_cert     = var.root_cert
+
+  docker_host     = var.docker_host
+  docker_username = var.docker_username
+  docker_ip       = var.docker_ip
+
+  providers = {
+    docker = docker.consul
+   }
+}

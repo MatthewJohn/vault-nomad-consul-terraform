@@ -54,6 +54,8 @@ module "consul" {
 
   create_directories = [
     "/consul",
-    "/consul/config.d",
+    "/consul/config",
+    "/consul/config/templates",
+    "/consul/config/agent-certs",
   ]
 }
