@@ -119,6 +119,9 @@ node_name          = "${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
+ui_config {
+  enabled = true
+}
 ui = true
 
 data_dir = "/consul/data"
