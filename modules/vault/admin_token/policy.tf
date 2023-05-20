@@ -57,6 +57,12 @@ path "transit/*"
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+# Manage PKI secrets engine
+path "pki/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 # Read health checks
 path "sys/health"
 {
