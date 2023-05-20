@@ -11,9 +11,9 @@ data "external" "root_ca" {
     var.aws_endpoint,
     var.common_name,
     var.domain,
-    join(",", var.additional_domains),
     var.expiry_days,
     var.initial_run == true ? "1" : "0",
+    join(",", var.additional_domains),
   ]
 
   depends_on = [

@@ -10,9 +10,9 @@ aws_region=$5
 aws_endpoint=$6
 common_name=$7
 domain=$8
-additional_domains=$9
-expiry_days=${10}
-initial_run=${11}
+expiry_days=$9
+initial_run=${10}
+additional_domains=${11}
 
 public_key_file="${domain}-agent-ca.pem"
 private_key_file="${domain}-agent-ca-key.pem"
@@ -38,7 +38,7 @@ if [ ! -f "$private_key_file" ] || [ ! -f "$public_key_file" ]
 then
     if [ "$initial_run"  != "1" ]
     then
-        echo "Could not find Root CA on non-initial run" >2&
+        echo "Could not find Root CA on non-initial run" >&2
         exit 1
     fi
 
@@ -66,4 +66,4 @@ private_key=$(cat $private_key_file | sed ':a;N;$!ba;s/\n/\\n/g' )
 
 rm -f $public_key_file $private_key_file
 
-echo "{\"public_key\": \"$public_key_file\", \"private_key\": \"$private_key_file\"}"
+echo "{\"public_key\": \"$bucket_prefix/$public_key_file\", \"private_key\": \"$bucket_prefix/$private_key_file\"}"
