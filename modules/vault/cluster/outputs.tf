@@ -8,11 +8,6 @@ output "address" {
   value       = local.cluster_address
 }
 
-output "admin_policy" {
-  description = "Name of admin policy"
-  value       = module.admin_token.admin_policy
-}
-
 output "admin_token" {
   description = "Admin token"
   value       = module.admin_token.token

@@ -8,6 +8,6 @@ resource "vault_token" "this" {
   renew_increment = 86400
 
   metadata = {
-    "purpose" = "${this.name}-role"
+    "purpose" = "${var.policy_name}"
   }
 }

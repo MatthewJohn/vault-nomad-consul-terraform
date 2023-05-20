@@ -27,10 +27,10 @@ variable "admin_policy_name" {
   default     = "vault-admin"
 }
 
-variable "admin_role_name" {
-  description = "Name of admin role to create"
+variable "terraform_policy_name" {
+  description = "Name of policy to create for terraform"
   type        = string
-  default     = "vault-admin"
+  default     = "terraform"
 }
 
 variable "root_token" {

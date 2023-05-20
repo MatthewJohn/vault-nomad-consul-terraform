@@ -1,7 +1,7 @@
 module "terraform_token" {
   source = "../policy_token"
 
-  policy_name = var.admin_policy_name
+  policy_name = var.terraform_policy_name
 
   root_token = var.root_token
 
