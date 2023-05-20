@@ -18,10 +18,10 @@ resource "vault_pki_secret_backend_config_urls" "this" {
   backend = vault_mount.consul_pki.path
 
   issuing_certificates = [
-    "${var.vault_cluster.address}/v1/pki/${vault_mount.consul_pki.path}/ca",
+    "${var.vault_cluster.address}/v1/${vault_mount.consul_pki.path}/ca",
   ]
 
   crl_distribution_points = [
-    "${var.vault_cluster.address}/v1/pki/${vault_mount.consul_pki.path}/crl",
+    "${var.vault_cluster.address}/v1/${vault_mount.consul_pki.path}/crl",
   ]
 }
