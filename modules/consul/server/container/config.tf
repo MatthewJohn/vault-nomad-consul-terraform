@@ -40,20 +40,18 @@ template {
   source      = "/consul/config/templates/agent.crt.tpl"
   destination = "/consul/config/agent-certs/agent.crt"
   perms       = 0700
-  command     = "sh -c 'date && consul reload'"
 }
 
 template {
   source      = "/consul/config/templates/agent.key.tpl"
   destination = "/consul/config/agent-certs/agent.key"
   perms       = 0700
-  command     = "sh -c 'date && consul reload'"
 }
 
 template {
   source      = "/consul/config/templates/ca.crt.tpl"
   destination = "/consul/config/agent-certs/ca.crt"
-  command     = "sh -c 'date && consul reload'"
+  perms       = 0700
 }
 
 # This is the signal to listen for to trigger a reload event. The default
