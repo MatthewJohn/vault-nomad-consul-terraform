@@ -41,3 +41,16 @@ resource "vault_pki_secret_backend_role" "this" {
   allowed_domains  = [local.common_name]
   allow_subdomains = true
 }
+
+resource "vault_pki_secret_backend_config_urls" "this" {
+  backend = vault_mount.this.path
+
+  issuing_certificates = [
+    "${var.vault_cluster.address}/v1/${vault_mount.this.path}/ca",
+  ]
+
+  crl_distribution_points = [
+    "${var.vault_cluster.address}/v1/${vault_mount.this.path}/crl",
+  ]
+}
+
