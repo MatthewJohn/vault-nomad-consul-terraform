@@ -1,13 +1,8 @@
 resource "vault_policy" "admin" {
   name = var.admin_policy_name
 
-policy = <<EOF
-# Allow managing leases
-path "sys/leases/*"
-{
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-
+  # Copied from https://github.com/hashicorp/learn-vault-codify/blob/main/oss/policies/admin-policy.hcl
+  policy = <<EOF
 # Manage auth methods broadly across Vault
 path "auth/*"
 {
@@ -26,34 +21,40 @@ path "sys/auth"
   capabilities = ["read"]
 }
 
-# List existing policies
-path "sys/policies/acl"
-{
-  capabilities = ["read","list"]
-}
-
 # Create and manage ACL policies
 path "sys/policies/acl/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-# List, create, update, and delete key/value secrets
-path "secret/*"
+# List ACL policies
+path "sys/policies/acl"
 {
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  capabilities = ["list"]
 }
 
-# Manage secret engines
+# Create and manage secrets engines broadly across Vault.
 path "sys/mounts/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-# List existing secret engines.
+# List enabled secrets engines
 path "sys/mounts"
 {
-  capabilities = ["read"]
+  capabilities = ["read", "list"]
+}
+
+# List, create, update, and delete key/value secrets at secret/
+path "secret/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Manage transit secrets engine
+path "transit/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
 # Read health checks
