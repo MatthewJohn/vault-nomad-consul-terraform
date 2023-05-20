@@ -33,6 +33,11 @@ variable "root_cert" {
   })
 }
 
+variable "gossip_key" {
+  description = "Gossip secret"
+  type        = string
+}
+
 variable "consul_version" {
   description = "Version of consul"
   type        = string

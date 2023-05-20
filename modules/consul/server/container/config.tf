@@ -135,6 +135,8 @@ auto_encrypt {
   allow_tls = true
 }
 
+encrypt = "${var.gossip_key}"
+
 EOF
   }
 }

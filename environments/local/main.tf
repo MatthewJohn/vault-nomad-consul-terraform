@@ -152,6 +152,8 @@ module "consul-1" {
   root_cert     = module.consul_certificate_authority
   hostname      = "consul-1"
 
+  gossip_key = module.consul_gossip_encryption.secret
+
   consul_version = "1.15.2"
 
   docker_host     = "consul-1.${local.domain_name}"
