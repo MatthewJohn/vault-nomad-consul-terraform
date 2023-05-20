@@ -56,8 +56,6 @@ RUN set -eux && \
     if [ -f /tmp/build/TermsOfEvaluation.txt ]; then mkdir -p /usr/share/doc/consul; mv /tmp/build/TermsOfEvaluation.txt /usr/share/doc/consul/TermsOfEvaluation.txt; fi && \
     cd /tmp && \
     rm -rf /tmp/build && \
-    gpgconf --kill all && \
-    rm -rf /root/.gnupg && \
 # tiny smoke test to ensure the binary we downloaded runs
     consul version
 
@@ -66,19 +64,17 @@ RUN set -eux && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     consulArch=amd64 && \
-    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip \
+    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip && \
     wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
     wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig && \
     gpg --batch --verify consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
     grep consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS | sha256sum -c && \
-    unzip -d /tmp/build consul_${CONSUL_VERSION}_linux_${consulArch}.zip && \
+    unzip -d /tmp/build consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip && \
     cp /tmp/build/consul-template /bin/consul-template && \
     cd /tmp && \
     rm -rf /tmp/build && \
     gpgconf --kill all && \
-    rm -rf /root/.gnupg && \
-# tiny smoke test to ensure the binary we downloaded runs
-    consul-template version
+    rm -rf /root/.gnupg
 
 # Create a non-root user to run the software. On OpenShift, this
 # will not matter since the container is run as a random user and group
