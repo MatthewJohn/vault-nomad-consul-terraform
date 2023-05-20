@@ -80,11 +80,19 @@ path "pki_consul_int_${datacenter}/intermediate/generate/internal"
   capabilities = ["update"]
 }
 
+# Set default issuer for cert
+path "pki_consul_int_${datacenter}/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Set self-signed certificate
 path "pki_consul_int_${datacenter}/intermediate/set-signed"
 {
   capabilities = ["update"]
 }
 
+# Create/view/delete roles
 path "pki_consul_int_${datacenter}/roles/*"
 {
   capabilities = ["update", "read", "delete"]

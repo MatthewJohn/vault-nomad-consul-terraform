@@ -11,6 +11,7 @@ variable "root_cert" {
     common_name    = string
     organisation   = string
     ou             = string
+    serial_number  = string
   })
 }
 
