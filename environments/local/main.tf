@@ -67,14 +67,14 @@ locals {
 }
 
 module "vault_cluster" {
-  source = "../../modules/vault_cluster"
+  source = "../../modules/vault/cluster"
 
   domain_name  = local.domain_name
   ip_addresses = local.all_vault_host_ips
 }
 
 module "vault_init" {
-  source = "../../modules/vault_init"
+  source = "../../modules/vault/init"
 
   # vault-1 IP
   vault_host        = "vault-1.dock.local"
@@ -91,7 +91,7 @@ module "kms_config" {
 }
 
 module "vault-1" {
-  source = "../../modules/vault_node"
+  source = "../../modules/vault/node"
 
   domain_name     = local.domain_name
   hostname        = "vault-1"
@@ -106,7 +106,7 @@ module "vault-1" {
 }
 
 module "vault-2" {
-  source = "../../modules/vault_node"
+  source = "../../modules/vault/node"
 
   domain_name     = local.domain_name
   hostname        = "vault-2"
@@ -149,15 +149,10 @@ module "consul_gossip_encryption" {
 module "consul-1" {
   source = "../../modules/consul/server"
 
-  # consul_domain   = "consul.${local.domain_name}"
   datacenter      = "dc"
   hostname        = "consul-1"
 
   root_ca = module.consul_ca
-
-  # root_ca_s3_bucket = module.consul_ca.s3_bucket
-  # root_ca_s3_key_public_key = module.consul_ca.s3_key_public_key
-  # root_ca_s3_key_private_key = module.consul_ca.s3_key_private_key
 
   aws_profile = local.aws_profile
   aws_region = local.aws_region
