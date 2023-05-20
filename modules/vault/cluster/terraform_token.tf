@@ -29,6 +29,12 @@ path "sys/mounts/*"
   capabilities = ["create", "read", "update", "list"]
 }
 
+# Create token
+path "auth/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 # List enabled secrets engines
 path "sys/mounts"
 {
