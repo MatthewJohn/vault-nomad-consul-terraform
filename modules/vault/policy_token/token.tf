@@ -1,5 +1,5 @@
-resource "vault_token" "admin" {
-  policies = [vault_policy.admin.name]
+resource "vault_token" "this" {
+  policies = [vault_policy.this.name]
 
   renewable = true
   ttl       = "24h"
@@ -8,6 +8,6 @@ resource "vault_token" "admin" {
   renew_increment = 86400
 
   metadata = {
-    "purpose" = "admin-role"
+    "purpose" = "${this.name}-role"
   }
 }

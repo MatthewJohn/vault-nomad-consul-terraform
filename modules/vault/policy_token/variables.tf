@@ -1,7 +1,11 @@
-variable "admin_policy_name" {
-  description = "Name of policy to create for admins"
+variable "policy_name" {
+  description = "Name of policy to create"
   type        = string
-  default     = "vault-admin"
+}
+
+variable "policy" {
+  description = "Policy for token"
+  type        = string
 }
 
 variable "root_token" {

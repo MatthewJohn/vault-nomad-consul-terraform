@@ -15,5 +15,10 @@ output "admin_policy" {
 
 output "admin_token" {
   description = "Admin token"
-  value       = module.admin_token.admin_token
+  value       = module.admin_token.token
+}
+
+output "token" {
+  description = "Terraform token"
+  value       = module.terraform_token.token
 }
