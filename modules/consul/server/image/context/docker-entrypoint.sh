@@ -105,5 +105,7 @@ then
     export SKIP_SETCAP="true"
     exec su consul -p "$0" -- "$@"
 else
-    exec "$@" 
+    exec consul-template \
+      -config /consul/config/templates/consul_template.hcl
+      -exec "$@"
 fi
