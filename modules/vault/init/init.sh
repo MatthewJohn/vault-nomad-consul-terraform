@@ -92,4 +92,6 @@ fi
 
 root_token=$(cat ${root_tokens_json_file} | jq -r '.root_token')
 
+rm ${root_tokens_json_file}
+
 echo "{\"root_token\": \"$root_token\", \"ca_cert_file\": \"${ca_cert_file}\"}"
