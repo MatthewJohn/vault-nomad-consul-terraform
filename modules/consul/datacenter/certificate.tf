@@ -40,4 +40,8 @@ resource "vault_pki_secret_backend_role" "this" {
   generate_lease   = true
   allowed_domains  = [local.common_name]
   allow_subdomains = true
+
+  depends_on = [
+    vault_pki_secret_backend_intermediate_set_signed.this
+  ]
 }
