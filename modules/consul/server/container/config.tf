@@ -110,12 +110,13 @@ bootstrap_expect = 1
 
 server = true
 
-client_addr = "0.0.0.0"
-bind_addr        = "${var.docker_ip}"
-advertise_addr   = "${var.docker_ip}"
+client_addr        = "0.0.0.0"
+bind_addr          = "${var.docker_ip}"
+advertise_addr     = "${var.docker_ip}"
 advertise_addr_wan = "${var.docker_ip}"
-datacenter  = "${var.datacenter.name}"
-domain      = "${var.root_cert.common_name}"
+node_name          = "${var.hostname}"
+datacenter         = "${var.datacenter.name}"
+domain             = "${var.root_cert.common_name}"
 
 ui = true
 
