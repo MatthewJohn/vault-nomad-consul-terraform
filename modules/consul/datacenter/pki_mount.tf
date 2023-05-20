@@ -1,5 +1,5 @@
 resource "vault_mount" "this" {
-  path        = "pki_consul_int_${var.datacenter}"
+  path        = "pki_int_consul_${var.datacenter}"
   type        = "pki"
   description = "Consul CA ${var.datacenter} Intermediate PKI"
 
