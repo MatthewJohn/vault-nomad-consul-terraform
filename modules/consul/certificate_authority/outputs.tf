@@ -17,8 +17,3 @@ output "ou" {
   description = "Certificate OU"
   value       = var.ou
 }
-
-output "serial_number" {
-  description = "Root certificate serial number"
-  value       = vault_pki_secret_backend_root_cert.this.serial_number
-}

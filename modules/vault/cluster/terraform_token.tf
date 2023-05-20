@@ -61,6 +61,12 @@ path "pki_consul/root/generate/internal"
   capabilities = ["update"]
 }
 
+# upload certificate
+path "pki_consul/config/ca"
+{
+  capabilities = ["update"]
+}
+
 # Update certificate URLs
 path "pki_consul/config/urls"
 {
