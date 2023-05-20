@@ -67,6 +67,12 @@ path "pki_consul/config/ca"
   capabilities = ["update"]
 }
 
+# Add roles for root cert
+path "pki_consul/roles/*"
+{
+  capabilities = ["read", "create", "update"]
+}
+
 # Update certificate URLs
 path "pki_consul/config/urls"
 {

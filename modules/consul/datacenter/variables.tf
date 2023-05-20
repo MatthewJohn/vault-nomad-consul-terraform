@@ -12,6 +12,7 @@ variable "root_cert" {
     organisation   = string
     ou             = string
     public_key     = string
+    issuer         = string
   })
 }
 

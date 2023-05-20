@@ -67,3 +67,15 @@ resource "vault_pki_secret_backend_config_urls" "this" {
     "${var.vault_cluster.address}/v1/${vault_mount.consul_pki.path}/crl",
   ]
 }
+
+resource "vault_pki_secret_backend_role" "role" {
+  backend          = vault_mount.consul_pki.path
+  name             = var.common_name
+
+  key_type         = "rsa"
+  key_bits         = 4096
+  allowed_domains  = [
+    var.common_name
+  ]
+  allow_subdomains = true
+}

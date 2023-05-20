@@ -22,3 +22,8 @@ output "public_key" {
   description = "Public key for root CA"
   value       = tls_self_signed_cert.this.cert_pem
 }
+
+output "issuer" {
+  description = "Certificate Issuer"
+  value       = vault_pki_secret_backend_role.role.name
+}
