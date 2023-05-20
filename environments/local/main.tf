@@ -129,7 +129,7 @@ module "consul_binary" {
 module "consul_ca" {
   source = "../../modules/consul/root_ca"
 
-  domain = "consul.dock.local"
+  domain = "consul.${local.domain_name}"
 
   initial_run = var.initial_setup
 
@@ -144,4 +144,26 @@ module "consul_ca" {
 
 module "consul_gossip_encryption" {
   source = "../../modules/consul/keygen"
+}
+
+module "consul-1" {
+  source = "../../modules/consul/server"
+
+  # consul_domain   = "consul.${local.domain_name}"
+  datacenter      = "dc"
+  hostname        = "consul-1"
+
+  root_ca = module.consul_ca
+
+  # root_ca_s3_bucket = module.consul_ca.s3_bucket
+  # root_ca_s3_key_public_key = module.consul_ca.s3_key_public_key
+  # root_ca_s3_key_private_key = module.consul_ca.s3_key_private_key
+
+  aws_profile = local.aws_profile
+  aws_region = local.aws_region
+  aws_endpoint = local.aws_endpoint
+
+  docker_host     = "consul-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.71"
 }
