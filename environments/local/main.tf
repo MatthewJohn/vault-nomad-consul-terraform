@@ -52,6 +52,8 @@ module "virtual_machines" {
       network_bridge           = "virbr0"
       additional_dns_hostnames = ["vault-2.vault.dock.local"]
     }
+  }
+  consul_hosts = {
     "consul-1" = {
       ip_address               = "192.168.122.71"
       ip_gateway               = "192.168.122.1"
