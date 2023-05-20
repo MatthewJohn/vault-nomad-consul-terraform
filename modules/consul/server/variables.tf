@@ -4,8 +4,6 @@ variable "hostname" {
   type        = string
 }
 
-
-
 variable "datacenter" {
   description = "Consul datacenter"
   type        = string
@@ -16,30 +14,22 @@ variable "root_ca" {
   type = object({
     domain_name        = string
     s3_bucket          = string
+    s3_prefix = string
     s3_key_public_key  = string
     s3_key_private_key = string
   })
 }
 
-# variable "consul_domain" {
-#   description = "Consul domain"
-#   type        = string
-# }
+variable "consul_binary" {
+  description = "Consul binary path"
+  type        = string
+}
 
-# variable "root_ca_s3_bucket" {
-#   description = "S3 bucket holding root CA"
-#   type        = string
-# }
-
-# variable "root_ca_s3_key_public_key" {
-#   description = "S3 key for CA public key in root CA S3 bucket"
-#   type        = string
-# }
-
-# variable "root_ca_s3_key_private_key" {
-#   description = "S3 key for CA private key in root CA S3 bucket"
-#   type        = string
-# }
+variable "initial_run" {
+  description = "Whether to allow creation of root CA"
+  type        = bool
+  default     = false
+}
 
 variable "aws_profile" {
   description = "AWS profile"

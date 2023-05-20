@@ -61,9 +61,6 @@ then
         --endpoint $aws_endpoint >/dev/null
 fi
 
-public_cert=$(cat $public_key_file | sed ':a;N;$!ba;s/\n/\\n/g' )
-private_key=$(cat $private_key_file | sed ':a;N;$!ba;s/\n/\\n/g' )
-
 rm -f $public_key_file $private_key_file
 
-echo "{\"public_key\": \"$bucket_prefix/$public_key_file\", \"private_key\": \"$bucket_prefix/$private_key_file\"}"
+echo "{\"public_key\": \"$public_key_file\", \"private_key\": \"$private_key_file\", \"bucket_prefix\": \"${bucket_prefix}\"}"
