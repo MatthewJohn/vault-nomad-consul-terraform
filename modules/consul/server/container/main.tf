@@ -34,11 +34,13 @@ resource "docker_container" "this" {
     host_path      = "/consul/config"
   }
 
-  lifecycle {
-    ignore_changes = [
-      image
-    ]
+  volumes {
+    container_path = "/consul/vault"
+    host_path      = "/consul/vault"
+    read_only      = true
+  }
 
+  lifecycle {
     replace_triggered_by = [
       null_resource.consul_config
     ]

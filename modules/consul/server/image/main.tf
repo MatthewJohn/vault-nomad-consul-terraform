@@ -22,4 +22,10 @@ resource "docker_image" "this" {
       author = "Dockstudios Ltd"
     }
   }
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.image_trigger
+    ]
+  }
 }
