@@ -104,7 +104,7 @@ EOF
 
     "vault/ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
 
-    "consul.hcl" = <<EOF
+    "config/consul.hcl" = <<EOF
 
 bootstrap_expect = 1
 
