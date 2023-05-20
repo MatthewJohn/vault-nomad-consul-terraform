@@ -63,6 +63,18 @@ path "pki/*"
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+# Generate root CA
+path "consul/root/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# Update certificate URLs
+path "consul/config/urls"
+{
+  capabilities = ["update", "read"]
+}
+
 # Read health checks
 path "sys/health"
 {
