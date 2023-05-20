@@ -37,3 +37,9 @@ variable "root_token" {
   description = "Root token to authenticate to cluster"
   type        = string
 }
+
+variable "consul_datacenters" {
+  description = "List of consul datacenter to provide permissions to Terraform user"
+  type        = list(string)
+  default     = []
+}

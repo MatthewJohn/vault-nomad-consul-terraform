@@ -84,10 +84,11 @@ module "vault_init" {
 module "vault_cluster" {
   source = "../../modules/vault/cluster"
 
-  domain_name  = local.domain_name
-  ip_addresses = local.all_vault_host_ips
-  root_token   = module.vault_init.root_token
-  ca_cert_file = module.vault_init.ca_cert_file
+  domain_name        = local.domain_name
+  ip_addresses       = local.all_vault_host_ips
+  root_token         = module.vault_init.root_token
+  ca_cert_file       = module.vault_init.ca_cert_file
+  consul_datacenters = ["dc1"]
 }
 
 module "kms_config" {
@@ -128,6 +129,14 @@ module "consul_certificate_authority" {
   source = "../../modules/consul/certificate_authority"
 
   common_name   = "consul.${local.domain_name}"
+  vault_cluster = module.vault_cluster
+}
+
+module "dc1" {
+  source = "../../modules/consul/datacenter"
+
+  datacenter    = "dc1"
+  root_cert     = module.consul_certificate_authority
   vault_cluster = module.vault_cluster
 }
 

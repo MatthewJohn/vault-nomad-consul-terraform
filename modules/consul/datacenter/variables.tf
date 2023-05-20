@@ -1,11 +1,17 @@
 
-variable "consul_domain" {
-  description = "Consul domain"
-}
-
 variable "datacenter" {
   description = "Datacenter name"
   type        = string
+}
+
+variable "root_cert" {
+  description = "Root certificate object"
+  type        = object({
+    pki_mount_path = string
+    common_name = string
+    organisation = string
+    ou = string
+  })
 }
 
 variable "vault_cluster" {

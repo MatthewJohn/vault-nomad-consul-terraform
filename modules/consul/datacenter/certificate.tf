@@ -1,15 +1,26 @@
-resource "vault_pki_secret_backend_root_cert" "this" {
-  backend = vault_mount.this.path
+locals {
+  common_name = "${var.datacenter}.${var.root_cert.common_name}"
+}
 
-  type = "internal"
-
-  common_name          = "${var.datacenter}.${var.consul_domain} Intermediate Authority"
-
-  key_bits             = 4096
-  exclude_cn_from_sans = true
+resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
+  backend     = vault_mount.this.path
+  type        = "internal"
+  common_name = local.common_name
 
   depends_on = [
-    vault_mount.consul_pki
+    vault_mount.this
   ]
 }
 
+# Sign intermediate certificate with root cert
+resource "vault_pki_secret_backend_root_sign_intermediate" "this" {
+  backend = var.root_cert.pki_mount_path
+
+  csr = vault_pki_secret_backend_intermediate_cert_request.this.csr
+
+  common_name  = local.common_name
+  ou           = var.root_cert.ou
+  organization = var.root_cert.organisation
+
+  revoke = true
+}

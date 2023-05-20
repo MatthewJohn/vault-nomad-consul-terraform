@@ -67,11 +67,19 @@ path "pki_consul/config/urls"
   capabilities = ["update", "read"]
 }
 
-# Generate intermediate CA
-path "pki_consul_int/root/generate/internal"
+# Sign intermediate certificates
+path "pki_consul/root/sign-intermediate"
 {
   capabilities = ["update"]
 }
+
+%{for datacenter in var.consul_datacenters}
+# Generate intermediate CAs
+path "pki_consul_int_${datacenter}/intermediate/generate/internal"
+{
+  capabilities = ["update"]
+}
+%{endfor}
 
 EOF
 }

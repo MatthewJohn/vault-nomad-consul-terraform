@@ -4,9 +4,9 @@ output "name" {
   value = var.datacenter
 }
 
-output "domain" {
-  description = "Datacenter domain"
-  value = "${var.datacenter}.${var.consul_domain}"
+output "common_name" {
+  description = "Common name"
+  value = local.common_name
 }
 
 output "pki_mount_path" {
