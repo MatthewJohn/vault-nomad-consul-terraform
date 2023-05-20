@@ -3,12 +3,11 @@ resource "vault_pki_secret_backend_root_cert" "this" {
 
   type = "internal"
 
-  common_name          = var.common_name
-  ou                   = var.ou
-  organization         = var.organisation
+  common_name  = var.common_name
+  ou           = var.ou
+  organization = var.organisation
 
-  key_bits             = 4096
-  exclude_cn_from_sans = true
+  key_bits = 4096
 
   depends_on = [
     vault_mount.consul_pki
