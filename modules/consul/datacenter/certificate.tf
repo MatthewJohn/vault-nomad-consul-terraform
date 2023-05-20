@@ -45,3 +45,16 @@ resource "vault_pki_secret_backend_role" "this" {
     vault_pki_secret_backend_intermediate_set_signed.this
   ]
 }
+
+# resource "vault_pki_secret_backend_config_urls" "this" {
+#   backend = vault_mount.this.path
+
+#   issuing_certificates = [
+#     "${var.vault_cluster.address}/v1/${vault_mount.this.path}/ca",
+#   ]
+
+#   crl_distribution_points = [
+#     "${var.vault_cluster.address}/v1/${vault_mount.this.path}/crl",
+#   ]
+# }
+
