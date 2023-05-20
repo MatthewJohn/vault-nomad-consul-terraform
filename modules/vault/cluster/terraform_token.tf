@@ -97,25 +97,25 @@ path "pki_consul/root/sign-intermediate"
 
 %{for datacenter in var.consul_datacenters}
 # Generate intermediate CAs
-path "pki_consul_int_${datacenter}/intermediate/generate/internal"
+path "pki_int_consul_${datacenter}/intermediate/generate/internal"
 {
   capabilities = ["update"]
 }
 
 # Set default issuer for cert
-path "pki_consul_int_${datacenter}/config/issuers"
+path "pki_int_consul_${datacenter}/config/issuers"
 {
   capabilities = ["update", "read"]
 }
 
 # Set self-signed certificate
-path "pki_consul_int_${datacenter}/intermediate/set-signed"
+path "pki_int_consul_${datacenter}/intermediate/set-signed"
 {
   capabilities = ["update"]
 }
 
 # Create/view/delete roles
-path "pki_consul_int_${datacenter}/roles/*"
+path "pki_int_consul_${datacenter}/roles/*"
 {
   capabilities = ["update", "read", "delete"]
 }
