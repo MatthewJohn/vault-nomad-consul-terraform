@@ -66,7 +66,10 @@ if [ "$1" = 'consul' ]; then
 
         chown -R consul: /consul/config/agent-certs
         chmod 755 /consul/config/agent-certs
-        chmod 644 /consul/config/agent-certs/*
+        if [ -f /consul/config/agent-certs/* ]
+        then
+          chmod 644 /consul/config/templates/*
+        fi
 
         chown -R consul: /consul/data
         chmod 755 /consul/data
