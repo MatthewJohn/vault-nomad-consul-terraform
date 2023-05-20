@@ -66,6 +66,7 @@ module "virtual_machines" {
 locals {
   all_vault_hosts    = ["vault-1", "vault-2"]
   all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
+  all_consul_ips     = ["192.168.122.71"]
 }
 
 module "vault_init" {
@@ -128,8 +129,9 @@ module "vault-2" {
 module "consul_certificate_authority" {
   source = "../../modules/consul/certificate_authority"
 
-  common_name   = "consul.${local.domain_name}"
-  vault_cluster = module.vault_cluster
+  domain_name      = local.domain_name
+  consul_subdomain = "consul"
+  vault_cluster    = module.vault_cluster
 }
 
 module "dc1" {
@@ -138,6 +140,7 @@ module "dc1" {
   datacenter    = "dc1"
   root_cert     = module.consul_certificate_authority
   vault_cluster = module.vault_cluster
+  agent_ips     = local.all_consul_ips
 }
 
 module "consul_gossip_encryption" {

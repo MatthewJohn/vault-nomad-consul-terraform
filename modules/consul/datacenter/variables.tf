@@ -7,12 +7,14 @@ variable "datacenter" {
 variable "root_cert" {
   description = "Root certificate object"
   type = object({
-    pki_mount_path = string
-    common_name    = string
-    organisation   = string
-    ou             = string
-    public_key     = string
-    issuer         = string
+    pki_mount_path   = string
+    common_name      = string
+    organisation     = string
+    ou               = string
+    public_key       = string
+    issuer           = string
+    domain_name      = string
+    consul_subdomain = string
   })
 }
 
@@ -23,4 +25,10 @@ variable "vault_cluster" {
     address      = string
     token        = string
   })
+}
+
+variable "agent_ips" {
+  description = "List of all agent IP addresses"
+  type        = list(string)
+  default     = []
 }

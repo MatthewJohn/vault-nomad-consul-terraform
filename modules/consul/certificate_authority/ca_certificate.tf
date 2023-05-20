@@ -24,7 +24,7 @@ resource "tls_private_key" "this" {
 resource "tls_self_signed_cert" "this" {
    private_key_pem = tls_private_key.this.private_key_pem
    subject {
-     common_name = var.common_name
+     common_name = local.common_name
      organization = var.organisation
      organizational_unit = var.ou
     #  street_address = ["1234 Main Street"]
@@ -70,12 +70,12 @@ resource "vault_pki_secret_backend_config_urls" "this" {
 
 resource "vault_pki_secret_backend_role" "role" {
   backend          = vault_mount.consul_pki.path
-  name             = var.common_name
+  name             = local.common_name
 
   key_type         = "rsa"
   key_bits         = 4096
   allowed_domains  = [
-    var.common_name
+    local.common_name
   ]
   allow_subdomains = true
 }

@@ -131,6 +131,22 @@ ca_file   = "/consul/config/agent-certs/ca.crt"
 cert_file = "/consul/config/agent-certs/agent.crt"
 key_file  = "/consul/config/agent-certs/agent.key"
 
+tls {
+   defaults {
+      ca_file   = "/consul/config/agent-certs/ca.crt"
+      cert_file = "/consul/config/agent-certs/agent.crt"
+      key_file  = "/consul/config/agent-certs/agent.key"
+
+      verify_incoming = true
+      verify_outgoing = true
+   }
+   internal_rpc {
+      verify_server_hostname = true
+   }
+}
+
+retry_join = ["${var.datacenter.common_name}"]
+
 auto_encrypt {
   allow_tls = true
 }

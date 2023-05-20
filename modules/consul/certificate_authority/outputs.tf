@@ -3,9 +3,19 @@ output "pki_mount_path" {
   value       = vault_mount.consul_pki.path
 }
 
+output "domain_name" {
+  description = "Root domain name"
+  value       = var.domain_name
+}
+
+output "consul_subdomain" {
+  description = "Consul subdomain of domain name for CA"
+  value       = var.consul_subdomain
+}
+
 output "common_name" {
   description = "Common name"
-  value       = var.common_name
+  value       = local.common_name
 }
 
 output "organisation" {

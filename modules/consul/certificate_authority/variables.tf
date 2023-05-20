@@ -1,7 +1,13 @@
 
-variable "common_name" {
-  description = "Common name for root certificate"
+variable "domain_name" {
+  description = "Root domain name"
   type        = string
+}
+
+variable "consul_subdomain" {
+  description = "Consul subdomain of domain name for CA"
+  type        = string
+  default     = "consul"
 }
 
 variable "ou" {
@@ -23,4 +29,8 @@ variable "vault_cluster" {
     address      = string
     token        = string
   })
+}
+
+locals {
+  common_name = "${var.consul_subdomain}.${var.domain_name}"
 }
