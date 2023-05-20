@@ -1,16 +1,17 @@
 locals {
 
   fqdn = "${var.hostname}.${var.datacenter.common_name}"
+  server_fqdn = "server.${var.datacenter.common_name}"
 
   config_files = {
     "config/templates/agent.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
     "config/templates/agent.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
