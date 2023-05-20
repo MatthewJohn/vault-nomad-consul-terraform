@@ -30,9 +30,6 @@ LABEL org.opencontainers.image.version=$CONSUL_VERSION \
 # This is the location of the releases.
 ENV HASHICORP_RELEASES=https://releases.hashicorp.com
 
-# Copy license for Red Hat certification.
-COPY LICENSE /licenses/mozilla.txt
-
 # Set up certificates, base tools, and Consul.
 # dumb-init is downloaded directly from GitHub because there's no RPM package.
 # Its shasum is hardcoded. If you upgrade the dumb-init verion you'll need to
