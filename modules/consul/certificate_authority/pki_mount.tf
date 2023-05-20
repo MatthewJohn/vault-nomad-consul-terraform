@@ -1,5 +1,5 @@
 resource "vault_mount" "consul_pki" {
-  path        = "consul"
+  path        = "pki_consul"
   type        = "pki"
   description = "Consul CA PKI"
 

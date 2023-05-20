@@ -47,22 +47,24 @@ path "pki/*"
   capabilities = ["create", "read", "update", "list"]
 }
 
+# Read health checks
+path "sys/health"
+{
+  capabilities = ["read", "sudo"]
+}
+
+#########################
+# Permissions for Consul CA
 # Generate root CA
-path "consul/root/generate/internal"
+path "pki_consul/root/generate/internal"
 {
   capabilities = ["update"]
 }
 
 # Update certificate URLs
-path "consul/config/urls"
+path "pki_consul/config/urls"
 {
   capabilities = ["update", "read"]
-}
-
-# Read health checks
-path "sys/health"
-{
-  capabilities = ["read", "sudo"]
 }
 EOF
 }
