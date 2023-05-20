@@ -80,12 +80,6 @@ path "pki_consul_int_${datacenter}/intermediate/generate/internal"
   capabilities = ["update"]
 }
 
-# Update certificate URLs
-path "pki_consul_int_${datacenter}/config/urls"
-{
-  capabilities = ["update", "read"]
-}
-
 # Set default issuer for cert
 path "pki_consul_int_${datacenter}/config/issuers"
 {
