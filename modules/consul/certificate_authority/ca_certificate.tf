@@ -45,7 +45,10 @@ resource "tls_self_signed_cert" "this" {
 
 resource "vault_pki_secret_backend_config_ca" "ca_config" {
   backend  = vault_mount.consul_pki.path
-  pem_bundle = tls_self_signed_cert.this.cert_pem
+  pem_bundle = join("", [
+    tls_self_signed_cert.this.cert_pem,
+    tls_private_key.this.private_key_pem
+  ])
 
   depends_on = [
     vault_mount.consul_pki,
