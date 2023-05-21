@@ -17,3 +17,8 @@ output "token" {
   description = "Terraform token"
   value       = module.terraform_token.token
 }
+
+output "consul_static_mount_path" {
+  description = "Counsul static mount path"
+  value       = vault_mount.consul_static.path
+}

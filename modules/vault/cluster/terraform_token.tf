@@ -3,13 +3,6 @@ module "terraform_token" {
 
   policy_name = var.terraform_policy_name
 
-  root_token = var.root_token
-
-  vault_cluster = {
-    ca_cert_file = var.ca_cert_file
-    address      = local.cluster_address
-  }
-
   policy = <<EOF
 # List auth methods
 path "sys/auth"

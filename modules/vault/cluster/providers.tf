@@ -6,3 +6,9 @@ terraform {
     }
   }
 }
+
+provider "vault" {
+  address      = local.cluster_address
+  ca_cert_file = var.ca_cert_file
+  token        = var.root_token
+}

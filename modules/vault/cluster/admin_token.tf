@@ -3,13 +3,6 @@ module "admin_token" {
 
   policy_name = var.admin_policy_name
 
-  root_token = var.root_token
-
-  vault_cluster = {
-    ca_cert_file = var.ca_cert_file
-    address      = local.cluster_address
-  }
-
   # Copied from https://github.com/hashicorp/learn-vault-codify/blob/main/oss/policies/admin-policy.hcl
   policy = <<EOF
 # Manage auth methods broadly across Vault
