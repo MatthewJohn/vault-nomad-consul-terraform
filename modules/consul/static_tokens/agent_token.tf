@@ -1,7 +1,32 @@
+resource "consul_acl_policy" "agent_role" {
+
+  for_each = local.consul_server_map
+
+  name = "agent-${var.datacenter.name}-${each.key}"
+
+  datacenters = [var.datacenter.name]
+
+  rules = <<EOF
+node "${var.datacenter.name}-${each.key}" {
+  policy = "write"
+}
+
+node "" {
+  policy = "read"
+}
+
+agent "${var.datacenter.name}-${each.key}" {
+  policy = "write"
+}
+EOF
+}
+
 resource "consul_acl_token" "agent_token" {
   for_each = local.consul_server_map
 
   description = "Agent token ${each.key}.${var.datacenter.name}"
+
+  policies = [consul_acl_policy.agent_role[each.key].name]
 
   node_identities {
     node_name  = each.key
