@@ -27,6 +27,7 @@ EOF
     "config/templates/consul_template.hcl" = <<EOF
 vault {
   address      = "${var.vault_cluster.address}"
+  # @TODO Wrap this token
   unwrap_token = false
   renew_token  = true
   token        = "${vault_token.consule_template.client_token}"
@@ -137,7 +138,11 @@ ui = true
 
 acl {
   enabled = true
+%{if var.initial_run == true}
+  default_policy = "allow"
+%{else}
   default_policy = "deny"
+%{endif}
   enable_token_persistence = true
   enable_token_replication = true
   tokens {
