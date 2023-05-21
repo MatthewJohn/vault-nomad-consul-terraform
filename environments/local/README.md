@@ -34,7 +34,45 @@ terraform apply -target=module.vault_init -target=module.vault_cluster -var init
 
 terraform apply -target=module.consul_certificate_authority -target=module.dc1
 
-terraform apply
+terraform apply -target=module.consul-1 -target=module.consul-X -target=module.consul_bootstrap -target=module.consul_static_tokens -var initial_setup=true
 
+# Iterate through each node individually to re-create with ACL tokens
+terraform apply -target=module.consul-1
+terraform apply -target=module.consul-2
+
+```
+
+## NOTES:
+
+If you get errors, such as:
+```
+│ URL: GET https://vault.dock.local:8200/v1/auth/token/lookup-self
+│ Code: 403. Errors:
+│ 
+│ * permission denied
+│ 
+│   with module.consul_certificate_authority.provider["registry.terraform.io/hashicorp/vault"],
+│   on ../../modules/consul/certificate_authority/provider.tf line 1, in provider "vault":
+│    1: provider "vault" {
+│ 
+╵
+╷
+│ Error: Error making API request.
+│ 
+│ URL: GET https://vault.dock.local:8200/v1/auth/token/lookup-self
+│ Code: 403. Errors:
+│ 
+│ * permission denied
+│ 
+│   with module.dc1.provider["registry.terraform.io/hashicorp/vault"],
+│   on ../../modules/consul/datacenter/provider.tf line 10, in provider "vault":
+│   10: provider "vault" {
+│ 
+```
+
+Regenerate tokens, using:
+
+```
+terraform apply -target=module.vault_cluster
 ```
 
