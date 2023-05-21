@@ -60,6 +60,12 @@ module "virtual_machines" {
       network_bridge           = "virbr0"
       additional_dns_hostnames = ["consul-1.dc.consul.dock.local"]
     }
+    "consul-2" = {
+      ip_address               = "192.168.122.72"
+      ip_gateway               = "192.168.122.1"
+      network_bridge           = "virbr0"
+      additional_dns_hostnames = ["consul-2.dc.consul.dock.local"]
+    }
   }
 }
 
@@ -174,4 +180,21 @@ module "consul-1" {
   docker_host     = "consul-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.71"
+}
+
+module "consul-2" {
+  source = "../../modules/consul/server"
+
+  datacenter    = module.dc1
+  vault_cluster = module.vault_cluster
+  root_cert     = module.consul_certificate_authority
+  hostname      = "consul-2"
+
+  gossip_key = module.consul_gossip_encryption.secret
+
+  consul_version = "1.15.2"
+
+  docker_host     = "consul-2.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.72"
 }
