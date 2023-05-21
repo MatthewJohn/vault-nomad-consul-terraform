@@ -139,8 +139,8 @@ acl {
   default_policy = "deny"
   enable_token_persistence = true
   tokens {
-{{ with secret "${var.datacenter.static_mount_path}/data/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
-    agent  = "{{ .Data.token }}"
+{{ with secret "${var.datacenter.static_mount_path}/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
+    agent  = "{{ .Data.data.token }}"
 {{ end }}
   }
 }
