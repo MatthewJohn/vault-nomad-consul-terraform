@@ -12,7 +12,7 @@ bucket_key=$7
 initial_run=$8
 
 ca_cert_file="`pwd`/root_ca.pem"
-boostrap_tokens_json_file="`pwd`/root_tokens.json"
+boostrap_tokens_json_file="`pwd`/consul_bootstrap.json"
 consul_unseal_debug_file="`pwd`/unseal-debug.log"
 root_token=""
 
