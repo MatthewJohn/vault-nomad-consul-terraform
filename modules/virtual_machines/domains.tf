@@ -57,5 +57,6 @@ module "consul" {
     "/consul/config",
     "/consul/config/templates",
     "/consul/config/agent-certs",
+    "/consul/vault",
   ]
 }
