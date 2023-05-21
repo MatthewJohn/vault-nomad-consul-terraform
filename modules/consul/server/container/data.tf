@@ -3,5 +3,5 @@ data "dns_a_record_set" "consul_cluster" {
 }
 
 locals {
-  boostrap_count = length(data.dns_a_record_set.consul_cluster.addrs)
+  bootstrap_count = length(data.dns_a_record_set.consul_cluster.addrs)
 }

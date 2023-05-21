@@ -108,7 +108,7 @@ EOF
     "config/consul.hcl" = <<EOF
 
 %{if var.initial_run == true}
-bootstrap_expect = ${local.boostrap_count}
+bootstrap_expect = ${local.bootstrap_count}
 %{endif}
 
 server = true

@@ -153,7 +153,7 @@ module "consul_gossip_encryption" {
   source = "../../modules/consul/keygen"
 }
 
-module "consul_boostrap" {
+module "consul_bootstrap" {
   source = "../../modules/consul/bootstrap"
 
   consul_host       = "consul-1.dock.local"
@@ -204,7 +204,7 @@ module "consul_static_tokens" {
 
   vault_cluster = module.vault_cluster
   datacenter    = module.dc1
-  bootstrap     = module.consul_boostrap
+  bootstrap     = module.consul_bootstrap
   consul_servers = [
     module.consul-1,
     module.consul-2

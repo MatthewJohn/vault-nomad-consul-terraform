@@ -12,8 +12,8 @@ bucket_key=$7
 initial_run=$8
 
 ca_cert_file="`pwd`/root_ca.pem"
-boostrap_tokens_json_file="`pwd`/consul_bootstrap.json"
-consul_unseal_debug_file="`pwd`/unseal-debug.log"
+bootstrap_tokens_json_file="`pwd`/consul_bootstrap.json"
+consul_unseal_debug_file="`pwd`/bootstrap-debug.log"
 root_token=""
 
 function f_execute_consul_command() {
@@ -27,32 +27,31 @@ function f_execute_consul_command() {
     return $?
 }
 
-
 echo "Starting unseal" > $consul_unseal_debug_file
 
-# Attempt to download existing boostrap credentials
-echo "Attempting to download boostrap tokens" >> $consul_unseal_debug_file
-if aws s3 cp s3://${bucket_name}/${bucket_key} ${boostrap_tokens_json_file} \
+# Attempt to download existing bootstrap credentials
+echo "Attempting to download bootstrap tokens" >> $consul_unseal_debug_file
+if aws s3 cp s3://${bucket_name}/${bucket_key} ${bootstrap_tokens_json_file} \
       --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $consul_unseal_debug_file
 then
-    echo "Boostrap credentials downloaded" >> $consul_unseal_debug_file
+    echo "bootstrap credentials downloaded" >> $consul_unseal_debug_file
 
 elif [ "$initial_run" == "0" ]
 then
-    echo "Cannot find boostrap credentials on non-initial run" >> $consul_unseal_debug_file
+    echo "Cannot find bootstrap credentials on non-initial run" >> $consul_unseal_debug_file
     exit 1
 else
-    echo "Performing boostrap" >> $consul_unseal_debug_file
+    echo "Performing bootstrap" >> $consul_unseal_debug_file
     f_execute_consul_command consul acl bootstrap \
-        -format=json > ${boostrap_tokens_json_file}
+        -format=json > ${bootstrap_tokens_json_file}
 
     echo "Uploading root tokens to s3" >> $consul_unseal_debug_file
-    aws s3 cp ${boostrap_tokens_json_file} s3://${bucket_name}/${bucket_key} \
+    aws s3 cp ${bootstrap_tokens_json_file} s3://${bucket_name}/${bucket_key} \
       --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $consul_unseal_debug_file
 fi
 
-token=$(cat ${boostrap_tokens_json_file} | jq -r '.SecretID')
+token=$(cat ${bootstrap_tokens_json_file} | jq -r '.SecretID')
 
-rm ${boostrap_tokens_json_file}
+rm ${bootstrap_tokens_json_file}
 
 echo "{\"token\": \"${token}\"}"

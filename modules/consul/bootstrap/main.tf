@@ -22,7 +22,7 @@ data "external" "init_consul" {
     var.aws_region,
     var.aws_endpoint,
     aws_s3_bucket.consul_unseal.bucket,
-    "consul-boostrap.json",
+    "consul-bootstrap.json",
     var.initial_run == true ? "1" : "0"
   ]
 }
