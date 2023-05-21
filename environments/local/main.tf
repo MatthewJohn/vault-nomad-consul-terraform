@@ -140,15 +140,23 @@ module "consul_certificate_authority" {
   vault_cluster    = module.vault_cluster
 }
 
+module "consul_global_config" {
+  source = "../../modules/consul/global_config"
+
+  primary_datacenter = "dc1"
+}
+
 module "dc1" {
   source = "../../modules/consul/datacenter"
 
   datacenter    = "dc1"
   root_cert     = module.consul_certificate_authority
   vault_cluster = module.vault_cluster
+  global_config = module.consul_global_config
   agent_ips     = local.all_consul_ips
 }
 
+# @TODO Generate in datacenter and store in vault
 module "consul_gossip_encryption" {
   source = "../../modules/consul/keygen"
 }

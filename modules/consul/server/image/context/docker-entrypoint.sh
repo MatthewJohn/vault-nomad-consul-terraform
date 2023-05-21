@@ -114,6 +114,7 @@ else
       -once
 
     # run consul-template in the backgroundn to update certs
+    # @TODO Get consul-template to trigger consul reload
     consul-template \
       -config /consul/config/templates/consul_template.hcl &
 

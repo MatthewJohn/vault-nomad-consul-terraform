@@ -38,3 +38,8 @@ output "static_mount_path" {
   description = "Vault mount path for consul static tokens"
   value = var.vault_cluster.consul_static_mount_path
 }
+
+output "primary_datacenter" {
+  description = "Whether the datacenter is the primary datacenter"
+  value       = local.is_primary_datacenter
+}
