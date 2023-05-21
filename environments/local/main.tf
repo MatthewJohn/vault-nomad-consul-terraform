@@ -177,6 +177,8 @@ module "consul-1" {
 
   consul_version = "1.15.2"
 
+  initial_run = var.initial_setup
+
   docker_host     = "consul-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.71"
@@ -193,6 +195,8 @@ module "consul-2" {
   gossip_key = module.consul_gossip_encryption.secret
 
   consul_version = "1.15.2"
+
+  initial_run = var.initial_setup
 
   docker_host     = "consul-2.${local.domain_name}"
   docker_username = local.docker_username
