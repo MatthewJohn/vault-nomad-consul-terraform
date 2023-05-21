@@ -7,7 +7,7 @@ resource "consul_acl_policy" "agent_role" {
   datacenters = [var.datacenter.name]
 
   rules = <<EOF
-node "${var.datacenter.name}-${each.key}" {
+node "${each.key}" {
   policy = "write"
 }
 
@@ -15,7 +15,7 @@ node "" {
   policy = "read"
 }
 
-agent "${var.datacenter.name}-${each.key}" {
+agent "${each.key}" {
   policy = "write"
 }
 EOF
