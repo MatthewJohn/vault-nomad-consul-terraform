@@ -58,7 +58,7 @@ fi
 if [ "$1" = 'consul' ]; then
     if [ -z "$SKIP_CHOWN" ]; then
         chown -R :consul /consul/config
-        chmod 755 /consul/config
+        chmod 775 /consul/config
         chmod 644 /consul/config/*
         chown -R :consul /consul/config/templates
         chmod 755 /consul/config/templates
