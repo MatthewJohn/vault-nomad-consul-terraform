@@ -1,6 +1,6 @@
 
 resource "vault_policy" "agent_ca" {
-  name = "consul-cert-${var.datacenter}"
+  name = "agent-consul-template-${var.datacenter}"
 
   policy = <<EOF
 # Access CA certs
@@ -24,12 +24,4 @@ path "auth/token/renew-self" {
 }
 
 EOF
-}
-
-resource "vault_token" "agent_ca" {
-  policies = [vault_policy.agent_ca.name]
-
-  metadata = {
-    "purpose" = "Consul Certs ${var.datacenter}"
-  }
 }

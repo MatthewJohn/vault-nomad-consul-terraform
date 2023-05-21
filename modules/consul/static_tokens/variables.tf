@@ -5,7 +5,6 @@ variable "datacenter" {
     common_name          = string
     role_name            = string
     pki_mount_path       = string
-    agent_ca_token       = string
     root_cert_public_key = string
     address              = string
   })

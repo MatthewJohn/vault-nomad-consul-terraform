@@ -19,9 +19,9 @@ output "pki_mount_path" {
   value       = vault_mount.this.path
 }
 
-output "agent_ca_token" {
-  description = "Token for agent to authenticate to vault"
-  value       = vault_token.agent_ca.client_token
+output "agent_consul_template_policy" {
+  description = "Role for agent consul-template to authenticate to vault"
+  value       = vault_policy.agent_ca.name
 }
 
 output "root_cert_public_key" {

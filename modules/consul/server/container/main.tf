@@ -21,7 +21,7 @@ resource "docker_container" "this" {
 
   env = [
     # "VAULT_ROOT_CA_CERT=${var.vault_cluster.root_ca_cert}"
-    "VAULT_TOKEN=${var.datacenter.agent_ca_token}"
+    # "VAULT_TOKEN="
   ]
 
   volumes {

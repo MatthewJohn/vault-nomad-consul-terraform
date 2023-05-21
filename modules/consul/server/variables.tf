@@ -7,12 +7,12 @@ variable "hostname" {
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({
-    name              = string
-    common_name       = string
-    role_name         = string
-    pki_mount_path    = string
-    agent_ca_token    = string
-    static_mount_path = string
+    name                         = string
+    common_name                  = string
+    role_name                    = string
+    pki_mount_path               = string
+    agent_consul_template_policy = string
+    static_mount_path            = string
   })
 }
 
