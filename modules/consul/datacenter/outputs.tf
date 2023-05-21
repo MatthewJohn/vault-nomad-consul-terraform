@@ -23,3 +23,13 @@ output "agent_ca_token" {
   description = "Token for agent to authenticate to vault"
   value       = vault_token.agent_ca.client_token
 }
+
+output "root_cert_public_key" {
+  description = "Root cert public key"
+  value       = var.root_cert.public_key
+}
+
+output "address" {
+  description = "Endpoint for cluster"
+  value       = "http://${local.common_name}:8500"
+}

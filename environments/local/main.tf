@@ -156,7 +156,7 @@ module "consul_gossip_encryption" {
 module "consul_boostrap" {
   source = "../../modules/consul/bootstrap"
 
-  consul_host        = "consul-1.dock.local"
+  consul_host       = "consul-1.dock.local"
   aws_region        = local.aws_region
   aws_endpoint      = local.aws_endpoint
   aws_profile       = local.aws_profile
@@ -197,4 +197,16 @@ module "consul-2" {
   docker_host     = "consul-2.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.72"
+}
+
+module "consul_static_tokens" {
+  source = "../../modules/consul/static_tokens"
+
+  vault_cluster = module.vault_cluster
+  datacenter    = module.dc1
+  bootstrap     = module.consul_boostrap
+  consul_servers = [
+    module.consul-1,
+    module.consul-2
+  ]
 }

@@ -51,8 +51,8 @@ else
       --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $consul_unseal_debug_file
 fi
 
-#root_token=$(cat ${boostrap_tokens_json_file} | jq -r '.root_token')
+token=$(cat ${boostrap_tokens_json_file} | jq -r '.SecretID')
 
-#rm ${boostrap_tokens_json_file}
+rm ${boostrap_tokens_json_file}
 
-echo "{}"
+echo "{\"token\": \"${token}\"}"
