@@ -13,6 +13,10 @@ path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/agent
 {
   capabilities = [ "read" ]
 }
+path "${var.vault_cluster.consul_static_mount_path}/${var.datacenter}/agent-tokens/*"
+{
+  capabilities = [ "read" ]
+}
 
 # Renew leases
 path "sys/leases/renew" {
