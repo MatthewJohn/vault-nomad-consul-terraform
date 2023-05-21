@@ -27,5 +27,10 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
+path "identity/oidc/token/${vault_identity_oidc_role.role.name}"
+{
+  capabilities = [ "read" ]
+}
+
 EOF
 }

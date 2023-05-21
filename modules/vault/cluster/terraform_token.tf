@@ -129,6 +129,16 @@ path "consul_static/metadata/${datacenter}/agent-tokens/*"
   capabilities = ["read", "update", "create", "delete", "list"]
 }
 
+# Create OIDC
+path "identity/oidc/key/consul-cluster-${datacenter}"
+{
+  capabilities = [ "read", "update", "create", "delete" ]
+}
+path "identity/oidc/role/consul-cluster-${datacenter}"
+{
+  capabilities = [ "read", "update", "create", "delete" ]
+}
+
 %{endfor}
 
 EOF

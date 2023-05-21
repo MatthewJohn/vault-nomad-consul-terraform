@@ -44,6 +44,9 @@ terraform apply -target=module.consul-2
 
 ## NOTES:
 
+
+### Error 1
+
 If you get errors, such as:
 ```
 │ URL: GET https://vault.dock.local:8200/v1/auth/token/lookup-self
@@ -76,3 +79,30 @@ Regenerate tokens, using:
 terraform apply -target=module.vault_cluster
 ```
 
+### Error 2
+
+```
+╷
+│ Error: failed to read policy '124de1ce-67f3-acee-484d-23fcd34dda4e': Unexpected response code: 500 (No cluster leader)
+│ 
+│   with module.consul_static_tokens.consul_acl_policy.agent_role["consul-1"],
+│   on ../../modules/consul/static_tokens/agent_token.tf line 1, in resource "consul_acl_policy" "agent_role":
+│    1: resource "consul_acl_policy" "agent_role" {
+│ 
+╵
+╷
+│ Error: failed to read policy '00404993-1fd1-f3bc-7bec-1b0e57c13972': Unexpected response code: 500 (No cluster leader)
+│ 
+│   with module.consul_static_tokens.consul_acl_policy.agent_role["consul-2"],
+│   on ../../modules/consul/static_tokens/agent_token.tf line 1, in resource "consul_acl_policy" "agent_role":
+│    1: resource "consul_acl_policy" "agent_role" {
+│ 
+╵
+```
+
+Solution:
+
+Reconfigure and re-apply tokens for consul hosts to bring them back up, if this is the issue with the consul containers
+```
+terraform apply -target=module.consul-1 -target=module.consul-X
+```

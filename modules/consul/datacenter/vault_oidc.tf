@@ -13,22 +13,22 @@ resource "vault_identity_oidc_role" "role" {
   name = "consul-cluster-${var.datacenter}"
   key  = vault_identity_oidc_key.oidc_key.name
 
-  ttl       = "12h"
+  ttl       = (12 * 60 * 60)  # "12h"
   client_id = "consul-cluster-${var.datacenter}"
 
   template = "{\"consul\": {\"hostname\": \"consul-client\" } }"
 }
 
-resource "vault_policy" "oidc" {
-  name = "oidc-consul-cluster-${var.datacenter}"
+# resource "vault_policy" "oidc" {
+#   name = "oidc-consul-cluster-${var.datacenter}"
 
-  policy = <<EOF
-{
-    "path": {
-        "identity/oidc/token/${vault_identity_oidc_role.role.name}": {
-            "policy": "read"
-        }
-    }
-}
-EOF
-}
+#   policy = <<EOF
+# {
+#     "path": {
+#         "identity/oidc/token/${vault_identity_oidc_role.role.name}": {
+#             "policy": "read"
+#         }
+#     }
+# }
+# EOF
+# }
