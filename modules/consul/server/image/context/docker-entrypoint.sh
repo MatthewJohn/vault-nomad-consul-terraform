@@ -105,6 +105,12 @@ then
     export SKIP_SETCAP="true"
     exec su consul -p "$0" -- "$@"
 else
+    # Run consul template once to generate initial keys
+    consul-template \
+      -config /consul/config/templates/consul_template.hcl \
+      -once
+
+    # run consul-template in the backgroundn to update certs
     consul-template \
       -config /consul/config/templates/consul_template.hcl &
 
