@@ -1,10 +1,7 @@
 resource "vault_token" "this" {
   policies = [vault_policy.this.name]
 
-  renewable = true
-
-  renew_min_lease = 43200
-  renew_increment = 86400
+  period = 356 * 24 * 60 * 60
 
   metadata = {
     "purpose" = "${var.policy_name}"
