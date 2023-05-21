@@ -38,3 +38,8 @@ output "static_mount_path" {
   description = "Vault mount path for consul static tokens"
   value = var.vault_cluster.consul_static_mount_path
 }
+
+output "vault_oidc_role_name" {
+  description = "Role name for vault OIDC auth"
+  value       = vault_identity_oidc_role.role.name
+}

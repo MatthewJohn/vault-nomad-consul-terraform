@@ -152,6 +152,26 @@ acl {
   }
 }
 
+auto_config {
+  authorization {
+    enabled = true
+    static {
+      oidc_discovery_url = "${var.vault_cluster.address}/v1/identity/oidc"
+      oidc_discovery_ca_cert = "${var.vault_cluster.ca_cert_pem}"
+      bound_issuer = "${var.vault_cluster.address}/v1/identity/oidc"
+      bound_audiences = ["consul-cluster-${var.datacenter.name}"]
+      claim_mappings = {
+        "/consul/hostname" = "node_name"
+      }
+      claim_assertions = [
+        "value.node_name == \"$${node}\""
+      ]
+    }
+  }
+}
+
+#primary_datacenter = "$${var.consul_global_config.primary_datacenter}"
+
 data_dir = "/consul/data"
 
 verify_incoming        = true

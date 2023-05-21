@@ -3,6 +3,11 @@ output "ca_cert_file" {
   value       = var.ca_cert_file
 }
 
+output "ca_cert_pem" {
+  description = "Contents of root CA cert"
+  value       = replace(file(var.ca_cert_file), "\n", "\\n")
+}
+
 output "address" {
   description = "Address of cluster"
   value       = local.cluster_address
