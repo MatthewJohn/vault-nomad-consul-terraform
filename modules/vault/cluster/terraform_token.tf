@@ -113,7 +113,7 @@ path "pki_int_consul_${datacenter}/roles/*"
   capabilities = ["update", "read", "delete"]
 }
 
-path "sys/policies/acl/consul-cert-${datacenter}"
+path "sys/policies/acl/agent-consul-template-${datacenter}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
