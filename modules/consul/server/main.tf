@@ -18,6 +18,7 @@ module "container" {
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert
   gossip_key    = var.gossip_key
+  initial_run   = var.initial_run
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

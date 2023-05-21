@@ -38,6 +38,12 @@ variable "gossip_key" {
   type        = string
 }
 
+variable "initial_run" {
+  description = "Whether an init is alled"
+  type        = bool
+  default     = false
+}
+
 variable "consul_version" {
   description = "Version of consul"
   type        = string

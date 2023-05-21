@@ -1,6 +1,6 @@
 locals {
 
-  fqdn = "${var.hostname}.${var.datacenter.common_name}"
+  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
   server_fqdn = "server.${var.datacenter.common_name}"
 
   config_files = {
@@ -107,7 +107,9 @@ EOF
 
     "config/consul.hcl" = <<EOF
 
-bootstrap_expect = 1
+%{if var.initial_run == true}
+bootstrap_expect = ${local.boostrap_count}
+%{endif}
 
 server = true
 
