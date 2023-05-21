@@ -34,6 +34,12 @@ resource "consul_acl_token" "agent_token" {
   }
 }
 
+data "consul_acl_token_secret_id" "agent_token" {
+  for_each = local.consul_server_map
+
+  accessor_id = consul_acl_token.agent_token[each.key].accessor_id
+}
+
 resource "vault_kv_secret_v2" "agent_token" {
   for_each = local.consul_server_map
 
@@ -42,7 +48,7 @@ resource "vault_kv_secret_v2" "agent_token" {
 
   data_json = jsonencode(
     {
-      token = consul_acl_token.agent_token[each.key].accessor_id
+      token = data.consul_acl_token_secret_id.agent_token[each.key].secret_id
     }
   )
 }
