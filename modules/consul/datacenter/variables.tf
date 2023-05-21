@@ -21,9 +21,10 @@ variable "root_cert" {
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
-    ca_cert_file = string
-    address      = string
-    token        = string
+    ca_cert_file             = string
+    address                  = string
+    token                    = string
+    consul_static_mount_path = string
   })
 }
 

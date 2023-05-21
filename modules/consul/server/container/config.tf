@@ -55,6 +55,14 @@ template {
   perms       = 0700
 }
 
+template {
+  source      = "/consul/config/templates/consul.hcl.tmpl"
+  destination = "/consul/config/consul.hcl"
+  perms       = 0700
+
+  error_on_missing_key = false
+}
+
 # This is the signal to listen for to trigger a reload event. The default
 # value is shown below. Setting this value to the empty string will cause CT
 # to not listen for any reload signals.
@@ -105,7 +113,7 @@ EOF
 
     "vault/ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
 
-    "config/consul.hcl" = <<EOF
+    "config/templates/consul.hcl.tmpl" = <<EOF
 
 %{if var.initial_run == true}
 bootstrap_expect = ${local.bootstrap_count}
@@ -130,6 +138,11 @@ acl {
   enabled = true
   default_policy = "deny"
   enable_token_persistence = true
+  tokens {
+{{ with secret "${var.datacenter.static_mount_path}/data/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
+    agent  = "{{ .Data.token }}"
+{{ end }}
+  }
 }
 
 data_dir = "/consul/data"

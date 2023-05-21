@@ -8,6 +8,12 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}"
   capabilities = [ "read", "update" ]
 }
 
+# Access vault static tokens
+path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/agent-tokens/*"
+{
+  capabilities = [ "read" ]
+}
+
 # Renew leases
 path "sys/leases/renew" {
   capabilities = [ "update" ]

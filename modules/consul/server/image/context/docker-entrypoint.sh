@@ -71,6 +71,9 @@ if [ "$1" = 'consul' ]; then
           chmod 644 /consul/config/templates/*
         fi
 
+        touch /consul/config/consul.hcl
+        chown consul: /consul/config/consul.hcl
+
         chown -R consul: /consul/data
         chmod 755 /consul/data
     fi

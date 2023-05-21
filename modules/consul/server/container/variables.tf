@@ -11,19 +11,22 @@ variable "image" {
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({
-    name           = string
-    common_name    = string
-    role_name      = string
-    pki_mount_path = string
-    agent_ca_token = string
+    name              = string
+    common_name       = string
+    role_name         = string
+    pki_mount_path    = string
+    agent_ca_token    = string
+    static_mount_path = string
   })
 }
 
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
-    ca_cert_file = string
-    address      = string
+    ca_cert_file             = string
+    address                  = string
+    consul_static_mount_path = string
+    token                    = string
   })
 }
 
