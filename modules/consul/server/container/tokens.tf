@@ -8,4 +8,10 @@ resource "vault_kv_secret_v2" "agent_token" {
       token = ""
     }
   )
+
+  lifecycle {
+    ignore_changes = [
+      data_json
+    ]
+  }
 }
