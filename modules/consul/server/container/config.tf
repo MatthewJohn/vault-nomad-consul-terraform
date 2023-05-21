@@ -138,6 +138,7 @@ acl {
   enabled = true
   default_policy = "deny"
   enable_token_persistence = true
+  enable_token_replication = true
   tokens {
 {{ with secret "${var.datacenter.static_mount_path}/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
     agent  = "{{ .Data.data.token }}"
