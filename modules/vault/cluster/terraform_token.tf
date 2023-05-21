@@ -118,6 +118,17 @@ path "sys/policies/acl/consul-cert-${datacenter}"
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Write static tokens
+path "consul_static/data/${datacenter}/agent-tokens/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
+path "consul_static/metadata/${datacenter}/agent-tokens/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
 %{endfor}
 
 EOF
