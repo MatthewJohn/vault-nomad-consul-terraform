@@ -1,7 +1,7 @@
 locals {
 
-  configs_files = {
-    "ssl/ssl/root-ca.pem" = file(var.vault_cluster.root)
+  config_files = {
+    "ssl/ssl/root-ca.pem" = file(var.vault_cluster.ca_cert_file)
     "config.d/app-role-id" = var.app_role_id
     "config.d/app-role-secret" = var.app_role_secret
 
@@ -54,6 +54,6 @@ resource "null_resource" "config_files" {
 
   provisioner "file" {
     content     = each.value
-    destination = "/vault-agent/${each.key}"
+    destination = "${var.base_directory}/${each.key}"
   }
 }

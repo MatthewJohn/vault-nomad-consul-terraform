@@ -41,6 +41,15 @@ variable "root_cert" {
   })
 }
 
+variable "consul_template_vault_agent" {
+  description = "Vault agent instance for consul template"
+  type = object({
+    container_id    = string
+    token_directory = string
+    token_path      = string
+  })
+}
+
 variable "gossip_key" {
   description = "Gossip secret"
   type        = string

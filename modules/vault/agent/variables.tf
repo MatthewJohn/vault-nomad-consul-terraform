@@ -1,4 +1,10 @@
 
+variable "container_name" {
+  description = "Custom name for container"
+  type        = string
+  default     = "vault-agent"
+}
+
 variable "hostname" {
   description = "Hostname for docker"
   type        = string
@@ -17,6 +23,12 @@ variable "vault_cluster" {
     token                    = string
     consul_static_mount_path = string
   })
+}
+
+variable "base_directory" {
+  description = "Base directory for agent"
+  type        = string
+  default     = "/vault-agent"
 }
 
 variable "app_role_id" {

@@ -1,5 +1,5 @@
 resource "docker_image" "this" {
-  name = "vault-ds:${var.vault_version}"
+  name = "${var.image_name}:${var.vault_version}"
 
   keep_locally = true
 

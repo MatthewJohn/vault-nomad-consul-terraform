@@ -9,6 +9,11 @@ variable "vault_cluster" {
   })
 }
 
+variable "container_name" {
+  description = "Custom name for container"
+  type        = string
+}
+
 variable "app_role_id" {
   description = "App role ID for authentication"
   type        = string
@@ -16,6 +21,11 @@ variable "app_role_id" {
 
 variable "app_role_secret" {
   description = "App role secret for authentication"
+  type        = string
+}
+
+variable "base_directory" {
+  description = "Base directory for agent"
   type        = string
 }
 

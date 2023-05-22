@@ -40,6 +40,11 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
+  volumes {
+    container_path = "/vault-agent-consul-template/auth"
+    host_path      = var.consul_template_vault_agent.token_directory
+  }
+
   lifecycle {
     replace_triggered_by = [
       null_resource.consul_config

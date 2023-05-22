@@ -41,8 +41,8 @@ resource "vault_auth_backend" "approle" {
   path = "approle-consul-${var.datacenter}"
 }
 
-resource "vault_approle_auth_backend_role" "example" {
+resource "vault_approle_auth_backend_role" "server_consul_template" {
   backend        = vault_auth_backend.approle.path
-  role_name      = "test-role"
-  token_policies = ["default", "dev", "prod"]
+  role_name      = "consul-server-${var.datacenter}-consul-template"
+  token_policies = [vault_policy.agent_consul_template.name]
 }
