@@ -21,7 +21,7 @@ output "pki_mount_path" {
 
 output "agent_consul_template_policy" {
   description = "Role for agent consul-template to authenticate to vault"
-  value       = vault_policy.agent_ca.name
+  value       = vault_policy.agent_consul_template.name
 }
 
 output "root_cert_public_key" {

@@ -1,5 +1,5 @@
 
-resource "vault_policy" "agent_ca" {
+resource "vault_policy" "agent_consul_template" {
   name = "agent-consul-template-${var.datacenter}"
 
   policy = <<EOF
