@@ -42,21 +42,7 @@ RUN groupadd --gid 1000 vault && \
 # the configuration directory so you can add additional config files in that
 # location.
 ENV HOME /home/vault
-RUN mkdir -p /vault/logs && \
-    mkdir -p /vault/file && \
-    mkdir -p /vault/config && \
-    mkdir -p $HOME && \
-    chown -R vault /vault && chown -R vault $HOME && \
-    chgrp -R 0 $HOME && chmod -R g+rwX $HOME && \
-    chgrp -R 0 /vault && chmod -R g+rwX /vault
-
-# Expose the logs directory as a volume since there's potentially long-running
-# state in there
-VOLUME /vault/logs
-
-# Expose the file directory as a volume since there's potentially long-running
-# state in there
-VOLUME /vault/file
+RUN mkdir -p $HOME
 
 # 8200/tcp is the primary interface that applications use to interact with
 # Vault.
