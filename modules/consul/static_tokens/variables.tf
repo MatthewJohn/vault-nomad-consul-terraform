@@ -24,7 +24,6 @@ variable "vault_cluster" {
     address                  = string
     token                    = string
     consul_static_mount_path = string
-
   })
 }
 

@@ -42,5 +42,5 @@ variable "agent_ips" {
 }
 
 locals {
-  is_primary_datacenter = var.global_config.primary_datacenter == var.name ? true : false
+  is_primary_datacenter = var.global_config.primary_datacenter == var.datacenter ? true : false
 }
