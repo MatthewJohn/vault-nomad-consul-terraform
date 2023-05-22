@@ -26,11 +26,10 @@ EOF
 
     "config/templates/consul_template.hcl" = <<EOF
 vault {
-  address      = "${var.vault_cluster.address}"
+  address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
-  unwrap_token = false
-  renew_token  = true
-  token        = "${vault_token.consul_template.client_token}"
+  unwrap_token           = false
+  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
 
   ssl {
     enabled = true
