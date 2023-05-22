@@ -35,3 +35,14 @@ path "auth/token/renew-self" {
 
 EOF
 }
+
+resource "vault_auth_backend" "approle" {
+  type = "approle"
+  path = "approle-consul-${var.datacenter}"
+}
+
+resource "vault_approle_auth_backend_role" "example" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = "test-role"
+  token_policies = ["default", "dev", "prod"]
+}
