@@ -33,7 +33,7 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
-path "auth/approle/login"
+path "approle-consul-dc1/login"
 {
   capabilities = ["update"]
 }

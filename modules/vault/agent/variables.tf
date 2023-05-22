@@ -41,6 +41,11 @@ variable "app_role_secret" {
   type        = string
 }
 
+variable "app_role_mount_path" {
+  description = "Mount path for approle backend"
+  type = string
+}
+
 variable "vault_version" {
   description = "Vault version"
   type = string

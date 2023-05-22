@@ -20,9 +20,9 @@ module "container" {
   vault_cluster  = var.vault_cluster
   container_name = var.container_name
 
-  app_role_id     = var.app_role_id
-  app_role_secret = var.app_role_secret
-
+  app_role_id         = var.app_role_id
+  app_role_secret     = var.app_role_secret
+  app_role_mount_path = var.app_role_mount_path
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

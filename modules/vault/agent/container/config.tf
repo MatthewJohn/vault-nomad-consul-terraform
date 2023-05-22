@@ -14,6 +14,8 @@ auto_auth {
   method {
     type = "approle"
 
+    mount_path = "${var.app_role_mount_path}"
+
     config = {
       role_id_file_path   = "/vault-agent/config.d/app-role-id"
       secret_id_file_path = "/vault-agent/config.d/app-role-id"
