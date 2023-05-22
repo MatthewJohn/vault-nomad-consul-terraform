@@ -12,6 +12,8 @@ data "consul_acl_token_secret_id" "vault_secret_engine" {
 resource "vault_consul_secret_backend" "this" {
   path        = "consul-${var.datacenter.name}"
   description = "Manages the Consul backend for ${var.datacenter.name}"
-  address     = var.vault_cluster.address
+  address     = var.datacenter.address_wo_protocol
+  # ca_cert     = var.datacenter.root_cert_public_key
+  local       = true
   token       = data.consul_acl_token_secret_id.vault_secret_engine.secret_id
 }

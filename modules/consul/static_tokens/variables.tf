@@ -7,6 +7,7 @@ variable "datacenter" {
     pki_mount_path       = string
     root_cert_public_key = string
     address              = string
+    address_wo_protocol = string
   })
 }
 

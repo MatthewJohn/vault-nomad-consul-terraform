@@ -34,6 +34,11 @@ output "address" {
   value       = "http://${local.common_name}:8500"
 }
 
+output "address_wo_protocol" {
+  description = "Endpoint for cluster without protocol"
+  value       = "${local.common_name}:8500"
+}
+
 output "static_mount_path" {
   description = "Vault mount path for consul static tokens"
   value = var.vault_cluster.consul_static_mount_path
