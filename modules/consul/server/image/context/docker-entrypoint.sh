@@ -113,10 +113,16 @@ else
       -config /consul/config/templates/consul_template.hcl \
       -once
 
+    cat > /tmp/start_consul.sh <<EOF
+#!/bin/bash
+
+$@
+EOF
+    chmod +x /tmp/start_consul.sh
+
     # run consul-template in the backgroundn to update certs
     # @TODO Get consul-template to trigger consul reload
     consul-template \
-      -config /consul/config/templates/consul_template.hcl &
-
-    exec $@
+      -config /consul/config/templates/consul_template.hcl \
+      -exec /tmp/start_consul.sh
 fi
