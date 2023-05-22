@@ -133,6 +133,12 @@ path "consul-${datacenter}/config/access"
   capabilities = ["update", "read"]
 }
 
+# Create consul role for servers
+path "consul-${datacenter}/roles/consul-server-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
 %{endfor}
 
 EOF

@@ -1,54 +1,28 @@
 resource "consul_acl_policy" "agent_role" {
 
-  for_each = local.consul_server_map
-
-  name = "agent-${var.datacenter.name}-${each.key}"
+  name = "consul-server-${var.datacenter.name}"
 
   datacenters = [var.datacenter.name]
 
   rules = <<EOF
-node "${each.key}" {
+node_prefix "consul-server-${var.datacenter.name}-" {
   policy = "write"
 }
-
-node "" {
+node_prefix "" {
   policy = "read"
 }
-
-agent "${each.key}" {
-  policy = "write"
+service_prefix "" {
+  policy = "read"
 }
 EOF
 }
 
-resource "consul_acl_token" "agent_token" {
-  for_each = local.consul_server_map
 
-  description = "Agent token ${each.key}.${var.datacenter.name}"
+resource "vault_consul_secret_backend_role" "agent_role" {
+  name    = "consul-server-role"
+  backend = vault_consul_secret_backend.this.path
 
-  policies = [consul_acl_policy.agent_role[each.key].name]
-
-  node_identities {
-    node_name  = each.key
-    datacenter = var.datacenter.name
-  }
-}
-
-data "consul_acl_token_secret_id" "agent_token" {
-  for_each = local.consul_server_map
-
-  accessor_id = consul_acl_token.agent_token[each.key].accessor_id
-}
-
-resource "vault_kv_secret_v2" "agent_token" {
-  for_each = local.consul_server_map
-
-  mount = var.vault_cluster.consul_static_mount_path
-  name  = "${var.datacenter.name}/agent-tokens/${each.key}"
-
-  data_json = jsonencode(
-    {
-      token = data.consul_acl_token_secret_id.agent_token[each.key].secret_id
-    }
-  )
+  consul_policies = [
+    consul_acl_policy.agent_role.name
+  ]
 }

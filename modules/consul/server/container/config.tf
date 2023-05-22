@@ -127,7 +127,7 @@ client_addr        = "0.0.0.0"
 bind_addr          = "${var.docker_ip}"
 advertise_addr     = "${var.docker_ip}"
 advertise_addr_wan = "${var.docker_ip}"
-node_name          = "${var.hostname}"
+node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
