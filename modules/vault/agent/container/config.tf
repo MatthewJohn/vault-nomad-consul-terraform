@@ -31,7 +31,7 @@ auto_auth {
 }
 vault {
    address      = "${var.vault_cluster.address}"
-   ca_cert_file = "/vault-agent/ssl/root-ca.pem"
+   ca_cert      = "/vault-agent/ssl/root-ca.pem"
 }
 
 EOF
