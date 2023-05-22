@@ -33,6 +33,11 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
+path "auth/approle/login"
+{
+  capabilities = ["update"]
+}
+
 EOF
 }
 
