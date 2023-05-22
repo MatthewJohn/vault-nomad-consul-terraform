@@ -138,17 +138,15 @@ ui = true
 
 acl {
   enabled = true
-%{if var.initial_run == true}
-  default_policy = "allow"
-%{else}
   default_policy = "deny"
-%{endif}
   enable_token_persistence = true
   enable_token_replication = true
   tokens {
-{{ with secret "${var.datacenter.static_mount_path}/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
-    agent  = "{{ .Data.data.token }}"
+%{if var.initial_run == false}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
+    agent  = "{{ .Data.token }}"
 {{ end }}
+%{endif}
   }
 }
 

@@ -48,3 +48,8 @@ output "primary_datacenter" {
   description = "Whether the datacenter is the primary datacenter"
   value       = local.is_primary_datacenter
 }
+
+output "consul_engine_mount_path" {
+  description = "Mount path for vault consul secret engine"
+  value       = local.consul_engine_mount_path
+}

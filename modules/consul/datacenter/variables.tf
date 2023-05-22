@@ -43,4 +43,6 @@ variable "agent_ips" {
 
 locals {
   is_primary_datacenter = var.global_config.primary_datacenter == var.datacenter ? true : false
+
+  consul_engine_mount_path = "consul-${var.datacenter}"
 }

@@ -13,6 +13,7 @@ variable "datacenter" {
     pki_mount_path               = string
     agent_consul_template_policy = string
     static_mount_path            = string
+    consul_engine_mount_path     = string
   })
 }
 
