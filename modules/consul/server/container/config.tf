@@ -30,7 +30,7 @@ vault {
   # @TODO Wrap this token
   unwrap_token = false
   renew_token  = true
-  token        = "${vault_token.consule_template.client_token}"
+  token        = "${vault_token.consul_template.client_token}"
 
   ssl {
     enabled = true
