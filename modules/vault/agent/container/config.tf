@@ -1,0 +1,59 @@
+locals {
+
+  configs_files = {
+    "ssl/ssl/root-ca.pem" = file(var.vault_cluster.root)
+    "config.d/app-role-id" = var.app_role_id
+    "config.d/app-role-secret" = var.app_role_secret
+
+    "config.d/agent.hcl" = <<EOF
+exit_after_auth = false
+
+pid_file = "/tmp/vault-agent.pid"
+
+auto_auth {
+  method {
+    type = "approle"
+
+    config = {
+      role_id_file_path   = "/vault-agent/config.d/app-role-id"
+      secret_id_file_path = "/vault-agent/config.d/app-role-id"
+
+      remove_secret_id_file_after_reading = false
+    }
+  }
+
+  sink "file" {
+    wrap_ttl = "5m"
+    config = {
+      path = "/vault-agent/auth/token"
+    }
+  }
+}
+vault {
+   address      = "${var.vault_cluster.address}"
+   ca_cert_file = "/vault-agent/ssl/root-ca.pem"
+}
+
+EOF
+  }
+}
+
+resource "null_resource" "config_files" {
+
+  for_each = local.config_files
+
+  triggers = {
+    config = each.value
+  }
+
+  connection {
+    type = "ssh"
+    user = var.docker_username
+    host = var.docker_host
+  }
+
+  provisioner "file" {
+    content     = each.value
+    destination = "/vault-agent/${each.key}"
+  }
+}
