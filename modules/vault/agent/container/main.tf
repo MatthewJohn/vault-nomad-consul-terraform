@@ -41,10 +41,6 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
-    ignore_changes = [
-      image
-    ]
-
     replace_triggered_by = [
       null_resource.config_files
     ]

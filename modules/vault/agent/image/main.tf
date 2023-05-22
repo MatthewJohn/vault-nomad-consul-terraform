@@ -1,3 +1,10 @@
+resource "null_resource" "image_trigger" {
+  triggers = {
+    "entrypoint" = filesha512("${path.module}/context/docker-entrypoint.sh")
+    "Dockerfile" = filesha512("${path.module}/context/Dockerfile")
+  }
+}
+
 resource "docker_image" "this" {
   name = "${var.image_name}:${var.vault_version}"
 
@@ -21,5 +28,11 @@ resource "docker_image" "this" {
     label = {
       author = "Dockstudios Ltd"
     }
+  }
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.image_trigger
+    ]
   }
 }

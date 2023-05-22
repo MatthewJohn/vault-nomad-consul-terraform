@@ -142,7 +142,7 @@ path "consul-${datacenter}/roles/consul-server-role"
 # Create approle backend
 path "sys/auth/approle-consul-${datacenter}"
 {
-  capabilities = ["create", "update", "delete", "read"]
+  capabilities = ["create", "update", "delete", "read", "sudo"]
 }
 
 %{endfor}

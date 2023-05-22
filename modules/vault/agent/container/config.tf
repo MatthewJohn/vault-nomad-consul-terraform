@@ -1,7 +1,7 @@
 locals {
 
   config_files = {
-    "ssl/ssl/root-ca.pem" = file(var.vault_cluster.ca_cert_file)
+    "ssl/root-ca.pem" = file(var.vault_cluster.ca_cert_file)
     "config.d/app-role-id" = var.app_role_id
     "config.d/app-role-secret" = var.app_role_secret
 

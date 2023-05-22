@@ -24,34 +24,15 @@ if [ "${1:0:1}" = '-' ]; then
     set -- vault "$@"
 fi
 
-mkdir -p /vault-agent/config.d
-mkdir -p /vault-agent/ssl
-mkdir -p /vault-agent/auth
+
+mkdir -p /vault-agent/auth || true
 
 # If we are running Vault, make sure it executes as the proper user.
 if [ "$1" = 'vault' ]; then
     if [ -z "$SKIP_CHOWN" ]; then
-        # If the config dir is bind mounted then chown it
-        chown -R :vault /vault-agent/config.d || echo "Could not chown /vault-agent/config.d (may not have appropriate permissions)"
-        chmod 755 /vault-agent/config.d || echo "Could not chmod /vault-agent/config.d (may not have appropriate permissions)"
-        chmod 644 /vault-agent/config.d/* || echo "Could not chmod /vault-agent/config.d/* (may not have appropriate permissions)"
-
-        chown -R :vault /vault-agent/ssl || echo "Could not chown /vault-agent/ssl (may not have appropriate permissions)"
-        chmod 755 /vault-agent/ssl || echo "Could not chmod /vault-agent/ssl (may not have appropriate permissions)"
-        chmod 644 /vault-agent/ssl/* || echo "Could not chmod /vault-agent/ssl/* (may not have appropriate permissions)"
-
         chown -R vault: /vault-agent/auth || echo "Could not chown /vault-agent/ssl (may not have appropriate permissions)"
         chmod 755 /vault-agent/auth || echo "Could not chmod /vault-agent/ssl (may not have appropriate permissions)"
 
-        # If the logs dir is bind mounted then chown it
-        if [ "$(stat -c %u /vault-agent/logs)" != "$(id -u vault)" ]; then
-            chown -R vault:vault /vault-agent/logs
-        fi
-
-        # If the file dir is bind mounted then chown it
-        if [ "$(stat -c %u /vault-agent/file)" != "$(id -u vault)" ]; then
-            chown -R vault:vault /vault-agent/file
-        fi
     fi
 
     if [ -z "$SKIP_SETCAP" ]; then
