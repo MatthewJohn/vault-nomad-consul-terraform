@@ -108,11 +108,6 @@ then
     export SKIP_SETCAP="true"
     exec su consul -p "$0" -- "$@"
 else
-    # Run consul template once to generate initial keys
-    consul-template \
-      -config /consul/config/templates/consul_template.hcl \
-      -once
-
     cat > /tmp/start_consul.sh <<EOF
 #!/bin/bash
 

@@ -28,7 +28,7 @@ EOF
 vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
-  unwrap_token           = false
+  unwrap_token           = true
   vault_agent_token_file = "/vault-agent-consul-template/auth/token"
 
   ssl {
