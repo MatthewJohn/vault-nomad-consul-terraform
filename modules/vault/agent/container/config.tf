@@ -25,7 +25,6 @@ auto_auth {
   }
 
   sink "file" {
-    wrap_ttl = "5m"
     config = {
       path = "/vault-agent/auth/token"
     }
