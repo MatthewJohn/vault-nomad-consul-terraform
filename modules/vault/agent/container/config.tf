@@ -25,6 +25,8 @@ auto_auth {
   }
 
   sink "file" {
+    # @TODO support unwrapping
+    #wrap_ttl = "5m"
     config = {
       path = "/vault-agent/auth/token"
     }
