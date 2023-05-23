@@ -119,3 +119,15 @@ Code: 400. Errors:
 
 This occurs when the cluster is still recovering from the lost node
 
+
+
+## Errors to investigate
+
+consul:
+```
+2023-05-23T06:02:56.429Z [WARN]  agent.server.raft: failed to get previous log: previous-index=3104 last-index=3085 error="log not found"
+```
+
+```
+2023-05-23T06:03:04.948Z [ERROR] agent: Failed to check for updates: error="Get \"https://checkpoint-api.hashicorp.com/v1/check/consul?arch=amd64&os=linux&signature=e54f3d7f-3cc0-31f7-374c-d7bccbfbab8a&version=1.15.2\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+```
