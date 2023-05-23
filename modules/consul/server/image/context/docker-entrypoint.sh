@@ -106,6 +106,10 @@ if [[ "$(id -u)" == '0' ]]
 then
     export SKIP_CHOWN="true"
     export SKIP_SETCAP="true"
+
+    # Allow consul to listen on all ports
+    setcap CAP_NET_BIND_SERVICE=+eip /bin/consul
+
     exec su consul -p "$0" -- "$@"
 else
     cat > /tmp/start_consul.sh <<EOF
