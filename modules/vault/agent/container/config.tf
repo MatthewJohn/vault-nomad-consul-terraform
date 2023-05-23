@@ -1,7 +1,7 @@
 locals {
 
-  configs_files = {
-    "ssl/ssl/root-ca.pem" = file(var.vault_cluster.root)
+  config_files = {
+    "ssl/root-ca.pem" = file(var.vault_cluster.ca_cert_file)
     "config.d/app-role-id" = var.app_role_id
     "config.d/app-role-secret" = var.app_role_secret
 
@@ -14,16 +14,17 @@ auto_auth {
   method {
     type = "approle"
 
-    config = {
+    mount_path = "auth/${var.app_role_mount_path}"
+
+    config {
       role_id_file_path   = "/vault-agent/config.d/app-role-id"
-      secret_id_file_path = "/vault-agent/config.d/app-role-id"
+      secret_id_file_path = "/vault-agent/config.d/app-role-secret"
 
       remove_secret_id_file_after_reading = false
     }
   }
 
   sink "file" {
-    wrap_ttl = "5m"
     config = {
       path = "/vault-agent/auth/token"
     }
@@ -31,7 +32,7 @@ auto_auth {
 }
 vault {
    address      = "${var.vault_cluster.address}"
-   ca_cert_file = "/vault-agent/ssl/root-ca.pem"
+   ca_cert      = "/vault-agent/ssl/root-ca.pem"
 }
 
 EOF
@@ -54,6 +55,6 @@ resource "null_resource" "config_files" {
 
   provisioner "file" {
     content     = each.value
-    destination = "/vault-agent/${each.key}"
+    destination = "${var.base_directory}/${each.key}"
   }
 }

@@ -26,11 +26,10 @@ EOF
 
     "config/templates/consul_template.hcl" = <<EOF
 vault {
-  address      = "${var.vault_cluster.address}"
+  address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
-  unwrap_token = false
-  renew_token  = true
-  token        = "${vault_token.consule_template.client_token}"
+  unwrap_token           = false
+  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
 
   ssl {
     enabled = true
@@ -127,7 +126,7 @@ client_addr        = "0.0.0.0"
 bind_addr          = "${var.docker_ip}"
 advertise_addr     = "${var.docker_ip}"
 advertise_addr_wan = "${var.docker_ip}"
-node_name          = "${var.hostname}"
+node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
@@ -138,17 +137,15 @@ ui = true
 
 acl {
   enabled = true
-%{if var.initial_run == true}
-  default_policy = "allow"
-%{else}
   default_policy = "deny"
-%{endif}
   enable_token_persistence = true
   enable_token_replication = true
   tokens {
-{{ with secret "${var.datacenter.static_mount_path}/${var.datacenter.name}/agent-tokens/${var.hostname}" }}
-    agent  = "{{ .Data.data.token }}"
+%{if var.initial_run == false}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
+    agent  = "{{ .Data.token }}"
 {{ end }}
+%{endif}
   }
 }
 

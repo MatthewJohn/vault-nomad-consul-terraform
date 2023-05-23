@@ -1,4 +1,10 @@
 
+variable "container_name" {
+  description = "Custom name for container"
+  type        = string
+  default     = "vault-agent"
+}
+
 variable "hostname" {
   description = "Hostname for docker"
   type        = string
@@ -19,6 +25,12 @@ variable "vault_cluster" {
   })
 }
 
+variable "base_directory" {
+  description = "Base directory for agent"
+  type        = string
+  default     = "/vault-agent"
+}
+
 variable "app_role_id" {
   description = "App role ID for authentication"
   type        = string
@@ -27,6 +39,11 @@ variable "app_role_id" {
 variable "app_role_secret" {
   description = "App role secret for authentication"
   type        = string
+}
+
+variable "app_role_mount_path" {
+  description = "Mount path for approle backend"
+  type = string
 }
 
 variable "vault_version" {

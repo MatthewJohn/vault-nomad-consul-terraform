@@ -28,8 +28,21 @@ variable "vault_cluster" {
   })
 }
 
+variable "global_config" {
+  description = "Global consul config"
+  type = object({
+    primary_datacenter = string
+  })
+}
+
 variable "agent_ips" {
   description = "List of all agent IP addresses"
   type        = list(string)
   default     = []
+}
+
+locals {
+  is_primary_datacenter = var.global_config.primary_datacenter == var.datacenter ? true : false
+
+  consul_engine_mount_path = "consul-${var.datacenter}"
 }

@@ -66,13 +66,19 @@ module "virtual_machines" {
       network_bridge           = "virbr0"
       additional_dns_hostnames = ["consul-2.dc.consul.dock.local"]
     }
+    "consul-3" = {
+      ip_address               = "192.168.122.73"
+      ip_gateway               = "192.168.122.1"
+      network_bridge           = "virbr0"
+      additional_dns_hostnames = ["consul-3.dc.consul.dock.local"]
+    }
   }
 }
 
 locals {
   all_vault_hosts    = ["vault-1", "vault-2"]
   all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
-  all_consul_ips     = ["192.168.122.71"]
+  all_consul_ips     = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
 }
 
 module "vault_init" {
@@ -140,15 +146,23 @@ module "consul_certificate_authority" {
   vault_cluster    = module.vault_cluster
 }
 
+module "consul_global_config" {
+  source = "../../modules/consul/global_config"
+
+  primary_datacenter = "dc1"
+}
+
 module "dc1" {
   source = "../../modules/consul/datacenter"
 
   datacenter    = "dc1"
   root_cert     = module.consul_certificate_authority
   vault_cluster = module.vault_cluster
+  global_config = module.consul_global_config
   agent_ips     = local.all_consul_ips
 }
 
+# @TODO Generate in datacenter and store in vault
 module "consul_gossip_encryption" {
   source = "../../modules/consul/keygen"
 }
@@ -201,6 +215,25 @@ module "consul-2" {
   docker_host     = "consul-2.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.72"
+}
+
+module "consul-3" {
+  source = "../../modules/consul/server"
+
+  datacenter    = module.dc1
+  vault_cluster = module.vault_cluster
+  root_cert     = module.consul_certificate_authority
+  hostname      = "consul-3"
+
+  gossip_key = module.consul_gossip_encryption.secret
+
+  consul_version = "1.15.2"
+
+  initial_run = var.initial_setup
+
+  docker_host     = "consul-3.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.73"
 }
 
 module "consul_static_tokens" {

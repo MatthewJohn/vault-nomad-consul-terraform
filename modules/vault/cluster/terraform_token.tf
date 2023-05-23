@@ -16,12 +16,6 @@ path "sys/policies/acl"
   capabilities = ["list"]
 }
 
-# Create and manage secrets engines broadly across Vault.
-path "sys/mounts/*"
-{
-  capabilities = ["create", "read", "update", "list"]
-}
-
 # Create token
 path "auth/*"
 {
@@ -127,6 +121,28 @@ path "consul_static/data/${datacenter}/agent-tokens/*"
 path "consul_static/metadata/${datacenter}/agent-tokens/*"
 {
   capabilities = ["read", "update", "create", "delete", "list"]
+}
+
+# Manage consul secret mount
+path "sys/mounts/consul-${datacenter}"
+{
+  capabilities = ["create", "read", "update", "list", "delete" ]
+}
+path "consul-${datacenter}/config/access"
+{
+  capabilities = ["update", "read"]
+}
+
+# Create consul role for servers
+path "consul-${datacenter}/roles/consul-server-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
+# Create approle backend
+path "sys/auth/approle-consul-${datacenter}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
 }
 
 %{endfor}

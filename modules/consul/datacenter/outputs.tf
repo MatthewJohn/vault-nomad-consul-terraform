@@ -21,7 +21,7 @@ output "pki_mount_path" {
 
 output "agent_consul_template_policy" {
   description = "Role for agent consul-template to authenticate to vault"
-  value       = vault_policy.agent_ca.name
+  value       = vault_policy.agent_consul_template.name
 }
 
 output "root_cert_public_key" {
@@ -34,7 +34,32 @@ output "address" {
   value       = "http://${local.common_name}:8500"
 }
 
+output "address_wo_protocol" {
+  description = "Endpoint for cluster without protocol"
+  value       = "${local.common_name}:8500"
+}
+
 output "static_mount_path" {
   description = "Vault mount path for consul static tokens"
-  value = var.vault_cluster.consul_static_mount_path
+  value       = var.vault_cluster.consul_static_mount_path
+}
+
+output "primary_datacenter" {
+  description = "Whether the datacenter is the primary datacenter"
+  value       = local.is_primary_datacenter
+}
+
+output "consul_engine_mount_path" {
+  description = "Mount path for vault consul secret engine"
+  value       = local.consul_engine_mount_path
+}
+
+output "approle_mount_path" {
+  description = "Path for vault approle mount path for datacenter"
+  value       = vault_auth_backend.approle.path
+}
+
+output "server_consul_template_approle_role_name" {
+  description = "Role name for consul server consul template approle"
+  value       = vault_approle_auth_backend_role.server_consul_template.role_name
 }

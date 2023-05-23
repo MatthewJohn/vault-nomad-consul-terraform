@@ -17,6 +17,7 @@ variable "datacenter" {
     pki_mount_path               = string
     agent_consul_template_policy = string
     static_mount_path            = string
+    consul_engine_mount_path     = string
   })
 }
 
@@ -37,6 +38,15 @@ variable "root_cert" {
     common_name    = string
     organisation   = string
     ou             = string
+  })
+}
+
+variable "consul_template_vault_agent" {
+  description = "Vault agent instance for consul template"
+  type = object({
+    container_id    = string
+    token_directory = string
+    token_path      = string
   })
 }
 

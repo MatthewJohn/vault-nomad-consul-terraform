@@ -1,12 +1,14 @@
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({
-    name                 = string
-    common_name          = string
-    role_name            = string
-    pki_mount_path       = string
-    root_cert_public_key = string
-    address              = string
+    name                     = string
+    common_name              = string
+    role_name                = string
+    pki_mount_path           = string
+    root_cert_public_key     = string
+    address                  = string
+    address_wo_protocol      = string
+    consul_engine_mount_path = string
   })
 }
 
@@ -24,7 +26,6 @@ variable "vault_cluster" {
     address                  = string
     token                    = string
     consul_static_mount_path = string
-
   })
 }
 
