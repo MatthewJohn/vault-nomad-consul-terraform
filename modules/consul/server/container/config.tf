@@ -130,6 +130,14 @@ node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
+ports {
+  # Listener ports
+  dns = 53
+  http = 8500
+  https = 8501
+  grpc = 8502
+}
+
 ui_config {
   enabled = true
 }
