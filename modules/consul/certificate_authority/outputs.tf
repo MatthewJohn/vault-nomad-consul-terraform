@@ -3,6 +3,11 @@ output "pki_mount_path" {
   value       = vault_mount.consul_pki.path
 }
 
+output "pki_connect_mount_path" {
+  description = "PKI Connect path"
+  value       = vault_mount.pki_connect.path
+}
+
 output "domain_name" {
   description = "Root domain name"
   value       = var.domain_name

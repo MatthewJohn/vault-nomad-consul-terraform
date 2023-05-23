@@ -82,6 +82,13 @@ path "pki_consul/root/sign-intermediate"
   capabilities = ["update"]
 }
 
+# Consul connect
+## CA
+path "sys/mounts/pki_connect"
+{
+  capabilities = ["create", "update", "read"]
+}
+
 %{for datacenter in var.consul_datacenters}
 # Generate intermediate CAs
 path "pki_int_consul_${datacenter}/intermediate/generate/internal"
@@ -143,6 +150,18 @@ path "consul-${datacenter}/roles/consul-server-role"
 path "sys/auth/approle-consul-${datacenter}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
+# Consul connect
+## Intermediate CA
+path "sys/mounts/pki_int_connect_${datacenter}"
+{
+  capabilities = ["create", "update", "read"]
+}
+## CA policy
+path "sys/policies/acl/consul-connect-ca-${datacenter}"
+{
+  capabilities = ["create", "update", "read"]
 }
 
 %{endfor}
