@@ -53,6 +53,16 @@ Again manually restart each of the consul containers
 
 ## NOTES:
 
+### Initial VM creation
+
+When a new VM is created, libvirt can error about an unknown disk - the VM has been created and the disk attrached.
+
+The storage pool simply needs refreshing.
+
+This may be fixed by creation of a volume resource in future
+
+### Vault token errors
+
 If you get errors, such as:
 ```
 │ URL: GET https://vault.dock.local:8200/v1/auth/token/lookup-self
@@ -85,7 +95,7 @@ Regenerate tokens, using:
 terraform apply -target=module.vault_cluster
 ```
 
-## Restarting consul node
+### Restarting consul node
 
 When restarting a consul node, you will receive the following errors:
 ```
