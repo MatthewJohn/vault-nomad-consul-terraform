@@ -130,6 +130,14 @@ node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
+ports {
+  # Listener ports
+  dns = 53
+  http = 8500
+  https = 8501
+  grpc_tls = 8503
+}
+
 ui_config {
   enabled = true
 }
@@ -173,6 +181,33 @@ tls {
    }
 }
 
+connect {
+  enabled = true
+  ca_provider = "vault"
+  ca_config {
+    address = "${var.vault_cluster.address}"
+    
+    auth_method {
+      type = "approle"
+      mount_path = "${var.datacenter.approle_mount_path}"
+      params {
+        role_id   = "${var.connect_ca_approle_role_id}"
+        secret_id = "${var.connect_ca_approle_secret_id}"
+      }
+      ca_file = "/consul/vault/ca_cert.pem"
+    }
+
+    root_pki_path         = "${var.root_cert.pki_connect_mount_path}"
+    intermediate_pki_path = "${var.datacenter.pki_connect_mount_path}"
+
+    leaf_cert_ttl         = "72h"
+    rotation_period       = "2160h"
+    intermediate_cert_ttl = "8760h"
+    private_key_type      = "rsa"
+    private_key_bits      = 2048
+  }
+}
+
 retry_join = ["${var.datacenter.common_name}"]
 
 auto_encrypt {
@@ -180,6 +215,8 @@ auto_encrypt {
 }
 
 encrypt = "${var.gossip_key}"
+
+disable_update_check = true
 
 EOF
   }

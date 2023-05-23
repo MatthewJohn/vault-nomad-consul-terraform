@@ -18,6 +18,8 @@ variable "datacenter" {
     agent_consul_template_policy = string
     static_mount_path            = string
     consul_engine_mount_path     = string
+    approle_mount_path           = string
+    pki_connect_mount_path       = string
   })
 }
 
@@ -34,10 +36,11 @@ variable "vault_cluster" {
 variable "root_cert" {
   description = "Root certificate object"
   type = object({
-    pki_mount_path = string
-    common_name    = string
-    organisation   = string
-    ou             = string
+    pki_mount_path         = string
+    common_name            = string
+    organisation           = string
+    ou                     = string
+    pki_connect_mount_path = string
   })
 }
 
@@ -48,6 +51,17 @@ variable "consul_template_vault_agent" {
     token_directory = string
     token_path      = string
   })
+}
+
+
+variable "connect_ca_approle_role_id" {
+  description = "Approle role ID for connect CA"
+  type        = string
+}
+
+variable "connect_ca_approle_secret_id" {
+  description = "Approle secret ID for connect CA"
+  type        = string
 }
 
 variable "gossip_key" {

@@ -53,6 +53,16 @@ Again manually restart each of the consul containers
 
 ## NOTES:
 
+### Initial VM creation
+
+When a new VM is created, libvirt can error about an unknown disk - the VM has been created and the disk attrached.
+
+The storage pool simply needs refreshing.
+
+This may be fixed by creation of a volume resource in future
+
+### Vault token errors
+
 If you get errors, such as:
 ```
 │ URL: GET https://vault.dock.local:8200/v1/auth/token/lookup-self
@@ -85,7 +95,7 @@ Regenerate tokens, using:
 terraform apply -target=module.vault_cluster
 ```
 
-## Restarting consul node
+### Restarting consul node
 
 When restarting a consul node, you will receive the following errors:
 ```
@@ -109,3 +119,15 @@ Code: 400. Errors:
 
 This occurs when the cluster is still recovering from the lost node
 
+
+
+## Errors to investigate
+
+consul:
+```
+2023-05-23T06:02:56.429Z [WARN]  agent.server.raft: failed to get previous log: previous-index=3104 last-index=3085 error="log not found"
+```
+
+```
+2023-05-23T06:03:04.948Z [ERROR] agent: Failed to check for updates: error="Get \"https://checkpoint-api.hashicorp.com/v1/check/consul?arch=amd64&os=linux&signature=e54f3d7f-3cc0-31f7-374c-d7bccbfbab8a&version=1.15.2\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+```

@@ -63,3 +63,19 @@ output "server_consul_template_approle_role_name" {
   description = "Role name for consul server consul template approle"
   value       = vault_approle_auth_backend_role.server_consul_template.role_name
 }
+
+# Consul connect
+output "pki_connect_mount_path" {
+  description = "PKI path for consul connect"
+  value       = vault_mount.connect_intermediate.path
+}
+
+output "connect_ca_policy" {
+  description = "Consul connect CA policy name"
+  value       = vault_policy.connect_ca.name
+}
+
+output "connect_ca_approle_role_name" {
+  description = "Role name for consul server consul template approle"
+  value       = vault_approle_auth_backend_role.connect_ca.role_name
+}

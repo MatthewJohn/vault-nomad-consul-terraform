@@ -17,6 +17,9 @@ resource "docker_container" "this" {
 
   user = "root"
 
+  # Use privileged mode to allow listening on port 53
+  privileged = true
+
   network_mode = "host"
 
   env = [

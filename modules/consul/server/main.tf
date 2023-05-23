@@ -39,6 +39,9 @@ module "container" {
   gossip_key    = var.gossip_key
   initial_run   = var.initial_run
 
+  connect_ca_approle_role_id   = data.vault_approle_auth_backend_role_id.connect_ca.role_id
+  connect_ca_approle_secret_id = vault_approle_auth_backend_role_secret_id.connect_ca.secret_id
+
   docker_host     = var.docker_host
   docker_username = var.docker_username
   docker_ip       = var.docker_ip
