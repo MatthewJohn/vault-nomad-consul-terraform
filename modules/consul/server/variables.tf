@@ -34,10 +34,11 @@ variable "vault_cluster" {
 variable "root_cert" {
   description = "Root certificate object"
   type = object({
-    pki_mount_path = string
-    common_name    = string
-    organisation   = string
-    ou             = string
+    pki_mount_path         = string
+    common_name            = string
+    organisation           = string
+    ou                     = string
+    pki_connect_mount_path = string
   })
 }
 

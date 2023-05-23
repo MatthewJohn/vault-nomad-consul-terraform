@@ -179,18 +179,18 @@ connect {
   ca_config {
     address = "${var.vault_cluster.address}"
     
-    auth_method = {
+    auth_method {
       type = "approle"
       mount_path = "${var.datacenter.approle_mount_path}"
-      params = {
+      params {
         role_id   = "${var.connect_ca_approle_role_id}"
         secret_id = "${var.connect_ca_approle_secret_id}"
       }
       ca_file = "/consul/vault/ca_cert.pem"
     }
 
-    root_pki_path = "connect_root"
-    intermediate_pki_path = "connect_dc1_inter"
+    root_pki_path         = "${var.root_cert.pki_connect_mount_path}"
+    intermediate_pki_path = "${var.datacenter.pki_connect_mount_path}"
 
     leaf_cert_ttl         = "72h"
     rotation_period       = "2160h"
