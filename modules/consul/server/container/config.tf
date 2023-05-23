@@ -208,6 +208,8 @@ auto_encrypt {
 
 encrypt = "${var.gossip_key}"
 
+disable_update_check = true
+
 EOF
   }
 }
