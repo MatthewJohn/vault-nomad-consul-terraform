@@ -16,6 +16,8 @@ variable "datacenter" {
     consul_engine_mount_path                 = string
     approle_mount_path                       = string
     server_consul_template_approle_role_name = string
+    pki_connect_mount_path                   = string
+    connect_ca_approle_role_name             = string
   })
 }
 

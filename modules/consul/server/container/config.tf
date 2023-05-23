@@ -173,6 +173,33 @@ tls {
    }
 }
 
+connect {
+  enabled = true
+  ca_provider = "vault"
+  ca_config {
+    address = "${var.vault_cluster.address}"
+    
+    auth_method = {
+      type = "approle"
+      mount_path = "${var.datacenter.approle_mount_path}"
+      params = {
+        role_id   = "${var.connect_ca_approle_role_id}"
+        secret_id = "${var.connect_ca_approle_secret_id}"
+      }
+      ca_file = "/consul/vault/ca_cert.pem"
+    }
+
+    root_pki_path = "connect_root"
+    intermediate_pki_path = "connect_dc1_inter"
+
+    leaf_cert_ttl         = "72h"
+    rotation_period       = "2160h"
+    intermediate_cert_ttl = "8760h"
+    private_key_type      = "rsa"
+    private_key_bits      = 2048
+  }
+}
+
 retry_join = ["${var.datacenter.common_name}"]
 
 auto_encrypt {
