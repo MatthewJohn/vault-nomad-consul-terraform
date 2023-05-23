@@ -135,7 +135,7 @@ ports {
   dns = 53
   http = 8500
   https = 8501
-  grpc = 8502
+  grpc_tls = 8503
 }
 
 ui_config {
