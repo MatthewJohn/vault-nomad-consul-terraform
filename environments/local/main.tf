@@ -58,19 +58,27 @@ module "virtual_machines" {
       ip_address               = "192.168.122.71"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-1.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-1.dc1.consul.dock.local"]
     }
     "consul-2" = {
       ip_address               = "192.168.122.72"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-2.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-2.dc1.consul.dock.local"]
     }
     "consul-3" = {
       ip_address               = "192.168.122.73"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-3.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-3.dc1.consul.dock.local"]
+    }
+  }
+  nomad_server_hosts = {
+    "nomad-1" = {
+      ip_address     = "192.168.122.81"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
+      #additional_dns_hostnames = ["nomad-1.ndc1.dock.local"]
     }
   }
 }
