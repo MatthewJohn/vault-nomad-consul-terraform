@@ -1,11 +1,16 @@
 locals {
   common_name = "${var.region}.${var.root_cert.common_name}"
+  nomad_verify_domain = "${var.region}.nomad"
 }
 
 resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
   backend     = vault_mount.this.path
   type        = "internal"
   common_name = local.common_name
+
+  alt_names = [
+    local.nomad_verify_domain
+  ]
 
   depends_on = [
     vault_mount.this
@@ -38,7 +43,7 @@ resource "vault_pki_secret_backend_role" "this" {
 
   max_ttl          = (720 * 60 * 60)  # "720h"
   generate_lease   = true
-  allowed_domains  = [local.common_name]
+  allowed_domains  = [local.common_name, local.nomad_verify_domain]
   allow_subdomains = true
 
   depends_on = [

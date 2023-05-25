@@ -2,23 +2,25 @@ locals {
 
   fqdn        = "${var.hostname}.${var.region.common_name}"
   server_fqdn = "server.${var.region.common_name}"
+  # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
+  verify_domain = "server.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h" "alt_names=${local.server_fqdn},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h" "alt_names=${local.server_fqdn},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
 
