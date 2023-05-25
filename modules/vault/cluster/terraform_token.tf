@@ -42,6 +42,10 @@ path "sys/health"
 
 #########################
 # Permissions for Consul CA
+path "sys/mounts/pki_consul"
+{
+  capabilities = ["read", "list", "create"]
+}
 # Generate root CA
 path "pki_consul/root/generate/internal"
 {
@@ -165,6 +169,52 @@ path "sys/policies/acl/consul-connect-ca-${datacenter}"
 }
 
 %{endfor}
+
+#########################
+# Permissions for Nomad CA
+path "sys/mounts/pki_nomad"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+# Generate root CA
+path "pki_nomad/root/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# upload certificate
+path "pki_nomad/config/ca"
+{
+  capabilities = ["update"]
+}
+
+# Add roles for root cert
+path "pki_nomad/roles/*"
+{
+  capabilities = ["read", "create", "update"]
+}
+
+# Read PKI issues and update config
+path "pki_nomad/issues"
+{
+  capabilities = ["read"]
+}
+path "pki_nomad/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Update certificate URLs
+path "pki_nomad/config/urls"
+{
+  capabilities = ["update", "read"]
+}
+
+# Sign intermediate certificates
+path "pki_nomad/root/sign-intermediate"
+{
+  capabilities = ["update"]
+}
 
 EOF
 }

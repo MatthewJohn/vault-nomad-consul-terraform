@@ -148,11 +148,14 @@ module "vault-2" {
 }
 
 module "consul_certificate_authority" {
-  source = "../../modules/consul/certificate_authority"
+  source = "../../modules/certificate_authority"
 
-  domain_name      = local.domain_name
-  consul_subdomain = "consul"
-  vault_cluster    = module.vault_cluster
+  domain_name       = local.domain_name
+  subdomain         = "consul"
+  vault_cluster     = module.vault_cluster
+  description       = "Consul CA"
+  mount_name        = "consul"
+  create_connect_ca = true
 }
 
 module "consul_global_config" {
@@ -255,6 +258,16 @@ module "consul_static_tokens" {
     module.consul-1,
     module.consul-2
   ]
+}
+
+module "nomad_certificate_authority" {
+  source = "../../modules/certificate_authority"
+
+  domain_name   = local.domain_name
+  subdomain     = "nomad"
+  vault_cluster = module.vault_cluster
+  description   = "Nomad CA"
+  mount_name    = "nomad"
 }
 
 

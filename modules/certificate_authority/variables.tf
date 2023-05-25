@@ -4,8 +4,8 @@ variable "domain_name" {
   type        = string
 }
 
-variable "consul_subdomain" {
-  description = "Consul subdomain of domain name for CA"
+variable "subdomain" {
+  description = "Subdomain of domain name for CA"
   type        = string
   default     = "consul"
 }
@@ -31,6 +31,23 @@ variable "vault_cluster" {
   })
 }
 
+variable "create_connect_ca" {
+  description = "Whether to create additional Consul connect CA"
+  type        = bool
+  default     = false
+}
+
+variable "mount_name" {
+  description = "Vault mount name for CA"
+  type        = string
+}
+
+variable "description" {
+  description = "Description of Mount for CA"
+  type        = string
+}
+
+
 locals {
-  common_name = "${var.consul_subdomain}.${var.domain_name}"
+  common_name = "${var.subdomain}.${var.domain_name}"
 }
