@@ -87,6 +87,7 @@ locals {
   all_vault_hosts    = ["vault-1", "vault-2"]
   all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
   all_consul_ips     = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
+  all_nomad_ips      = ["192.168.122.81"]
 }
 
 module "vault_init" {
@@ -254,4 +255,20 @@ module "consul_static_tokens" {
     module.consul-1,
     module.consul-2
   ]
+}
+
+
+module "nomad-1" {
+  source = "../../modules/nomad/server"
+
+  consul_datacenter = module.dc1
+  vault_cluster     = module.vault_cluster
+  consul_root_cert  = module.consul_certificate_authority
+  hostname          = "nomad-1"
+
+  nomad_version = "1.5.6"
+
+  docker_host     = "nomad-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.81"
 }
