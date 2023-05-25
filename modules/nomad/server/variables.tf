@@ -4,20 +4,15 @@ variable "hostname" {
   type        = string
 }
 
-variable "consul_datacenter" {
-  description = "Consul datacenter"
+variable "datacenter" {
+  description = "Nomad datacenter"
   type = object({
     name                                     = string
     common_name                              = string
     role_name                                = string
     pki_mount_path                           = string
-    agent_consul_template_policy             = string
-    static_mount_path                        = string
-    consul_engine_mount_path                 = string
     approle_mount_path                       = string
     server_consul_template_approle_role_name = string
-    pki_connect_mount_path                   = string
-    connect_ca_approle_role_name             = string
   })
 }
 
@@ -28,17 +23,6 @@ variable "vault_cluster" {
     address                  = string
     consul_static_mount_path = string
     token                    = string
-  })
-}
-
-variable "consul_root_cert" {
-  description = "Root certificate object for consul"
-  type = object({
-    pki_mount_path         = string
-    common_name            = string
-    organisation           = string
-    ou                     = string
-    pki_connect_mount_path = string
   })
 }
 

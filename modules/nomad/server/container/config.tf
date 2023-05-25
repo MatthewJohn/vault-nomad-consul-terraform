@@ -1,60 +1,60 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.consul_datacenter.common_name}"
-  server_fqdn = "server.${var.consul_datacenter.common_name}"
+  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  server_fqdn = "server.${var.datacenter.common_name}"
 
   config_files = {
-    "config/templates/agent.crt.tpl" = <<EOF
-{{ with secret "${var.consul_datacenter.pki_mount_path}/issue/${var.consul_datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/server.crt.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
-    "config/templates/agent.key.tpl" = <<EOF
-{{ with secret "${var.consul_datacenter.pki_mount_path}/issue/${var.consul_datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/server.key.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.consul_datacenter.pki_mount_path}/issue/${var.consul_datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
 
 EOF
 
     "config/templates/consul_template.hcl" = <<EOF
-# vault {
-#   address                = "${var.vault_cluster.address}"
-#   # @TODO Wrap this token
-#   unwrap_token           = false
-#   vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+vault {
+  address                = "${var.vault_cluster.address}"
+  # @TODO Wrap this token
+  unwrap_token           = false
+  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
 
-#   ssl {
-#     enabled = true
-#     verify  = true
-#     ca_cert = "/nomad/vault/ca_cert.pem"
-#   }
-# }
+  ssl {
+    enabled = true
+    verify  = true
+    ca_cert = "/nomad/vault/ca_cert.pem"
+  }
+}
 
-# template {
-#   source      = "/nomad/config/templates/agent.crt.tpl"
-#   destination = "/nomad/config/agent-certs/agent.crt"
-#   perms       = 0700
-# }
+template {
+  source      = "/nomad/config/templates/server.crt.tpl"
+  destination = "/nomad/config/server-certs/server.crt"
+  perms       = 0700
+}
 
-# template {
-#   source      = "/nomad/config/templates/agent.key.tpl"
-#   destination = "/nomad/config/agent-certs/agent.key"
-#   perms       = 0700
-# }
+template {
+  source      = "/nomad/config/templates/server.key.tpl"
+  destination = "/nomad/config/server-certs/server.key"
+  perms       = 0700
+}
 
-# template {
-#   source      = "/nomad/config/templates/ca.crt.tpl"
-#   destination = "/nomad/config/agent-certs/ca.crt"
-#   perms       = 0700
-# }
+template {
+  source      = "/nomad/config/templates/ca.crt.tpl"
+  destination = "/nomad/config/server-certs/ca.crt"
+  perms       = 0700
+}
 
 template {
   source      = "/nomad/config/templates/server.hcl.tmpl"
@@ -118,12 +118,25 @@ EOF
 
 server {
   enabled          = true
-  bootstrap_expect = 1
-  # server_join {
-  #   retry_join = [ "1.1.1.1", "2.2.2.2" ]
-  #   retry_max = 3
-  #   retry_interval = "15s"
-  # }
+  %{if var.initial_run == true}
+  bootstrap_expect = ${local.bootstrap_count}
+  %{endif}
+  server_join {
+    retry_join = [ "${var.datacenter.common_name}" ]
+    retry_max = 3
+    retry_interval = "15s"
+  }
+}
+
+tls {
+  http = true
+  rpc  = true
+
+  ca_file   = "/nomad/config/server-certs/ca.crt"
+  cert_file = "/nomad/config/server-certs/server.crt"
+  key_file  = "/nomad/config/server-certs/server.key"
+
+  verify_server_hostname = true
 }
 
 data_dir = "/nomad/data"

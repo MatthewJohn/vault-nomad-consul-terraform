@@ -58,6 +58,9 @@ module "consul" {
     "/consul/config/templates",
     "/consul/config/agent-certs",
     "/consul/vault",
+    "/vault-agent-consul-template",
+    "/vault-agent-consul-template/config.d",
+    "/vault-agent-consul-template/ssl",
   ]
 }
 
@@ -90,6 +93,9 @@ module "nomad" {
     "/nomad/config/templates",
     "/nomad/config/agent-certs",
     "/nomad/vault",
+    "/vault-agent-consul-template",
+    "/vault-agent-consul-template/config.d",
+    "/vault-agent-consul-template/ssl",
   ]
 }
 

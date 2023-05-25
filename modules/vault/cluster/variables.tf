@@ -43,3 +43,9 @@ variable "consul_datacenters" {
   type        = list(string)
   default     = []
 }
+
+variable "nomad_datacenters" {
+  description = "List of noamd datacenter to provide permissions to Terraform user"
+  type        = list(string)
+  default     = []
+}

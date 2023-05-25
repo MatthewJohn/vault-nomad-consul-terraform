@@ -94,6 +94,11 @@ path "sys/mounts/pki_connect"
 }
 
 %{for datacenter in var.consul_datacenters}
+path "sys/mounts/pki_int_consul_${datacenter}"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+
 # Generate intermediate CAs
 path "pki_int_consul_${datacenter}/intermediate/generate/internal"
 {
@@ -215,6 +220,51 @@ path "pki_nomad/root/sign-intermediate"
 {
   capabilities = ["update"]
 }
+
+
+%{for datacenter in var.nomad_datacenters}
+
+path "sys/mounts/pki_int_nomad_${datacenter}"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+# Generate intermediate CAs
+path "pki_int_nomad_${datacenter}/intermediate/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# Set default issuer for cert
+path "pki_int_nomad_${datacenter}/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Set self-signed certificate
+path "pki_int_nomad_${datacenter}/intermediate/set-signed"
+{
+  capabilities = ["update"]
+}
+
+# Create/view/delete roles
+path "pki_int_nomad_${datacenter}/roles/*"
+{
+  capabilities = ["update", "read", "delete"]
+}
+
+path "sys/policies/acl/nomad-server-consul-template-${datacenter}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Create approle backend
+path "sys/auth/approle-nomad-${datacenter}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
+%{endfor}
+
 
 EOF
 }

@@ -84,10 +84,10 @@ module "virtual_machines" {
 }
 
 locals {
-  all_vault_hosts    = ["vault-1", "vault-2"]
-  all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
-  all_consul_ips     = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
-  all_nomad_ips      = ["192.168.122.81"]
+  all_vault_hosts      = ["vault-1", "vault-2"]
+  all_vault_host_ips   = ["192.168.122.60", "192.168.122.61"]
+  all_consul_ips       = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
+  all_nomad_server_ips = ["192.168.122.81"]
 }
 
 module "vault_init" {
@@ -111,6 +111,7 @@ module "vault_cluster" {
   root_token         = module.vault_init.root_token
   ca_cert_file       = module.vault_init.ca_cert_file
   consul_datacenters = ["dc1"]
+  nomad_datacenters  = ["dc1"]
 }
 
 module "kms_config" {
@@ -270,14 +271,22 @@ module "nomad_certificate_authority" {
   mount_name    = "nomad"
 }
 
+module "nomad_dc1" {
+  source = "../../modules/nomad/datacenter"
+
+  datacenter       = "dc1"
+  root_cert        = module.nomad_certificate_authority
+  vault_cluster    = module.vault_cluster
+  nomad_server_ips = local.all_nomad_server_ips
+}
+
 
 module "nomad-1" {
   source = "../../modules/nomad/server"
 
-  consul_datacenter = module.dc1
-  vault_cluster     = module.vault_cluster
-  consul_root_cert  = module.consul_certificate_authority
-  hostname          = "nomad-1"
+  datacenter    = module.nomad_dc1
+  vault_cluster = module.vault_cluster
+  hostname      = "nomad-1"
 
   nomad_version = "1.5.6"
 
