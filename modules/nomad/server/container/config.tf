@@ -7,20 +7,20 @@ locals {
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h" "alt_names=${local.server_fqdn},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h" "alt_names=${local.server_fqdn},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.verify_domain}" "ttl=24h"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
 
