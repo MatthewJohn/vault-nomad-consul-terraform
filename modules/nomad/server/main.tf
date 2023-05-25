@@ -13,7 +13,7 @@ module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
   hostname       = var.hostname
-  domain_name    = var.datacenter.common_name
+  domain_name    = var.region.common_name
   vault_cluster  = var.vault_cluster
   container_name = "vault-agent-consul-template"
 
@@ -21,7 +21,7 @@ module "consul_template_vault_agent" {
 
   app_role_id         = data.vault_approle_auth_backend_role_id.consul_template.role_id
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
-  app_role_mount_path = var.datacenter.approle_mount_path
+  app_role_mount_path = var.region.approle_mount_path
 
   docker_username = var.docker_username
   docker_host     = var.docker_host
@@ -31,10 +31,10 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image            = module.image.image_id
-  hostname         = var.hostname
-  datacenter       = var.datacenter
-  vault_cluster    = var.vault_cluster
+  image         = module.image.image_id
+  hostname      = var.hostname
+  region        = var.region
+  vault_cluster = var.vault_cluster
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

@@ -1,5 +1,5 @@
 locals {
-  common_name = "${var.datacenter}.${var.root_cert.common_name}"
+  common_name = "${var.region}.${var.root_cert.common_name}"
 }
 
 resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
@@ -34,7 +34,7 @@ resource "vault_pki_secret_backend_intermediate_set_signed" "this" {
 
 resource "vault_pki_secret_backend_role" "this" {
   backend = vault_mount.this.path
-  name    = "nomad-${var.datacenter}"
+  name    = "nomad-${var.region}"
 
   max_ttl          = (720 * 60 * 60)  # "720h"
   generate_lease   = true

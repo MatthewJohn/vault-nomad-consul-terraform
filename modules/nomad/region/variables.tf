@@ -1,6 +1,6 @@
 
-variable "datacenter" {
-  description = "Datacenter name"
+variable "region" {
+  description = "Region name"
   type        = string
 }
 

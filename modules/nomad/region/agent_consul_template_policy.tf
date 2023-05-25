@@ -1,6 +1,6 @@
 
 resource "vault_policy" "server_consul_template" {
-  name = "nomad-server-consul-template-${var.datacenter}"
+  name = "nomad-server-consul-template-${var.region}"
 
   policy = <<EOF
 # Access CA certs
@@ -27,6 +27,6 @@ EOF
 
 resource "vault_approle_auth_backend_role" "server_consul_template" {
   backend        = vault_auth_backend.approle.path
-  role_name      = "nomad-server-${var.datacenter}-consul-template"
+  role_name      = "nomad-server-${var.region}-consul-template"
   token_policies = [vault_policy.server_consul_template.name]
 }

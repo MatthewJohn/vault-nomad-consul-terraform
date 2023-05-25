@@ -4,8 +4,8 @@ variable "hostname" {
   type        = string
 }
 
-variable "datacenter" {
-  description = "Nomad datacenter"
+variable "region" {
+  description = "Nomad region"
   type = object({
     name                                     = string
     common_name                              = string

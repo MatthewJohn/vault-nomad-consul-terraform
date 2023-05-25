@@ -1,4 +1,4 @@
 resource "vault_auth_backend" "approle" {
   type = "approle"
-  path = "approle-nomad-${var.datacenter}"
+  path = "approle-nomad-${var.region}"
 }

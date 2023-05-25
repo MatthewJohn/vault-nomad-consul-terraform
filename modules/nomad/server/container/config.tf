@@ -1,24 +1,24 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
-  server_fqdn = "server.${var.datacenter.common_name}"
+  fqdn        = "${var.hostname}.${var.region.common_name}"
+  server_fqdn = "server.${var.region.common_name}"
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
 
@@ -116,13 +116,19 @@ EOF
 
     "config/templates/server.hcl.tmpl" = <<EOF
 
+name = "${var.hostname}"
+
+region = "${var.region.name}"
+
+bind_addr = "0.0.0.0"
+
 server {
   enabled          = true
   %{if var.initial_run == true}
   bootstrap_expect = ${local.bootstrap_count}
   %{endif}
   server_join {
-    retry_join = [ "${var.datacenter.common_name}" ]
+    retry_join = [ "${var.region.common_name}" ]
     retry_max = 3
     retry_interval = "15s"
   }
@@ -144,7 +150,7 @@ data_dir = "/nomad/data"
 disable_update_check = true
 
 EOF
-  }
+}
 }
 
 resource "null_resource" "noamd_config" {

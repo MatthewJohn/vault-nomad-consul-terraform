@@ -111,7 +111,7 @@ module "vault_cluster" {
   root_token         = module.vault_init.root_token
   ca_cert_file       = module.vault_init.ca_cert_file
   consul_datacenters = ["dc1"]
-  nomad_datacenters  = ["dc1"]
+  nomad_regions      = {"global" = ["dc1"]}
 }
 
 module "kms_config" {
@@ -271,20 +271,19 @@ module "nomad_certificate_authority" {
   mount_name    = "nomad"
 }
 
-module "nomad_dc1" {
-  source = "../../modules/nomad/datacenter"
+module "nomad_global" {
+  source = "../../modules/nomad/region"
 
-  datacenter       = "dc1"
+  region           = "global"
   root_cert        = module.nomad_certificate_authority
   vault_cluster    = module.vault_cluster
   nomad_server_ips = local.all_nomad_server_ips
 }
 
-
 module "nomad-1" {
   source = "../../modules/nomad/server"
 
-  datacenter    = module.nomad_dc1
+  region        = module.nomad_global
   vault_cluster = module.vault_cluster
   hostname      = "nomad-1"
 

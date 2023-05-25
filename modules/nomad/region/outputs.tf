@@ -1,7 +1,7 @@
 
 output "name" {
-  description = "Datacenter name"
-  value       = var.datacenter
+  description = "Region name"
+  value       = var.region
 }
 
 output "common_name" {
@@ -35,7 +35,7 @@ output "address_wo_protocol" {
 }
 
 output "approle_mount_path" {
-  description = "Path for vault approle mount path for datacenter"
+  description = "Path for vault approle mount path for region"
   value       = vault_auth_backend.approle.path
 }
 
