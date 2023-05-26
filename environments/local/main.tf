@@ -111,7 +111,7 @@ module "vault_cluster" {
   root_token         = module.vault_init.root_token
   ca_cert_file       = module.vault_init.ca_cert_file
   consul_datacenters = ["dc1"]
-  nomad_regions      = {"global" = ["dc1"]}
+  nomad_regions      = { "global" = ["dc1"] }
 }
 
 module "kms_config" {
