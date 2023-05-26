@@ -168,10 +168,6 @@ tls {
 
 retry_join = ["${var.datacenter.common_name}"]
 
-auto_encrypt {
-  allow_tls = true
-}
-
 disable_update_check = true
 
 EOF
