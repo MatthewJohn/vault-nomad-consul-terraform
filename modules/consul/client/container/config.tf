@@ -128,6 +128,7 @@ ports {
   dns = 53
   http = -1
   https = ${var.listen_port}
+  grpc = -1
   grpc_tls = 8503
 }
 
