@@ -2,7 +2,7 @@
 resource "docker_container" "this" {
   image = var.image
 
-  name    = "consul"
+  name    = "consul-client"
   rm      = false
   restart = "on-failure"
 
