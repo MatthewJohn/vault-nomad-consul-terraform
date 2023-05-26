@@ -30,8 +30,9 @@ if [ "$1" = 'nomad' ]; then
         chmod 755 /nomad/config/server-certs
         if ls /nomad/config/server-certs/*
         then
-          find /nomad/config/server-certs -type f -exec chmod 644 {} \;
+          chmod 644 /nomad/config/server-certs/*
         fi
+        chmod 755 /nomad/config/consul-certs
 
         touch /nomad/config/server.hcl
         chown nomad: /nomad/config/server.hcl
