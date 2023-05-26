@@ -17,7 +17,7 @@ variable "domain_name" {
 variable "listen_port" {
   description = "Port for consul client to listen on"
   type        = number
-  default     = 8500
+  default     = 8501
 }
 
 variable "listen_host" {
