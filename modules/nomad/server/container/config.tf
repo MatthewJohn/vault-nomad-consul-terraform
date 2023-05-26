@@ -16,17 +16,19 @@ EOF
 {{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
-
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
 {{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
-
 EOF
 
-    "config/consul-certs/ca.crt" = var.consul_root_cert.public_key
+    "config/templates/consul-ca.crt.tpl" = <<EOF
+{{- with secret "${var.consul_datacenter.pki_mount_path}/cert/ca_chain" -}}
+{{ .Data.ca_chain }}
+{{- end -}}
+EOF
 
     "config/templates/consul_template.hcl" = <<EOF
 vault {
@@ -57,6 +59,12 @@ template {
 template {
   source      = "/nomad/config/templates/ca.crt.tpl"
   destination = "/nomad/config/server-certs/ca.crt"
+  perms       = 0700
+}
+
+template {
+  source      = "/nomad/config/templates/consul-ca.crt.tpl"
+  destination = "/nomad/config/consul-certs/ca.crt"
   perms       = 0700
 }
 

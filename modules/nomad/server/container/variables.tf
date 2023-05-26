@@ -29,6 +29,14 @@ variable "vault_cluster" {
   })
 }
 
+variable "consul_datacenter" {
+  description = "Consul datacenter"
+  type = object({
+    name           = string
+    pki_mount_path = string
+  })
+}
+
 variable "consul_template_vault_agent" {
   description = "Vault agent instance for consul template"
   type = object({
