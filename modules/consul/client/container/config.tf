@@ -146,7 +146,7 @@ acl {
 
 data_dir = "/consul/data"
 
-verify_incoming        = true
+verify_incoming        = false
 verify_outgoing        = true
 verify_server_hostname = true
 
@@ -160,7 +160,7 @@ tls {
       cert_file = "/consul/config/client-certs/client.crt"
       key_file  = "/consul/config/client-certs/client.key"
 
-      verify_incoming = true
+      verify_incoming = false
       verify_outgoing = true
    }
    internal_rpc {
