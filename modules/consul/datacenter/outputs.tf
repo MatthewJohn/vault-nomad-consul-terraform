@@ -29,6 +29,11 @@ output "root_cert_public_key" {
   value       = var.root_cert.public_key
 }
 
+output "ca_chain" {
+  description = "Intermediate certificate CA chain"
+  value       = vault_pki_secret_backend_root_sign_intermediate.this.ca_chain
+}
+
 output "address" {
   description = "Endpoint for cluster"
   value       = "http://${local.common_name}:8500"

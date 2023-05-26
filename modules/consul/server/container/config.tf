@@ -7,6 +7,7 @@ locals {
     "config/templates/agent.crt.tpl" = <<EOF
 {{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
+{{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
@@ -18,10 +19,9 @@ EOF
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.fqdn}" "ttl=24h"}}
-{{ .Data.issuing_ca }}
-{{ end }}
-
+{{- with secret "${var.datacenter.pki_mount_path}/cert/ca_chain" -}}
+{{ .Data.ca_chain }}
+{{- end -}}
 EOF
 
     "config/templates/consul_template.hcl" = <<EOF
