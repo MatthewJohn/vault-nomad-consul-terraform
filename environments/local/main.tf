@@ -283,13 +283,14 @@ module "nomad_global" {
 module "nomad-1" {
   source = "../../modules/nomad/server"
 
-  region        = module.nomad_global
-  vault_cluster = module.vault_cluster
-  hostname      = "nomad-1"
-  consul_root_cert = module.consul_certificate_authority
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  hostname          = "nomad-1"
+  consul_root_cert  = module.consul_certificate_authority
   consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
 
-  nomad_version = "1.5.6"
+  nomad_version  = "1.5.6"
   consul_version = "1.15.2"
 
   docker_host     = "nomad-1.${local.domain_name}"

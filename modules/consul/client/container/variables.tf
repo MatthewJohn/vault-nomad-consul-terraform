@@ -62,6 +62,11 @@ variable "consul_template_vault_agent" {
   })
 }
 
+variable "gossip_key" {
+  description = "Gossip secret"
+  type        = string
+}
+
 variable "docker_username" {
   description = "SSH username to connect to docker host"
   type        = string

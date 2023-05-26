@@ -36,6 +36,7 @@ module "container" {
   datacenter    = var.datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert
+  gossip_key    = var.gossip_key
 
   listen_host = var.listen_host
   listen_port = var.listen_port

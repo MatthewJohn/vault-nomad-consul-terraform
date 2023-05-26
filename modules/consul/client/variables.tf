@@ -26,6 +26,11 @@ variable "listen_host" {
   default     = "127.0.0.1"
 }
 
+variable "gossip_key" {
+  description = "Gossip secret"
+  type        = string
+}
+
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({

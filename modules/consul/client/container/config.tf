@@ -168,6 +168,8 @@ tls {
 
 retry_join = ["${var.datacenter.common_name}"]
 
+encrypt = "${var.gossip_key}"
+
 disable_update_check = true
 
 EOF
