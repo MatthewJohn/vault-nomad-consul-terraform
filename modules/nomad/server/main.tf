@@ -55,6 +55,7 @@ module "container" {
   consul_root_cert  = var.consul_root_cert
   consul_client     = module.consul_client
   consul_datacenter = var.consul_datacenter
+  initial_run       = var.initial_run
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

@@ -69,6 +69,12 @@ variable "nomad_version" {
   type        = string
 }
 
+variable "initial_run" {
+  description = "Whether an init is alled"
+  type        = bool
+  default     = false
+}
+
 variable "docker_username" {
   description = "SSH username to connect to docker host"
   type        = string

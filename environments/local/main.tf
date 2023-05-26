@@ -290,6 +290,8 @@ module "nomad-1" {
   consul_datacenter = module.dc1
   consul_gossip_key = module.consul_gossip_encryption.secret
 
+  initial_run = var.initial_setup
+
   nomad_version  = "1.5.6"
   consul_version = "1.15.2"
 
