@@ -172,6 +172,9 @@ retry_join = ["${var.datacenter.common_name}"]
 
 encrypt = "${var.gossip_key}"
 
+encrypt_verify_incoming = true
+encrypt_verify_outgoing = true
+
 disable_update_check = true
 
 EOF
