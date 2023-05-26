@@ -53,7 +53,8 @@ resource "vault_pki_secret_backend_role" "client" {
   max_ttl        = (720 * 60 * 60) # "720h"
   generate_lease = true
   allowed_domains = [
-    "client.${local.common_name}"
+    "client.${local.common_name}",
+    "localhost"
   ]
   # Allow client IP in certificate
   allow_ip_sans = true
