@@ -1,68 +1,61 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.region.common_name}"
-  server_fqdn = "server.${var.region.common_name}"
-  # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
-  verify_domain = "server.${var.region.name}.nomad"
+  client_fqdn = "client.${var.datacenter.common_name}"
 
   config_files = {
-    "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.crt.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
-    "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.key.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
-
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
-
 EOF
-
-    "config/consul-certs/ca.crt" = var.consul_root_cert.public_key
 
     "config/templates/consul_template.hcl" = <<EOF
 vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "/consul-client-vault-agent-consul-template/auth/token"
 
   ssl {
     enabled = true
     verify  = true
-    ca_cert = "/nomad/vault/ca_cert.pem"
+    ca_cert = "/consul/vault/ca_cert.pem"
   }
 }
 
 template {
-  source      = "/nomad/config/templates/server.crt.tpl"
-  destination = "/nomad/config/server-certs/server.crt"
+  source      = "/consul/config/templates/client.crt.tpl"
+  destination = "/consul/config/client-certs/client.crt"
   perms       = 0700
 }
 
 template {
-  source      = "/nomad/config/templates/server.key.tpl"
-  destination = "/nomad/config/server-certs/server.key"
+  source      = "/consul/config/templates/client.key.tpl"
+  destination = "/consul/config/client-certs/client.key"
   perms       = 0700
 }
 
 template {
-  source      = "/nomad/config/templates/ca.crt.tpl"
-  destination = "/nomad/config/server-certs/ca.crt"
+  source      = "/consul/config/templates/ca.crt.tpl"
+  destination = "/consul/config/client-certs/ca.crt"
   perms       = 0700
 }
 
 template {
-  source      = "/nomad/config/templates/server.hcl.tmpl"
-  destination = "/nomad/config/server.hcl"
+  source      = "/consul/config/templates/consul.hcl.tmpl"
+  destination = "/consul/config/consul.hcl"
   perms       = 0700
 
   error_on_missing_key = false
@@ -118,66 +111,66 @@ EOF
 
     "vault/ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
 
-    "config/templates/server.hcl.tmpl" = <<EOF
+    "config/templates/consul.hcl.tmpl" = <<EOF
+server = false
 
-name = "${var.hostname}"
+client_addr        = "${var.listen_host}"
+bind_addr          = "${var.listen_host}"
+advertise_addr     = "${var.docker_ip}"
+advertise_addr_wan = "${var.docker_ip}"
+node_name          = "consul-client-${var.datacenter.name}-${var.hostname}"
+datacenter         = "${var.datacenter.name}"
+domain             = "${var.root_cert.common_name}"
 
-region = "${var.region.name}"
+ports {
+  # Listener ports
+  dns = 53
+  http = -1
+  https = ${var.listen_port}
+  grpc_tls = 8503
+}
 
-bind_addr = "0.0.0.0"
-
-server {
-  enabled          = true
-  %{if var.initial_run == true}
-  bootstrap_expect = ${local.bootstrap_count}
-  %{endif}
-  server_join {
-    retry_join = [ "${var.region.common_name}" ]
-    retry_max = 3
-    retry_interval = "15s"
+acl {
+  enabled = true
+  default_policy = "deny"
+  enable_token_persistence = true
+  enable_token_replication = true
+  tokens {
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role" }}
+    agent  = "{{ .Data.token }}"
+{{ end }}
   }
 }
 
+data_dir = "/consul/data"
+
+verify_incoming        = true
+verify_outgoing        = true
+verify_server_hostname = true
+
+ca_file   = "/consul/config/client-certs/ca.crt"
+cert_file = "/consul/config/client-certs/client.crt"
+key_file  = "/consul/config/client-certs/client.key"
+
 tls {
-  http = true
-  rpc  = true
+   defaults {
+      ca_file   = "/consul/config/client-certs/ca.crt"
+      cert_file = "/consul/config/client-certs/client.crt"
+      key_file  = "/consul/config/client-certs/client.key"
 
-  ca_file   = "/nomad/config/server-certs/ca.crt"
-  cert_file = "/nomad/config/server-certs/server.crt"
-  key_file  = "/nomad/config/server-certs/server.key"
-
-  verify_server_hostname = true
+      verify_incoming = true
+      verify_outgoing = true
+   }
+   internal_rpc {
+      verify_server_hostname = true
+   }
 }
 
-#acl {
-#  enabled    = true
-#  token_ttl  = "30s"
-#  policy_ttl = "60s"
-#  role_ttl   = "60s"
-#}
+retry_join = ["${var.datacenter.common_name}"]
 
-consul {
-  address = "${var.consul_client.listen_host}:${var.consul_client.port}"
-
-  allow_unauthenticated = false
-  auto_advertise        = true
-
-  server_auto_join    = true
-  client_auto_join    = true
-
-  #client_service_name    = ""
-  #client_http_check_name = ""
-
-  namespace = "nomad-${var.region.name}"
-
-  ssl = true
-  verify_ssl = true
-
-  grpc_ca_file = "/nomad/config/consul-certs/ca.crt"
-  ca_file      = "/nomad/config/consul-certs/ca.crt"
+auto_encrypt {
+  allow_tls = true
 }
-
-data_dir = "/nomad/data"
 
 disable_update_check = true
 
@@ -185,7 +178,7 @@ EOF
   }
 }
 
-resource "null_resource" "noamd_config" {
+resource "null_resource" "consul_config" {
 
   for_each = local.config_files
 
@@ -201,6 +194,6 @@ resource "null_resource" "noamd_config" {
 
   provisioner "file" {
     content     = each.value
-    destination = "/nomad/${each.key}"
+    destination = "/consul/${each.key}"
   }
 }

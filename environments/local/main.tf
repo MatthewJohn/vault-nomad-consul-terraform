@@ -286,8 +286,11 @@ module "nomad-1" {
   region        = module.nomad_global
   vault_cluster = module.vault_cluster
   hostname      = "nomad-1"
+  consul_root_cert = module.consul_certificate_authority
+  consul_datacenter = module.dc1
 
   nomad_version = "1.5.6"
+  consul_version = "1.15.2"
 
   docker_host     = "nomad-1.${local.domain_name}"
   docker_username = local.docker_username

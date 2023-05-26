@@ -9,6 +9,22 @@ module "image" {
   }
 }
 
+module "consul_client" {
+  source = "../../consul/client"
+
+  hostname      = var.hostname
+  domain_name   = var.region.common_name
+  datacenter    = var.consul_datacenter
+  vault_cluster = var.vault_cluster
+  root_cert     = var.consul_root_cert
+
+  consul_version = var.consul_version
+
+  docker_username = var.docker_username
+  docker_host     = var.docker_host
+  docker_ip       = var.docker_ip
+}
+
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
@@ -31,10 +47,12 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image         = module.image.image_id
-  hostname      = var.hostname
-  region        = var.region
-  vault_cluster = var.vault_cluster
+  image            = module.image.image_id
+  hostname         = var.hostname
+  region           = var.region
+  vault_cluster    = var.vault_cluster
+  consul_root_cert = var.consul_root_cert
+  consul_client    = module.consul_client
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

@@ -128,7 +128,14 @@ path "pki_int_consul_${datacenter}/roles/*"
   capabilities = ["update", "read", "delete"]
 }
 
+# Server policies
 path "sys/policies/acl/agent-consul-template-${datacenter}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Client policies
+path "sys/policies/acl/consul-client-consul-template-${datacenter}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
@@ -156,6 +163,12 @@ path "consul-${datacenter}/config/access"
 
 # Create consul role for servers
 path "consul-${datacenter}/roles/consul-server-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
+# Create consul role for clients
+path "consul-${datacenter}/roles/consul-client-role"
 {
   capabilities = ["create", "read", "delete", "update"]
 }

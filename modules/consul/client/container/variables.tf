@@ -1,5 +1,5 @@
 variable "hostname" {
-  description = "Hostname for noamd"
+  description = "Hostname for consul"
   type        = string
 }
 
@@ -8,14 +8,27 @@ variable "image" {
   type        = string
 }
 
-variable "region" {
-  description = "Nomad region"
+variable "listen_port" {
+  description = "Port for consul client to listen on"
+  type        = number
+}
+
+variable "listen_host" {
+  description = "Host for consul client to listen on"
+  type        = string
+}
+
+variable "datacenter" {
+  description = "Consul datacenter"
   type = object({
-    name               = string
-    common_name        = string
-    role_name          = string
-    pki_mount_path     = string
-    approle_mount_path = string
+    name                     = string
+    common_name              = string
+    pki_mount_path           = string
+    static_mount_path        = string
+    consul_engine_mount_path = string
+    approle_mount_path       = string
+    pki_connect_mount_path   = string
+    client_ca_role_name      = string
   })
 }
 
@@ -29,6 +42,17 @@ variable "vault_cluster" {
   })
 }
 
+variable "root_cert" {
+  description = "Root certificate object"
+  type = object({
+    pki_mount_path         = string
+    common_name            = string
+    organisation           = string
+    ou                     = string
+    pki_connect_mount_path = string
+  })
+}
+
 variable "consul_template_vault_agent" {
   description = "Vault agent instance for consul template"
   type = object({
@@ -36,27 +60,6 @@ variable "consul_template_vault_agent" {
     token_directory = string
     token_path      = string
   })
-}
-
-variable "consul_root_cert" {
-  description = "Consul root certificate authority"
-  type = object({
-    public_key = string
-  })
-}
-
-variable "consul_client" {
-  description = "Configuration of consul client"
-  type = object({
-    port        = number
-    listen_host = string
-  })
-}
-
-variable "initial_run" {
-  description = "Whether an init is alled"
-  type        = bool
-  default     = false
 }
 
 variable "docker_username" {

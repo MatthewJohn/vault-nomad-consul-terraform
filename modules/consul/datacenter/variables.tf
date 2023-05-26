@@ -14,7 +14,7 @@ variable "root_cert" {
     public_key             = string
     issuer                 = string
     domain_name            = string
-    subdomain       = string
+    subdomain              = string
     pki_connect_mount_path = string
   })
 }

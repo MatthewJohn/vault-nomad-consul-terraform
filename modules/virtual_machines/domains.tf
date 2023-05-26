@@ -41,7 +41,7 @@ module "consul" {
   ip_gateway                 = each.value.ip_gateway
   nameservers                = var.nameservers
   memory                     = 386
-  disk_size                  = 3000
+  disk_size                  = 4000
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
   hypervisor_username        = var.hypervisor_username
@@ -76,7 +76,7 @@ module "nomad" {
   ip_gateway                 = each.value.ip_gateway
   nameservers                = var.nameservers
   memory                     = 386
-  disk_size                  = 3000
+  disk_size                  = 5000
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
   hypervisor_username        = var.hypervisor_username
@@ -96,6 +96,16 @@ module "nomad" {
     "/vault-agent-consul-template",
     "/vault-agent-consul-template/config.d",
     "/vault-agent-consul-template/ssl",
+
+    # Consul agent directories
+    "/consul",
+    "/consul/config",
+    "/consul/config/templates",
+    "/consul/config/client-certs",
+    "/consul/vault",
+    "/consul-agent-vault-agent-consul-template",
+    "/consul-agent-vault-agent-consul-template/config.d",
+    "/consul-agent-vault-agent-consul-template/ssl",
   ]
 }
 
