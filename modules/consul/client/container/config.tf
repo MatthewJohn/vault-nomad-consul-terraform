@@ -115,7 +115,7 @@ EOF
 server = false
 
 client_addr        = "${var.listen_host}"
-bind_addr          = "${var.listen_host}"
+bind_addr          = "${var.docker_ip}"
 advertise_addr     = "${var.docker_ip}"
 advertise_addr_wan = "${var.docker_ip}"
 node_name          = "consul-client-${var.datacenter.name}-${var.hostname}"
