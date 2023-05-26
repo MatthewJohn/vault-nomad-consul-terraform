@@ -50,6 +50,7 @@ variable "consul_datacenter" {
     consul_engine_mount_path                 = string
     approle_mount_path                       = string
     pki_connect_mount_path                   = string
+    ca_chain                                 = string
   })
 }
 

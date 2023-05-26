@@ -38,6 +38,14 @@ variable "consul_template_vault_agent" {
   })
 }
 
+variable "consul_datacenter" {
+  description = "Consul datacenter"
+  type = object({
+    name     = string
+    ca_chain = string
+  })
+}
+
 variable "consul_root_cert" {
   description = "Consul root certificate authority"
   type = object({

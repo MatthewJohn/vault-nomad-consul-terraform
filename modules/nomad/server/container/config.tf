@@ -26,7 +26,7 @@ EOF
 
 EOF
 
-    "config/consul-certs/ca.crt" = var.consul_root_cert.public_key
+    "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
 
     "config/templates/consul_template.hcl" = <<EOF
 vault {

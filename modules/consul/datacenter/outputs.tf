@@ -31,7 +31,7 @@ output "root_cert_public_key" {
 
 output "ca_chain" {
   description = "Intermediate certificate CA chain"
-  value       = vault_pki_secret_backend_root_sign_intermediate.this.ca_chain
+  value       = join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
 }
 
 output "address" {
