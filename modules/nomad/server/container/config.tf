@@ -168,7 +168,7 @@ consul {
   #client_service_name    = ""
   #client_http_check_name = ""
 
-  namespace = "nomad-${var.region.name}"
+  #namespace = "nomad-${var.region.name}"
 
   ssl = true
   verify_ssl = true
