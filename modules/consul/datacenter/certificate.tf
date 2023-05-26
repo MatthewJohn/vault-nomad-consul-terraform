@@ -36,7 +36,7 @@ resource "vault_pki_secret_backend_role" "this" {
   backend = vault_mount.this.path
   name    = "consul-${var.datacenter}"
 
-  max_ttl          = (720 * 60 * 60)  # "720h"
+  max_ttl          = (720 * 60 * 60) # "720h"
   generate_lease   = true
   allowed_domains  = [local.common_name]
   allow_subdomains = true
@@ -50,12 +50,18 @@ resource "vault_pki_secret_backend_role" "client" {
   backend = vault_mount.this.path
   name    = "consul-client-${var.datacenter}"
 
-  max_ttl          = (720 * 60 * 60)  # "720h"
-  generate_lease   = true
-  allowed_domains  = [
+  max_ttl        = (720 * 60 * 60) # "720h"
+  generate_lease = true
+  allowed_domains = [
     "client.${local.common_name}"
   ]
-  allow_subdomains = false
+  # Allow client IP in certificate
+  allow_ip_sans = true
+  # Allow localhost in certificate for direct communication with client
+  allow_localhost = true
+  # Force use of client. domain
+  allow_bare_domains = true
+  allow_subdomains   = false
 
   depends_on = [
     vault_pki_secret_backend_intermediate_set_signed.this
