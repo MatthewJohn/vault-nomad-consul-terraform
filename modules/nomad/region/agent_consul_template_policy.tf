@@ -8,6 +8,11 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}"
   capabilities = [ "read", "update" ]
 }
 
+# Generate token for nomad server using consul engine role
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/nomad-${var.region}-server-*" {
+  capabilities = ["read"]
+}
+
 # Renew leases
 path "sys/leases/renew" {
   capabilities = [ "update" ]

@@ -173,6 +173,13 @@ path "consul-${datacenter}/roles/consul-client-role"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+%{for nomad_region in keys(var.nomad_regions)}
+path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+%{endfor}
+
 # Create approle backend
 path "sys/auth/approle-consul-${datacenter}"
 {

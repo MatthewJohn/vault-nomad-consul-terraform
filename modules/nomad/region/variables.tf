@@ -19,6 +19,15 @@ variable "root_cert" {
   })
 }
 
+variable "consul_datacenter" {
+  description = "Consul datacenter"
+  type = object({
+    name                                     = string
+    common_name                              = string
+    consul_engine_mount_path                 = string
+  })
+}
+
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({

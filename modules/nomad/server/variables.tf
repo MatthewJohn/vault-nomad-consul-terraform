@@ -51,6 +51,15 @@ variable "consul_datacenter" {
     approle_mount_path                       = string
     pki_connect_mount_path                   = string
     ca_chain                                 = string
+    root_cert_public_key                     = string
+    address                                  = string
+  })
+}
+
+variable "consul_bootstrap" {
+  description = "Value of consul bootstrap"
+  type = object({
+    token = string
   })
 }
 

@@ -48,14 +48,15 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image             = module.image.image_id
-  hostname          = var.hostname
-  region            = var.region
-  vault_cluster     = var.vault_cluster
-  consul_root_cert  = var.consul_root_cert
-  consul_client     = module.consul_client
-  consul_datacenter = var.consul_datacenter
-  initial_run       = var.initial_run
+  image                          = module.image.image_id
+  hostname                       = var.hostname
+  region                         = var.region
+  vault_cluster                  = var.vault_cluster
+  consul_root_cert               = var.consul_root_cert
+  consul_client                  = module.consul_client
+  consul_datacenter              = var.consul_datacenter
+  initial_run                    = var.initial_run
+  nomad_server_vault_consul_role = vault_consul_secret_backend_role.nomad_server_vault_consul_role.name
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

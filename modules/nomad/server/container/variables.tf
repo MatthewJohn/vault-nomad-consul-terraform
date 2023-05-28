@@ -41,8 +41,9 @@ variable "consul_template_vault_agent" {
 variable "consul_datacenter" {
   description = "Consul datacenter"
   type = object({
-    name     = string
-    ca_chain = string
+    name                     = string
+    ca_chain                 = string
+    consul_engine_mount_path = string
   })
 }
 
@@ -59,6 +60,11 @@ variable "consul_client" {
     port        = number
     listen_host = string
   })
+}
+
+variable "nomad_server_vault_consul_role" {
+  description = "Name of vault consul engine role for nomad server"
+  type        = string
 }
 
 variable "initial_run" {

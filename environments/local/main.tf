@@ -274,10 +274,11 @@ module "nomad_certificate_authority" {
 module "nomad_global" {
   source = "../../modules/nomad/region"
 
-  region           = "global"
-  root_cert        = module.nomad_certificate_authority
-  vault_cluster    = module.vault_cluster
-  nomad_server_ips = local.all_nomad_server_ips
+  region            = "global"
+  root_cert         = module.nomad_certificate_authority
+  vault_cluster     = module.vault_cluster
+  nomad_server_ips  = local.all_nomad_server_ips
+  consul_datacenter = module.dc1
 }
 
 module "nomad-1" {
@@ -289,6 +290,7 @@ module "nomad-1" {
   consul_root_cert  = module.consul_certificate_authority
   consul_datacenter = module.dc1
   consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
 
   initial_run = var.initial_setup
 
