@@ -54,11 +54,6 @@ then
     export SKIP_CHOWN="true"
     export SKIP_SETCAP="true"
 
-    # Allow nomad to listen on all ports
-    setcap CAP_NET_BIND_SERVICE=+eip /bin/nomad
-
-    exec su nomad -p "$0" -- "$@"
-else
     cat > /tmp/start_nomad.sh <<EOF
 #!/bin/bash
 
