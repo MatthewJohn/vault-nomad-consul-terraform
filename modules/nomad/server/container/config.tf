@@ -132,7 +132,7 @@ server {
   bootstrap_expect = ${local.bootstrap_count}
   %{endif}
   server_join {
-    retry_join = [ "${var.region.common_name}" ]
+    retry_join = [ "${var.region.server_dns}" ]
     retry_max = 3
     retry_interval = "15s"
   }

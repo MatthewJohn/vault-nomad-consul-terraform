@@ -13,6 +13,7 @@ variable "region" {
     pki_mount_path                           = string
     approle_mount_path                       = string
     server_consul_template_approle_role_name = string
+    server_dns                               = string
   })
 }
 

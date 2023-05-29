@@ -24,14 +24,19 @@ output "root_cert_public_key" {
   value       = var.root_cert.public_key
 }
 
+output "server_dns" {
+  description = "DNS for region servers"
+  value       = "server.${local.common_name}"
+}
+
 output "address" {
   description = "Endpoint for cluster"
-  value       = "http://${local.common_name}:4646"
+  value       = "http://server.${local.common_name}:4646"
 }
 
 output "address_wo_protocol" {
   description = "Endpoint for cluster without protocol"
-  value       = "${local.common_name}:4646"
+  value       = "server.${local.common_name}:4646"
 }
 
 output "approle_mount_path" {

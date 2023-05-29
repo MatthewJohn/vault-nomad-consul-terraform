@@ -16,6 +16,7 @@ variable "region" {
     role_name          = string
     pki_mount_path     = string
     approle_mount_path = string
+    server_dns         = string
   })
 }
 
