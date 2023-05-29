@@ -167,7 +167,7 @@ acl {
 consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
 
-  allow_unauthenticated = false
+  allow_unauthenticated = true
   auto_advertise        = true
 
   server_auto_join    = true
