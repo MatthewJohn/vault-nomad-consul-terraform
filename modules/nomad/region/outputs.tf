@@ -14,6 +14,11 @@ output "role_name" {
   value       = vault_pki_secret_backend_role.this.name
 }
 
+output "client_pki_role_name" {
+  description = "Role name for client certificate"
+  value       = vault_pki_secret_backend_role.client.name
+}
+
 output "pki_mount_path" {
   description = "PKI path"
   value       = vault_mount.this.path
@@ -52,4 +57,9 @@ output "server_consul_template_approle_role_name" {
 output "server_consul_template_policy" {
   description = "Role for server consul-template to authenticate to vault"
   value       = vault_policy.server_consul_template.name
+}
+
+output "client_consul_template_approle_role_name" {
+  description = "Role name for nomad client consul template approle"
+  value       = vault_approle_auth_backend_role.client_consul_template.role_name
 }

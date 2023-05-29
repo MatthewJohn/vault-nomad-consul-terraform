@@ -85,6 +85,13 @@ module "virtual_machines" {
       network_bridge = "virbr0"
     }
   }
+  nomad_client_hosts = {
+    "nomad-client-1" = {
+      ip_address     = "192.168.122.91"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
+    }
+  }
 }
 
 locals {

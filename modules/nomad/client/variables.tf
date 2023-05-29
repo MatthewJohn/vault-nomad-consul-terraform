@@ -9,10 +9,10 @@ variable "region" {
   type = object({
     name                                     = string
     common_name                              = string
-    role_name                                = string
+    client_pki_role_name                     = string
     pki_mount_path                           = string
     approle_mount_path                       = string
-    server_consul_template_approle_role_name = string
+    client_consul_template_approle_role_name = string
     server_dns                               = string
   })
 }
