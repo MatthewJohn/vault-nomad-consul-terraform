@@ -56,6 +56,12 @@ variable "consul_datacenter" {
   })
 }
 
+variable "client_enabled" {
+  description = "Whether the nomad server is a client"
+  type        = bool
+  default     = false
+}
+
 variable "consul_bootstrap" {
   description = "Value of consul bootstrap"
   type = object({

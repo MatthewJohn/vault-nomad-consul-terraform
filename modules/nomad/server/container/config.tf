@@ -138,6 +138,12 @@ server {
   }
 }
 
+%{if var.client_enabled}
+client {
+  enabled = true
+}
+%{endif}
+
 tls {
   http = true
   rpc  = true
