@@ -55,7 +55,6 @@ resource "docker_container" "this" {
   volumes {
     container_path = "/sys/fs/cgroup"
     host_path      = "/sys/fs/cgroup"
-    read_only      = true
   }
 
   # Pass through docker socket for client

@@ -39,6 +39,8 @@ if [ "$1" = 'nomad' ]; then
 
         chown -R nomad: /nomad/data
         chmod 755 /nomad/data
+
+        mkdir -p /sys/fs/cgroup/nomad.slice
     fi
 fi
 
