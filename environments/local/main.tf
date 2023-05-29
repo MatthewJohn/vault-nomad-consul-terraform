@@ -78,7 +78,11 @@ module "virtual_machines" {
       ip_address     = "192.168.122.81"
       ip_gateway     = "192.168.122.1"
       network_bridge = "virbr0"
-      #additional_dns_hostnames = ["nomad-1.ndc1.dock.local"]
+    }
+    "nomad-2" = {
+      ip_address     = "192.168.122.82"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
     }
   }
 }
@@ -87,7 +91,7 @@ locals {
   all_vault_hosts      = ["vault-1", "vault-2"]
   all_vault_host_ips   = ["192.168.122.60", "192.168.122.61"]
   all_consul_ips       = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
-  all_nomad_server_ips = ["192.168.122.81"]
+  all_nomad_server_ips = ["192.168.122.81", "192.168.122.82"]
 }
 
 module "vault_init" {
@@ -302,6 +306,27 @@ module "nomad-1" {
   docker_host     = "nomad-1.${local.domain_name}"
   docker_username = local.docker_username
   docker_ip       = "192.168.122.81"
+}
+
+module "nomad-2" {
+  source = "../../modules/nomad/server"
+
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  hostname          = "nomad-2"
+  consul_root_cert  = module.consul_certificate_authority
+  consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
+
+  initial_run = var.initial_setup
+
+  nomad_version  = "1.5.6"
+  consul_version = "1.15.2"
+
+  docker_host     = "nomad-2.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.82"
 }
 
 module "nomad_bootstrap" {
