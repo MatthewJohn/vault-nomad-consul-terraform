@@ -138,13 +138,11 @@ server {
   }
 }
 
-%{if var.client_enabled}
 client {
-  enabled = true
+  enabled = ${var.client_enabled}
 
   network_interface = "ens3"
 }
-%{endif}
 
 tls {
   http = true
