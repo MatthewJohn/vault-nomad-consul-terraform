@@ -62,6 +62,11 @@ variable "consul_client" {
   })
 }
 
+variable "nomad_https_port" {
+  description = "Nomad HTTPS listen port"
+  type        = number
+}
+
 variable "nomad_server_vault_consul_role" {
   description = "Name of vault consul engine role for nomad server"
   type        = string

@@ -149,12 +149,12 @@ tls {
   verify_server_hostname = true
 }
 
-#acl {
-#  enabled    = true
-#  token_ttl  = "30s"
-#  policy_ttl = "60s"
-#  role_ttl   = "60s"
-#}
+acl {
+  enabled    = true
+  token_ttl  = "30s"
+  policy_ttl = "60s"
+  role_ttl   = "60s"
+}
 
 consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"

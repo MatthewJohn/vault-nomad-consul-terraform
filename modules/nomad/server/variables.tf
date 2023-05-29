@@ -78,6 +78,12 @@ variable "nomad_version" {
   type        = string
 }
 
+variable "nomad_https_port" {
+  description = "Nomad HTTPS listen port"
+  type        = number
+  default     = 4646
+}
+
 variable "initial_run" {
   description = "Whether an init is alled"
   type        = bool

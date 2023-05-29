@@ -301,3 +301,14 @@ module "nomad-1" {
   docker_username = local.docker_username
   docker_ip       = "192.168.122.81"
 }
+
+module "nomad_bootstrap" {
+  source = "../../modules/nomad/bootstrap"
+
+  nomad_host        = module.nomad-1
+  aws_region        = local.aws_region
+  aws_endpoint      = local.aws_endpoint
+  aws_profile       = local.aws_profile
+  bucket_name       = "nomad-bootstrap"
+  initial_run       = var.initial_setup
+}
