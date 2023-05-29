@@ -296,8 +296,6 @@ module "nomad-1" {
   consul_gossip_key = module.consul_gossip_encryption.secret
   consul_bootstrap  = module.consul_bootstrap
 
-  client_enabled = true
-
   initial_run = var.initial_setup
 
   nomad_version  = "1.5.6"
