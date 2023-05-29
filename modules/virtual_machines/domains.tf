@@ -75,7 +75,7 @@ module "nomad" {
   ip_address                 = each.value.ip_address
   ip_gateway                 = each.value.ip_gateway
   nameservers                = var.nameservers
-  memory                     = 386
+  memory                     = 512
   disk_size                  = 5000
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
