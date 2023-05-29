@@ -69,6 +69,10 @@ RUN set -eux && \
 # Install packages for nomad client to function
 RUN microdnf install -y iproute
 
+RUN microdnf install -y yum-utils && \
+   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
+   microdnf install -y docker-ce-cli
+
 # Create a non-root user to run the software. On OpenShift, this
 # will not matter since the container is run as a random user and group
 # but this is kept for consistency with our other images.
