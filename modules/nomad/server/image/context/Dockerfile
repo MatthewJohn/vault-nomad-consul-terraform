@@ -69,6 +69,7 @@ RUN set -eux && \
 # Install packages for nomad client to function
 RUN microdnf install -y iproute
 
+RUN groupadd --gid=5500 docker
 RUN microdnf install -y yum-utils && \
    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
    microdnf install -y docker-ce-cli
@@ -82,7 +83,7 @@ RUN groupadd nomad && \
 # Add nomad user to group that owns docker socket
 # @TODO Add group with matching GID in host and container
 # for correct permissions
-RUN usermod -aG systemd-coredump nomad
+RUN usermod -aG docker nomad
 
 # The /nomad/data dir is used by Consul to store state. The agent will be started
 # with /nomad/config as the configuration directory so you can add additional
