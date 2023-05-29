@@ -75,6 +75,11 @@ RUN microdnf install -y iproute
 RUN groupadd nomad && \
     adduser --uid 100 --system -g nomad nomad
 
+# Add nomad user to group that owns docker socket
+# @TODO Add group with matching GID in host and container
+# for correct permissions
+RUN usermod -aG systemd-coredump nomad
+
 # The /nomad/data dir is used by Consul to store state. The agent will be started
 # with /nomad/config as the configuration directory so you can add additional
 # config files in that location.

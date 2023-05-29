@@ -58,6 +58,12 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
+  # Pass through docker socket for client
+  volumes {
+    container_path = "/var/run/docker.sock"
+    host_path      = "/var/run/docker.sock"
+  }
+
   lifecycle {
     replace_triggered_by = [
       null_resource.noamd_config
