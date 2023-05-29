@@ -74,6 +74,11 @@ RUN microdnf install -y yum-utils && \
    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
    microdnf install -y docker-ce-cli
 
+# Install CNI plugins
+RUN curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz && \
+    mkdir -p /opt/cni/bin && \
+    tar -C /opt/cni/bin -xzf cni-plugins.tgz
+
 # Create a non-root user to run the software. On OpenShift, this
 # will not matter since the container is run as a random user and group
 # but this is kept for consistency with our other images.

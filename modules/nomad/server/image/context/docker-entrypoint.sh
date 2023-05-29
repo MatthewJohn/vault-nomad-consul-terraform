@@ -41,6 +41,11 @@ if [ "$1" = 'nomad' ]; then
         chmod 755 /nomad/data
 
         mkdir -p /sys/fs/cgroup/nomad.slice
+
+        # Enable bridge network routing
+        echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables
+        echo 1 > /proc/sys/net/bridge/bridge-nf-call-ip6tables
+        echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
     fi
 fi
 
