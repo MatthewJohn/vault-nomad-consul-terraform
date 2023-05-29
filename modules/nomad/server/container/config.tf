@@ -141,6 +141,8 @@ server {
 %{if var.client_enabled}
 client {
   enabled = true
+
+  network_interface = "ens3"
 }
 %{endif}
 
