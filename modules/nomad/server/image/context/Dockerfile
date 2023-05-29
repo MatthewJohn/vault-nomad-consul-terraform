@@ -66,6 +66,9 @@ RUN set -eux && \
     gpgconf --kill all && \
     rm -rf /root/.gnupg
 
+# Install packages for nomad client to function
+RUN microdnf install -y iproute
+
 # Create a non-root user to run the software. On OpenShift, this
 # will not matter since the container is run as a random user and group
 # but this is kept for consistency with our other images.
