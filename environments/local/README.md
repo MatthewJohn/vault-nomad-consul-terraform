@@ -49,6 +49,11 @@ The containers should be showing:
 
 Again manually restart each of the consul containers
 
+# Nomad
+terraform-1.4.6 apply -target=module.nomad_global -target=module.nomad-1 -var initial_setup=true
+terraform-1.4.6 apply -target=module.nomad_bootstrap -var initial_setup=true
+terraform-1.4.6 apply -target=module.nomad-2
+terraform-1.4.6 apply -target=module.nomad-1
 ```
 
 ## NOTES:
