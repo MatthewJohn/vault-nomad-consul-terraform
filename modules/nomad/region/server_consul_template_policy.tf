@@ -33,6 +33,17 @@ path "${var.root_cert.pki_mount_path}/cert/ca"
   capabilities = ["read"]
 }
 
+# Allow access to generate tokens for nomad server with the server policy
+path "auth/token/create" {
+  capabilities = ["create"]
+  allowed_parameters = {
+    "policies" = ["${vault_policy.server_policy.name}"]
+    "no_default_policy" = true
+    "orphan" = true
+    "period" = "72h"
+  }
+}
+
 EOF
 }
 

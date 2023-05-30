@@ -16,7 +16,7 @@ path "sys/policies/acl"
   capabilities = ["list"]
 }
 
-# Create token
+# Create tokens/roles
 path "auth/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
@@ -299,6 +299,12 @@ path "pki_int_nomad_${region}/roles/*"
 }
 
 path "sys/policies/acl/nomad-server-consul-template-${region}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Policy for nomad server vault integration
+path "sys/policies/acl/nomad-server-${region}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }

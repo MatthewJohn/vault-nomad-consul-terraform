@@ -7,9 +7,9 @@ variable "hostname" {
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
-    pki_mount_path         = string
-    common_name            = string
-    public_key             = string
+    pki_mount_path = string
+    common_name    = string
+    public_key     = string
   })
 }
 
@@ -23,6 +23,8 @@ variable "region" {
     approle_mount_path                       = string
     server_consul_template_approle_role_name = string
     server_dns                               = string
+    server_vault_policy                      = string
+    server_vault_role                        = string
   })
 }
 

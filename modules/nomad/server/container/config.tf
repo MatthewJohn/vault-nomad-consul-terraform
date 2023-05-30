@@ -190,6 +190,13 @@ consul {
   ca_file      = "/nomad/config/consul-certs/ca.crt"
 }
 
+vault {
+  {{with secret "/auth/token/create" "policies=${var.region.server_vault_policy}" "no_default_policy=true" "orphan=true" "period=72h"}}
+  token = "{{.Auth.ClientToken}}"
+  {{ end }}
+}
+
+
 data_dir = "/nomad/data"
 
 disable_update_check = true
