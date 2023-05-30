@@ -191,7 +191,7 @@ consul {
 }
 
 vault {
-  {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}"}}
+  {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}" "period=72h"}}
   token = "{{.Auth.ClientToken}}"
   {{ end }}
   enabled = true

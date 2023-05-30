@@ -56,8 +56,9 @@ path "${var.root_cert.pki_mount_path}/cert/ca"
 }
 
 # Allow creating tokens under "nomad-server" token role.
+# Allow "sudo" permission so that client can create period token.
 path "auth/token/create/${vault_token_auth_backend_role.server_consul_template_role.role_name}" {
-  capabilities = ["update"]
+  capabilities = ["update", "sudo"]
 }
 
 # Allow looking up "nomad-cluster" token role.
