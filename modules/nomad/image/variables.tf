@@ -8,3 +8,8 @@ variable "nomad_version" {
   description = "Version of Nomad"
   type        = string
 }
+
+variable "consul_version" {
+  description = "Version of Nomad"
+  type        = string
+}

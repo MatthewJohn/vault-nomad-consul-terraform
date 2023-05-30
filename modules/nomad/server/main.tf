@@ -2,7 +2,8 @@
 module "image" {
   source = "../image"
 
-  nomad_version = var.nomad_version
+  nomad_version  = var.nomad_version
+  consul_version = var.consul_version
 
   providers = {
     docker = docker.consul
