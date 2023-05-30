@@ -130,6 +130,7 @@ client {
   enabled = true
 
   network_interface = "ens3"
+  servers = ["${var.region.server_dns}"]
 }
 
 tls {
