@@ -29,8 +29,6 @@ EOF
 
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
 
-    "config/vault-certs/ca.crt" = var.vault_init.ca_cert
-
     "config/templates/consul_template.hcl" = <<EOF
 vault {
   address                = "${var.vault_cluster.address}"
@@ -198,7 +196,7 @@ vault {
   {{ end }}
   address = "${var.vault_cluster.address}"
 
-  ca_file = "/nomad/config/vault-certs/ca.crt"
+  ca_file = "/nomad/vault/ca_cert.pem"
 
   create_from_role = "${var.region.server_vault_role}"
 
