@@ -38,7 +38,7 @@ resource "vault_pki_secret_backend_intermediate_set_signed" "this" {
 }
 
 resource "vault_pki_secret_backend_role" "client" {
-  backend = vault_mount.this.path
+  backend = var.region.pki_mount_path
   name    = "nomad-client-${var.region.name}-${var.datacenter}"
 
   max_ttl        = (720 * 60 * 60) # "720h"
