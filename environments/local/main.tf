@@ -379,3 +379,11 @@ module "nomad-client-1" {
   docker_username = local.docker_username
   docker_ip       = "192.168.122.91"
 }
+
+module "traefik" {
+  source = "../../modules/services/traefik"
+
+  nomad_bootstrap = module.nomad_bootstrap
+  nomad_region = module.nomad_global
+  nomad_datacenter = module.nomad_dc1
+}
