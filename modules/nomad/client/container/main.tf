@@ -27,14 +27,22 @@ resource "docker_container" "this" {
     # "VAULT_TOKEN="
   ]
 
-  volumes {
-    container_path = "/nomad/data"
-    host_path      = "/nomad/data"
+  mounts {
+    target = "/nomad/data"
+    type   = "bind"
+    source      = "/nomad/data"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
-  volumes {
-    container_path = "/nomad/config"
-    host_path      = "/nomad/config"
+  mounts {
+    target = "/nomad/config"
+    type   = "bind"
+    source      = "/nomad/config"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   volumes {
@@ -43,9 +51,13 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  volumes {
-    container_path = "/vault-agent-consul-template/auth"
-    host_path      = var.consul_template_vault_agent.token_directory
+  mounts {
+    target = "/vault-agent-consul-template/auth"
+    type   = "bind"
+    source      = var.consul_template_vault_agent.token_directory
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   # Mount cgroup due to errors when running client
