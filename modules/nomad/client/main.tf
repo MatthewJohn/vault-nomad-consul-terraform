@@ -13,7 +13,7 @@ module "consul_client" {
   source = "../../consul/client"
 
   hostname      = var.hostname
-  domain_name   = var.region.common_name
+  domain_name   = var.datacenter.common_name
   datacenter    = var.consul_datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
@@ -52,13 +52,12 @@ module "container" {
   hostname                       = var.hostname
   root_cert                      = var.root_cert
   region                         = var.region
+  datacenter                     = var.datacenter
   vault_cluster                  = var.vault_cluster
   consul_root_cert               = var.consul_root_cert
   consul_client                  = module.consul_client
   consul_datacenter              = var.consul_datacenter
-  initial_run                    = var.initial_run
-  nomad_server_vault_consul_role = vault_consul_secret_backend_role.nomad_server_vault_consul_role.name
-  nomad_https_port               = var.nomad_https_port
+  nomad_client_vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

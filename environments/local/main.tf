@@ -85,6 +85,13 @@ module "virtual_machines" {
       network_bridge = "virbr0"
     }
   }
+  nomad_client_hosts = {
+    "nomad-client-1" = {
+      ip_address     = "192.168.122.91"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
+    }
+  }
 }
 
 locals {
@@ -92,6 +99,7 @@ locals {
   all_vault_host_ips   = ["192.168.122.60", "192.168.122.61"]
   all_consul_ips       = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
   all_nomad_server_ips = ["192.168.122.81", "192.168.122.82"]
+  all_nomad_client_ips = ["192.168.122.91"]
 }
 
 module "vault_init" {
@@ -288,6 +296,7 @@ module "nomad_global" {
 module "nomad-1" {
   source = "../../modules/nomad/server"
 
+  root_cert         = module.nomad_certificate_authority
   region            = module.nomad_global
   vault_cluster     = module.vault_cluster
   hostname          = "nomad-1"
@@ -309,6 +318,7 @@ module "nomad-1" {
 module "nomad-2" {
   source = "../../modules/nomad/server"
 
+  root_cert         = module.nomad_certificate_authority
   region            = module.nomad_global
   vault_cluster     = module.vault_cluster
   hostname          = "nomad-2"
@@ -330,10 +340,42 @@ module "nomad-2" {
 module "nomad_bootstrap" {
   source = "../../modules/nomad/bootstrap"
 
-  nomad_host        = module.nomad-1
-  aws_region        = local.aws_region
-  aws_endpoint      = local.aws_endpoint
-  aws_profile       = local.aws_profile
-  bucket_name       = "nomad-bootstrap"
-  initial_run       = var.initial_setup
+  nomad_host   = module.nomad-1
+  aws_region   = local.aws_region
+  aws_endpoint = local.aws_endpoint
+  aws_profile  = local.aws_profile
+  bucket_name  = "nomad-bootstrap"
+  initial_run  = var.initial_setup
+}
+
+module "nomad_dc1" {
+  source = "../../modules/nomad/datacenter"
+
+  datacenter        = "dc1"
+  root_cert         = module.nomad_certificate_authority
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  nomad_client_ips  = local.all_nomad_client_ips
+  consul_datacenter = module.dc1
+}
+
+module "nomad-client-1" {
+  source = "../../modules/nomad/client"
+
+  root_cert         = module.nomad_certificate_authority
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  hostname          = "nomad-client-1"
+  consul_root_cert  = module.consul_certificate_authority
+  consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
+  datacenter        = module.nomad_dc1
+
+  nomad_version  = "1.5.6"
+  consul_version = "1.15.2"
+
+  docker_host     = "nomad-client-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.91"
 }

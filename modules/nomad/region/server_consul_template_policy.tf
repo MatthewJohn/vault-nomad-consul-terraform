@@ -27,6 +27,12 @@ path "${vault_auth_backend.approle.path}/login"
   capabilities = ["update"]
 }
 
+# Allow access to read root CA
+path "${var.root_cert.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
+
 EOF
 }
 

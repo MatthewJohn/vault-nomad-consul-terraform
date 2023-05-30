@@ -26,17 +26,17 @@ output "root_cert_public_key" {
 
 output "server_dns" {
   description = "DNS for region servers"
-  value       = "server.${local.common_name}"
+  value       = "${local.server_common_name}"
 }
 
 output "address" {
   description = "Endpoint for cluster"
-  value       = "http://server.${local.common_name}:4646"
+  value       = "http://${local.server_common_name}:4646"
 }
 
 output "address_wo_protocol" {
   description = "Endpoint for cluster without protocol"
-  value       = "server.${local.common_name}:4646"
+  value       = "${local.server_common_name}:4646"
 }
 
 output "approle_mount_path" {

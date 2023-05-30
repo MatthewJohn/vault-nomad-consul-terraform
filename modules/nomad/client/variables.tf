@@ -7,22 +7,32 @@ variable "hostname" {
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
-    pki_mount_path         = string
-    common_name            = string
-    public_key             = string
+    pki_mount_path = string
+    common_name    = string
+    public_key     = string
   })
 }
 
 variable "region" {
   description = "Nomad region"
   type = object({
+    name               = string
+    common_name        = string
+    approle_mount_path = string
+    server_dns         = string
+    pki_mount_path     = string
+  })
+}
+
+variable "datacenter" {
+  description = "Nomad datacenter"
+  type = object({
     name                                     = string
     common_name                              = string
-    role_name                                = string
     pki_mount_path                           = string
-    approle_mount_path                       = string
-    server_consul_template_approle_role_name = string
-    server_dns                               = string
+    client_consul_template_approle_role_name = string
+    client_dns                               = string
+    client_pki_role_name                     = string
   })
 }
 
@@ -86,18 +96,6 @@ variable "consul_version" {
 variable "nomad_version" {
   description = "Version of nomad"
   type        = string
-}
-
-variable "nomad_https_port" {
-  description = "Nomad HTTPS listen port"
-  type        = number
-  default     = 4646
-}
-
-variable "initial_run" {
-  description = "Whether an init is alled"
-  type        = bool
-  default     = false
 }
 
 variable "docker_username" {

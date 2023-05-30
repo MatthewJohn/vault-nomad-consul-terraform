@@ -11,9 +11,9 @@ variable "image" {
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
-    pki_mount_path         = string
-    common_name            = string
-    public_key             = string
+    pki_mount_path = string
+    common_name    = string
+    public_key     = string
   })
 }
 
@@ -22,10 +22,21 @@ variable "region" {
   type = object({
     name               = string
     common_name        = string
-    role_name          = string
-    pki_mount_path     = string
     approle_mount_path = string
     server_dns         = string
+    pki_mount_path     = string
+  })
+}
+
+variable "datacenter" {
+  description = "Nomad datacenter"
+  type = object({
+    name                                     = string
+    common_name                              = string
+    client_consul_template_approle_role_name = string
+    client_dns                               = string
+    pki_mount_path                           = string
+    client_pki_role_name                     = string
   })
 }
 
@@ -57,13 +68,6 @@ variable "consul_datacenter" {
   })
 }
 
-variable "consul_root_cert" {
-  description = "Consul root certificate authority"
-  type = object({
-    public_key = string
-  })
-}
-
 variable "consul_client" {
   description = "Configuration of consul client"
   type = object({
@@ -72,20 +76,16 @@ variable "consul_client" {
   })
 }
 
-variable "nomad_https_port" {
-  description = "Nomad HTTPS listen port"
-  type        = number
+variable "consul_root_cert" {
+  description = "Consul root certificate authority"
+  type = object({
+    public_key = string
+  })
 }
 
-variable "nomad_server_vault_consul_role" {
-  description = "Name of vault consul engine role for nomad server"
+variable "nomad_client_vault_consul_role" {
+  description = "Name of vault consul engine role for nomad client"
   type        = string
-}
-
-variable "initial_run" {
-  description = "Whether an init is alled"
-  type        = bool
-  default     = false
 }
 
 variable "docker_username" {

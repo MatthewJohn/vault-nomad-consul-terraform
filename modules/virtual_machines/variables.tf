@@ -70,3 +70,14 @@ variable "nomad_server_hosts" {
   }))
   default = {}
 }
+
+variable "nomad_client_hosts" {
+  description = "List of nomad client host configurations"
+  type = map(object({
+    ip_address               = string
+    ip_gateway               = string
+    network_bridge           = optional(string)
+    additional_dns_hostnames = optional(list(string), [])
+  }))
+  default = {}
+}

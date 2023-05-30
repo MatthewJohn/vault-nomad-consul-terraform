@@ -178,6 +178,14 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
 {
   capabilities = ["create", "read", "delete", "update"]
 }
+
+%{for nomad_dc in var.nomad_regions[nomad_region]}
+path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+%{endfor}
+
 %{endfor}
 
 # Create approle backend
@@ -278,6 +286,12 @@ path "pki_int_nomad_${region}/intermediate/set-signed"
   capabilities = ["update"]
 }
 
+# Generate child intermediate certs
+path "pki_int_nomad_${region}/root/sign-intermediate"
+{
+  capabilities = ["update"]
+}
+
 # Create/view/delete roles
 path "pki_int_nomad_${region}/roles/*"
 {
@@ -294,6 +308,44 @@ path "sys/auth/approle-nomad-${region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
 }
+
+%{for nomad_dc in var.nomad_regions[region]}
+
+path "sys/mounts/pki_int_nomad_${region}_${nomad_dc}"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+
+# Generate intermediate CAs
+path "pki_int_nomad_${region}_${nomad_dc}/intermediate/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# Set default issuer for cert
+path "pki_int_nomad_${region}_${nomad_dc}/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Set self-signed certificate
+path "pki_int_nomad_${region}_${nomad_dc}/intermediate/set-signed"
+{
+  capabilities = ["update"]
+}
+
+# Create/view/delete roles
+path "pki_int_nomad_${region}_${nomad_dc}/roles/*"
+{
+  capabilities = ["update", "read", "delete"]
+}
+
+path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+%{endfor}
 
 %{endfor}
 

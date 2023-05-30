@@ -1,20 +1,23 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.region.common_name}"
-  server_fqdn = "server.${var.region.common_name}"
+  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  client_fqdn = "client.${var.datacenter.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
-  verify_domain = "server.${var.region.name}.nomad"
+  verify_domain = "client.${var.region.name}.nomad"
 
   config_files = {
-    "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.crt.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
+{{ with secret "${var.region.pki_mount_path}/cert/ca" }}
+{{ .Data.certificate }}
+{{ end }}
 EOF
 
-    "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.key.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
@@ -44,26 +47,26 @@ vault {
 }
 
 template {
-  source      = "/nomad/config/templates/server.crt.tpl"
-  destination = "/nomad/config/server-certs/server.crt"
+  source      = "/nomad/config/templates/client.crt.tpl"
+  destination = "/nomad/config/client-certs/client.crt"
   perms       = 0700
 }
 
 template {
-  source      = "/nomad/config/templates/server.key.tpl"
-  destination = "/nomad/config/server-certs/server.key"
+  source      = "/nomad/config/templates/client.key.tpl"
+  destination = "/nomad/config/client-certs/client.key"
   perms       = 0700
 }
 
 template {
   source      = "/nomad/config/templates/ca.crt.tpl"
-  destination = "/nomad/config/server-certs/ca.crt"
+  destination = "/nomad/config/client-certs/ca.crt"
   perms       = 0700
 }
 
 template {
-  source      = "/nomad/config/templates/server.hcl.tmpl"
-  destination = "/nomad/config/server.hcl"
+  source      = "/nomad/config/templates/client.hcl.tmpl"
+  destination = "/nomad/config/client.hcl"
   perms       = 0700
 
   error_on_missing_key = false
@@ -119,39 +122,28 @@ EOF
 
     "vault/ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
 
-    "config/templates/server.hcl.tmpl" = <<EOF
+    "config/templates/client.hcl.tmpl" = <<EOF
 
-name = "${var.hostname}"
-
-region = "${var.region.name}"
+name       = "${var.hostname}"
+region     = "${var.region.name}"
+datacenter = "${var.datacenter.name}"
 
 bind_addr = "0.0.0.0"
 
-server {
-  enabled          = true
-  %{if var.initial_run == true}
-  bootstrap_expect = ${local.bootstrap_count}
-  %{endif}
-  server_join {
-    retry_join = [ "${var.region.server_dns}" ]
-    retry_max = 3
-    retry_interval = "15s"
-  }
-}
-
 client {
-  enabled = false
+  enabled = true
 
   network_interface = "ens3"
+  servers = ["${var.region.server_dns}"]
 }
 
 tls {
   http = true
   rpc  = true
 
-  ca_file   = "/nomad/config/server-certs/ca.crt"
-  cert_file = "/nomad/config/server-certs/server.crt"
-  key_file  = "/nomad/config/server-certs/server.key"
+  ca_file   = "/nomad/config/client-certs/ca.crt"
+  cert_file = "/nomad/config/client-certs/client.crt"
+  key_file  = "/nomad/config/client-certs/client.key"
 
   verify_server_hostname = true
 }
@@ -172,12 +164,10 @@ consul {
   server_auto_join    = true
   client_auto_join    = true
 
-  client_service_name    = "nomad-${var.region.name}-client"
-  #client_auto_join       = true
-  #server_auto_join       = true
+  client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
   #client_http_check_name = ""
 
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
+{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_client_vault_consul_role}" }}
   token = "{{ .Data.token }}"
 {{ end }}
 
@@ -198,7 +188,7 @@ EOF
   }
 }
 
-resource "null_resource" "noamd_config" {
+resource "null_resource" "nomad_config" {
 
   for_each = local.config_files
 
