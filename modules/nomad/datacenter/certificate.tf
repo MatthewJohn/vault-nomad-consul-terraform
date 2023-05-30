@@ -1,6 +1,6 @@
 locals {
   common_name         = "${var.datacenter}.${var.region.common_name}"
-  nomad_verify_domain = "${var.datacenter}.${var.region.name}.nomad"
+  nomad_verify_domain = "${var.region.name}.nomad"
 }
 
 resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
@@ -50,7 +50,7 @@ resource "vault_pki_secret_backend_role" "client" {
     # hostname.dc.region.name.rootdomain
     # localhost
     local.common_name,
-    "${var.region.name}.nomad"
+    local.nomad_verify_domain
   ]
   allow_subdomains = true
   allow_localhost  = true
