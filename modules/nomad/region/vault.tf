@@ -67,11 +67,3 @@ resource "vault_token_auth_backend_role" "server_role" {
   token_explicit_max_ttl = 14 * 24 * 60 * 60 # 14 days
   path_suffix            = "nomad-service-${var.region}-"
 }
-
-# Create approle to to grant token to server policy
-resource "vault_approle_auth_backend_role" "server_token" {
-  backend = vault_auth_backend.approle.path
-
-  role_name      = local.vault_server_role
-  token_policies = [vault_policy.server_policy.name]
-}
