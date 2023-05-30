@@ -162,8 +162,6 @@ consul {
   client_auto_join    = true
 
   client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
-  #client_auto_join       = true
-  #server_auto_join       = true
   #client_http_check_name = ""
 
 {{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_client_vault_consul_role}" }}
