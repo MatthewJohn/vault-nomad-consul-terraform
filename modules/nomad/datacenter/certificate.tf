@@ -50,7 +50,7 @@ resource "vault_pki_secret_backend_role" "client" {
     # hostname.dc.region.name.rootdomain
     # localhost
     local.common_name,
-    local.nomad_verify_domain
+    "${var.region.name}.nomad"
   ]
   allow_subdomains = true
   allow_localhost  = true

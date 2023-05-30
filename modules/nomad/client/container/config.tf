@@ -3,7 +3,7 @@ locals {
   fqdn        = "${var.hostname}.${var.datacenter.common_name}"
   client_fqdn = "client.${var.datacenter.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
-  verify_domain = "client.${var.datacenter.name}.${var.region.name}.nomad"
+  verify_domain = "client.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
