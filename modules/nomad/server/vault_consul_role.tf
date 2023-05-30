@@ -23,6 +23,8 @@ agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
   policy = "read"
 }
 
+acl = "write"
+
 RULE
 }
 
