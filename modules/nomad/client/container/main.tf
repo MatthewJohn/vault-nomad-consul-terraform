@@ -57,15 +57,31 @@ resource "docker_container" "this" {
     host_path      = "/sys/fs/cgroup"
   }
 
-  # Pass through docker socket for client
-  volumes {
-    container_path = "/var/run/docker.sock"
-    host_path      = "/var/run/docker.sock"
+  # Pass through docker socket/docker runtime for client and fix issues with netns errors
+  mounts {
+    target = "/var/run"
+    type   = "bind"
+    source      = "/var/run"
+    bind_options {
+      propagation = "shared"
+    }
   }
-
-  volumes {
-    container_path = "/var/run/docker"
-    host_path      = "/var/run/docker"
+  # Use shared mounts to fix issues with CNI tools reading netns
+  mounts {
+    target = "/var/run/netns"
+    type   = "bind"
+    source      = "/var/run/netns"
+    bind_options {
+      propagation = "shared"
+    }
+  }
+  mounts {
+    target = "/var/run/docker/netns"
+    type   = "bind"
+    source      = "/var/run/docker/netns"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   lifecycle {
