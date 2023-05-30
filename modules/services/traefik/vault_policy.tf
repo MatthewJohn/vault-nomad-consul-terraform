@@ -25,7 +25,7 @@ resource "vault_policy" "traefik" {
 
   policy = <<EOF
 # Generate token for nomad server using consul engine role
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/nomad-job-${var.nomad_region.name}-traefik" {
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.traefik.name}" {
   capabilities = ["read"]
 }
 EOF
