@@ -23,6 +23,9 @@ agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
   policy = "read"
 }
 
+# Hopefully not required as servers have this permission
+#acl = "write"
+
 RULE
 }
 
