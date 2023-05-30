@@ -73,11 +73,6 @@ variable "nomad_server_vault_consul_role" {
   type        = string
 }
 
-variable "client_enabled" {
-  description = "Whether the nomad server is a client"
-  type        = bool
-}
-
 variable "initial_run" {
   description = "Whether an init is alled"
   type        = bool

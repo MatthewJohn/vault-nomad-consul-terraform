@@ -1,26 +1,26 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.region.common_name}"
-  client_fqdn = "client.${var.region.common_name}"
+  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  client_fqdn = "client.${var.datacenter.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
-  verify_domain = "client.${var.region.name}.nomad"
+  verify_domain = "client.${var.datacenter.name}.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ end }}
 EOF
 
     "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h"}}
 {{ .Data.issuing_ca }}
 {{ end }}
 
@@ -120,9 +120,9 @@ EOF
 
     "config/templates/client.hcl.tmpl" = <<EOF
 
-name = "${var.hostname}"
-
-region = "${var.region.name}"
+name       = "${var.hostname}"
+region     = "${var.region.name}"
+datacenter = "${var.datacenter.name}"
 
 bind_addr = "0.0.0.0"
 
@@ -159,7 +159,7 @@ consul {
   server_auto_join    = true
   client_auto_join    = true
 
-  client_service_name    = "nomad-${var.region.name}-client"
+  client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
   #client_auto_join       = true
   #server_auto_join       = true
   #client_http_check_name = ""

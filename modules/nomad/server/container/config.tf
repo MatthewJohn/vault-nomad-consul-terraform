@@ -139,7 +139,7 @@ server {
 }
 
 client {
-  enabled = ${var.client_enabled}
+  enabled = false
 
   network_interface = "ens3"
 }

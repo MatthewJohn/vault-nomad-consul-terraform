@@ -1,7 +1,6 @@
 locals {
-  common_name         = "${var.region}.${var.root_cert.common_name}"
-  nomad_verify_domain = "${var.region}.nomad"
-  server_common_name  = "server.${local.common_name}"
+  common_name = "${var.datacenter}.${var.region.common_name}"
+  nomad_verify_domain = "${var.datacenter}.${var.region.name}.nomad"
 }
 
 resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
@@ -20,7 +19,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
 
 # Sign intermediate certificate with root cert
 resource "vault_pki_secret_backend_root_sign_intermediate" "this" {
-  backend = var.root_cert.pki_mount_path
+  backend = var.region.pki_mount_path
 
   csr = vault_pki_secret_backend_intermediate_cert_request.this.csr
 
@@ -38,14 +37,18 @@ resource "vault_pki_secret_backend_intermediate_set_signed" "this" {
   certificate = join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
 }
 
-resource "vault_pki_secret_backend_role" "this" {
+resource "vault_pki_secret_backend_role" "client" {
   backend = vault_mount.this.path
-  name    = "nomad-${var.region}"
+  name    = "nomad-client-${var.region.name}-${var.datacenter}"
 
-  max_ttl          = (720 * 60 * 60) # "720h"
+  max_ttl          = (720 * 60 * 60)  # "720h"
   generate_lease   = true
-  allowed_domains  = [local.common_name, local.nomad_verify_domain]
-  allow_subdomains = true
+  allowed_domains  = [
+    "client.${local.common_name}",
+    "client.${local.nomad_verify_domain}"
+  ]
+  allow_subdomains = false
+  allow_bare_domains = true
 
   depends_on = [
     vault_pki_secret_backend_intermediate_set_signed.this

@@ -26,11 +26,23 @@ if [ "$1" = 'nomad' ]; then
         chmod 755 /nomad/config/templates
         chmod 644 /nomad/config/templates/*
 
-        chown -R nomad: /nomad/config/server-certs
-        chmod 755 /nomad/config/server-certs
-        if ls /nomad/config/server-certs/*
+        if [ -d /nomad/config/server-certs ]
         then
-          chmod 644 /nomad/config/server-certs/*
+            chown -R nomad: /nomad/config/server-certs
+            chmod 755 /nomad/config/server-certs
+            if ls /nomad/config/server-certs/*
+            then
+                chmod 644 /nomad/config/server-certs/*
+            fi
+        fi
+        if [ -d /nomad/config/client-certs ]
+        then
+            chown -R nomad: /nomad/config/client-certs
+            chmod 755 /nomad/config/client-certs
+            if ls /nomad/config/client-certs/*
+            then
+                chmod 644 /nomad/config/client-certs/*
+            fi
         fi
         chmod 755 /nomad/config/consul-certs
 

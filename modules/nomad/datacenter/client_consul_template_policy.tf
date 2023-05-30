@@ -1,6 +1,6 @@
 
 resource "vault_policy" "client_consul_template" {
-  name = "nomad-client-consul-template-${var.region}"
+  name = "nomad-client-${var.region.name}-${var.datacenter}-consul-template"
 
   policy = <<EOF
 # Access CA certs
@@ -9,7 +9,7 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.client.name
 }
 
 # Generate token for nomad client using consul engine role
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/nomad-${var.region}-client-*" {
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/nomad-${var.region.name}-${var.datacenter}-client-*" {
   capabilities = ["read"]
 }
 
@@ -22,7 +22,7 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
-path "${vault_auth_backend.approle.path}/login"
+path "${var.region.approle_mount_path}/login"
 {
   capabilities = ["update"]
 }
@@ -31,7 +31,7 @@ EOF
 }
 
 resource "vault_approle_auth_backend_role" "client_consul_template" {
-  backend        = vault_auth_backend.approle.path
-  role_name      = "nomad-client-${var.region}-consul-template"
+  backend        = var.region.approle_mount_path
+  role_name      = "nomad-client-${var.region.name}-${var.datacenter}-consul-template"
   token_policies = [vault_policy.client_consul_template.name]
 }

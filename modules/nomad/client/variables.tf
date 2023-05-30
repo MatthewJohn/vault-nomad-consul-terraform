@@ -7,13 +7,22 @@ variable "hostname" {
 variable "region" {
   description = "Nomad region"
   type = object({
+    name               = string
+    common_name        = string
+    approle_mount_path = string
+    server_dns         = string
+  })
+}
+
+variable "datacenter" {
+  description = "Nomad datacenter"
+  type = object({
     name                                     = string
     common_name                              = string
-    client_pki_role_name                     = string
     pki_mount_path                           = string
-    approle_mount_path                       = string
     client_consul_template_approle_role_name = string
-    server_dns                               = string
+    client_dns                               = string
+    client_pki_role_name                     = string
   })
 }
 
@@ -77,18 +86,6 @@ variable "consul_version" {
 variable "nomad_version" {
   description = "Version of nomad"
   type        = string
-}
-
-variable "nomad_https_port" {
-  description = "Nomad HTTPS listen port"
-  type        = number
-  default     = 4646
-}
-
-variable "initial_run" {
-  description = "Whether an init is alled"
-  type        = bool
-  default     = false
 }
 
 variable "docker_username" {

@@ -1,5 +1,5 @@
 data "dns_a_record_set" "nomad_cluster" {
-  host = var.region.common_name
+  host = var.region.server_dns
 }
 
 locals {

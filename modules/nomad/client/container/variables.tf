@@ -11,12 +11,22 @@ variable "image" {
 variable "region" {
   description = "Nomad region"
   type = object({
-    name                 = string
-    common_name          = string
-    client_pki_role_name = string
-    pki_mount_path       = string
-    approle_mount_path   = string
-    server_dns           = string
+    name               = string
+    common_name        = string
+    approle_mount_path = string
+    server_dns         = string
+  })
+}
+
+variable "datacenter" {
+  description = "Nomad datacenter"
+  type = object({
+    name                                     = string
+    common_name                              = string
+    client_consul_template_approle_role_name = string
+    client_dns                               = string
+    pki_mount_path                           = string
+    client_pki_role_name                     = string
   })
 }
 
@@ -45,6 +55,14 @@ variable "consul_datacenter" {
     name                     = string
     ca_chain                 = string
     consul_engine_mount_path = string
+  })
+}
+
+variable "consul_client" {
+  description = "Configuration of consul client"
+  type = object({
+    port        = number
+    listen_host = string
   })
 }
 

@@ -5,7 +5,7 @@
 # during startup
 
 resource "consul_acl_policy" "nomad_client" {
-  name        = "nomad-${var.region.name}-client-${var.hostname}"
+  name        = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
   datacenters = [
     var.consul_datacenter.name
   ]
@@ -27,7 +27,7 @@ RULE
 }
 
 resource "vault_consul_secret_backend_role" "nomad_client_vault_consul_role" {
-  name    = "nomad-${var.region.name}-client-${var.hostname}"
+  name    = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
   backend = var.consul_datacenter.consul_engine_mount_path
 
   consul_policies = [
