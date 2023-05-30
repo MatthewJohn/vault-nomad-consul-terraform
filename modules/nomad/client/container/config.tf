@@ -11,6 +11,9 @@ locals {
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
+{{ with secret "${var.region.pki_mount_path}/cert/ca" }}
+{{ .Data.certificate }}
+{{ end }}
 EOF
 
     "config/templates/client.key.tpl" = <<EOF

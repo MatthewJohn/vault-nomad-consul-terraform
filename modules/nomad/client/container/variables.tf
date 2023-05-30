@@ -11,9 +11,9 @@ variable "image" {
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
-    pki_mount_path         = string
-    common_name            = string
-    public_key             = string
+    pki_mount_path = string
+    common_name    = string
+    public_key     = string
   })
 }
 
@@ -24,6 +24,7 @@ variable "region" {
     common_name        = string
     approle_mount_path = string
     server_dns         = string
+    pki_mount_path     = string
   })
 }
 

@@ -33,6 +33,12 @@ path "${var.root_cert.pki_mount_path}/cert/ca"
   capabilities = ["read"]
 }
 
+# Allow access to read region CA
+path "${var.region.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
+
 EOF
 }
 
