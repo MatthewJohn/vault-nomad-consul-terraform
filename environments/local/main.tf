@@ -304,6 +304,7 @@ module "nomad-1" {
   consul_datacenter = module.dc1
   consul_gossip_key = module.consul_gossip_encryption.secret
   consul_bootstrap  = module.consul_bootstrap
+  vault_init        = module.vault_init
 
   initial_run = var.initial_setup
 
@@ -326,6 +327,7 @@ module "nomad-2" {
   consul_datacenter = module.dc1
   consul_gossip_key = module.consul_gossip_encryption.secret
   consul_bootstrap  = module.consul_bootstrap
+  vault_init        = module.vault_init
 
   initial_run = var.initial_setup
 

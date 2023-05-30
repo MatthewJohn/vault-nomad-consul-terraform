@@ -103,6 +103,7 @@ module "nomad" {
     "/consul/config",
     "/consul/config/templates",
     "/consul/config/client-certs",
+    "/consul/config/vault-certs",
     "/consul/vault",
     "/consul-agent-vault-agent-consul-template",
     "/consul-agent-vault-agent-consul-template/config.d",

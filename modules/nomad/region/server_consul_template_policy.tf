@@ -1,3 +1,25 @@
+# Create policy that allows consul template on nomad servers to:
+# * Obtain CA certs
+# * Obtain consul token
+# * Renew its own token
+# * Obtain Root CA cert for nomad
+# * Create token for nomad server, using a token role, which species
+#   the server policy that can be used for the token
+
+
+resource "vault_token_auth_backend_role" "server_consul_template_role" {
+  role_name = "nomad-server-consul-template-${var.region}"
+  allowed_policies         = [local.vault_server_policy]
+  #disallowed_policies      = ["default"]
+  #allowed_policies_glob    = []
+  #disallowed_policies_glob = []
+  orphan                 = true
+  token_period           = 7 * 24 * 60 * 60 # 7 days
+  renewable              = true
+  token_explicit_max_ttl = 14 * 24 * 60 * 60 # 14 days
+  path_suffix            = "nomad-server-${var.region}-"
+}
+
 
 resource "vault_policy" "server_consul_template" {
   name = "nomad-server-consul-template-${var.region}"
@@ -33,15 +55,14 @@ path "${var.root_cert.pki_mount_path}/cert/ca"
   capabilities = ["read"]
 }
 
-# Allow access to generate tokens for nomad server with the server policy
-path "auth/token/create" {
-  capabilities = ["create"]
-  allowed_parameters = {
-    "policies" = ["${vault_policy.server_policy.name}"]
-    "no_default_policy" = true
-    "orphan" = true
-    "period" = "72h"
-  }
+# Allow creating tokens under "nomad-server" token role.
+path "auth/token/create/${vault_token_auth_backend_role.server_consul_template_role.role_name}" {
+  capabilities = ["update"]
+}
+
+# Allow looking up "nomad-cluster" token role.
+path "auth/token/roles/${vault_token_auth_backend_role.server_consul_template_role.role_name}" {
+  capabilities = ["read"]
 }
 
 EOF

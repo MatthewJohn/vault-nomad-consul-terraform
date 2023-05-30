@@ -13,18 +13,26 @@ variable "root_cert" {
   })
 }
 
+variable "vault_init" {
+  description = "Vault init"
+  type = object({
+    ca_cert = string
+  })
+}
+
 variable "region" {
   description = "Nomad region"
   type = object({
-    name                                     = string
-    common_name                              = string
-    role_name                                = string
-    pki_mount_path                           = string
-    approle_mount_path                       = string
-    server_consul_template_approle_role_name = string
-    server_dns                               = string
-    server_vault_policy                      = string
-    server_vault_role                        = string
+    name                                      = string
+    common_name                               = string
+    role_name                                 = string
+    pki_mount_path                            = string
+    approle_mount_path                        = string
+    server_consul_template_approle_role_name  = string
+    server_dns                                = string
+    server_vault_policy                       = string
+    server_vault_role                         = string
+    server_consul_template_consul_server_role = string
   })
 }
 

@@ -29,6 +29,8 @@ EOF
 
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
 
+    "config/vault-certs/ca.crt" = var.vault_init.ca_cert
+
     "config/templates/consul_template.hcl" = <<EOF
 vault {
   address                = "${var.vault_cluster.address}"
@@ -191,9 +193,17 @@ consul {
 }
 
 vault {
-  {{with secret "/auth/token/create" "policies=${var.region.server_vault_policy}" "no_default_policy=true" "orphan=true" "period=72h"}}
+  {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}"}}
   token = "{{.Auth.ClientToken}}"
   {{ end }}
+  address = "${var.vault_cluster.address}"
+
+  ca_file = "/nomad/config/vault-certs/ca.crt"
+
+  create_from_role = "${var.region.server_vault_role}"
+
+  # @TODO To set false in future
+  allow_unauthenticated = true
 }
 
 

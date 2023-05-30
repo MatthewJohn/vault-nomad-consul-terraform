@@ -60,6 +60,7 @@ module "container" {
   initial_run                    = var.initial_run
   nomad_server_vault_consul_role = vault_consul_secret_backend_role.nomad_server_vault_consul_role.name
   nomad_https_port               = var.nomad_https_port
+  vault_init                     = var.vault_init
 
   docker_host     = var.docker_host
   docker_username = var.docker_username

@@ -54,6 +54,11 @@ output "server_consul_template_policy" {
   value       = vault_policy.server_consul_template.name
 }
 
+output "server_consul_template_consul_server_role" {
+  description = "Role used by consul template to generate token for consul server"
+  value       = vault_token_auth_backend_role.server_consul_template_role.role_name
+}
+
 output "server_vault_policy" {
   description = "Vault policy for nomad server vault integration"
   value       = vault_policy.server_policy.name
