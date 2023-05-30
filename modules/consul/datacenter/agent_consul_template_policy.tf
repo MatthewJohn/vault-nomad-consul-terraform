@@ -33,17 +33,12 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
-path "approle-consul-dc1/login"
+path "${vault_auth_backend.approle.path}/login"
 {
   capabilities = ["update"]
 }
 
 EOF
-}
-
-resource "vault_auth_backend" "approle" {
-  type = "approle"
-  path = "approle-consul-${var.datacenter}"
 }
 
 resource "vault_approle_auth_backend_role" "server_consul_template" {

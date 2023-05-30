@@ -51,10 +51,22 @@ variable "vault_hosts" {
 }
 
 variable "consul_hosts" {
+  description = "List of nomad clients"
   type = map(object({
     ip_address               = string
     ip_gateway               = string
     network_bridge           = optional(string)
     additional_dns_hostnames = list(string)
   }))
+}
+
+variable "nomad_server_hosts" {
+  description = "List of nomad server host configurations"
+  type = map(object({
+    ip_address               = string
+    ip_gateway               = string
+    network_bridge           = optional(string)
+    additional_dns_hostnames = optional(list(string), [])
+  }))
+  default = {}
 }

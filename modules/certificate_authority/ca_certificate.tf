@@ -22,32 +22,32 @@ resource "tls_self_signed_cert" "this" {
 }
 
 resource "vault_pki_secret_backend_config_ca" "ca_config" {
-  backend  = vault_mount.consul_pki.path
+  backend  = vault_mount.this.path
   pem_bundle = join("", [
     tls_self_signed_cert.this.cert_pem,
     tls_private_key.this.private_key_pem
   ])
 
   depends_on = [
-    vault_mount.consul_pki,
+    vault_mount.this,
     tls_private_key.this
   ]
 }
 
 resource "vault_pki_secret_backend_config_urls" "this" {
-  backend = vault_mount.consul_pki.path
+  backend = vault_mount.this.path
 
   issuing_certificates = [
-    "${var.vault_cluster.address}/v1/${vault_mount.consul_pki.path}/ca",
+    "${var.vault_cluster.address}/v1/${vault_mount.this.path}/ca",
   ]
 
   crl_distribution_points = [
-    "${var.vault_cluster.address}/v1/${vault_mount.consul_pki.path}/crl",
+    "${var.vault_cluster.address}/v1/${vault_mount.this.path}/crl",
   ]
 }
 
 resource "vault_pki_secret_backend_role" "role" {
-  backend          = vault_mount.consul_pki.path
+  backend          = vault_mount.this.path
   name             = local.common_name
 
   key_type         = "rsa"

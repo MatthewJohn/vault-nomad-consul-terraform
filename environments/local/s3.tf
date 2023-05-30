@@ -26,5 +26,6 @@ module "s3_configure" {
     "vault-unseal",
     "consul-certs",
     "consul-bootstrap",
+    "nomad-bootstrap",
   ]
 }

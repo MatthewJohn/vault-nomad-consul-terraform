@@ -43,3 +43,9 @@ variable "consul_datacenters" {
   type        = list(string)
   default     = []
 }
+
+variable "nomad_regions" {
+  description = "Map of noamd regions and child list of datacenter"
+  type        = map(list(string))
+  default     = {}
+}

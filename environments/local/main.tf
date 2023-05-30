@@ -58,27 +58,40 @@ module "virtual_machines" {
       ip_address               = "192.168.122.71"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-1.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-1.dc1.consul.dock.local"]
     }
     "consul-2" = {
       ip_address               = "192.168.122.72"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-2.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-2.dc1.consul.dock.local"]
     }
     "consul-3" = {
       ip_address               = "192.168.122.73"
       ip_gateway               = "192.168.122.1"
       network_bridge           = "virbr0"
-      additional_dns_hostnames = ["consul-3.dc.consul.dock.local"]
+      additional_dns_hostnames = ["consul-3.dc1.consul.dock.local"]
+    }
+  }
+  nomad_server_hosts = {
+    "nomad-1" = {
+      ip_address     = "192.168.122.81"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
+    }
+    "nomad-2" = {
+      ip_address     = "192.168.122.82"
+      ip_gateway     = "192.168.122.1"
+      network_bridge = "virbr0"
     }
   }
 }
 
 locals {
-  all_vault_hosts    = ["vault-1", "vault-2"]
-  all_vault_host_ips = ["192.168.122.60", "192.168.122.61"]
-  all_consul_ips     = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
+  all_vault_hosts      = ["vault-1", "vault-2"]
+  all_vault_host_ips   = ["192.168.122.60", "192.168.122.61"]
+  all_consul_ips       = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
+  all_nomad_server_ips = ["192.168.122.81", "192.168.122.82"]
 }
 
 module "vault_init" {
@@ -102,6 +115,7 @@ module "vault_cluster" {
   root_token         = module.vault_init.root_token
   ca_cert_file       = module.vault_init.ca_cert_file
   consul_datacenters = ["dc1"]
+  nomad_regions      = { "global" = ["dc1"] }
 }
 
 module "kms_config" {
@@ -139,11 +153,14 @@ module "vault-2" {
 }
 
 module "consul_certificate_authority" {
-  source = "../../modules/consul/certificate_authority"
+  source = "../../modules/certificate_authority"
 
-  domain_name      = local.domain_name
-  consul_subdomain = "consul"
-  vault_cluster    = module.vault_cluster
+  domain_name       = local.domain_name
+  subdomain         = "consul"
+  vault_cluster     = module.vault_cluster
+  description       = "Consul CA"
+  mount_name        = "consul"
+  create_connect_ca = true
 }
 
 module "consul_global_config" {
@@ -246,4 +263,77 @@ module "consul_static_tokens" {
     module.consul-1,
     module.consul-2
   ]
+}
+
+module "nomad_certificate_authority" {
+  source = "../../modules/certificate_authority"
+
+  domain_name   = local.domain_name
+  subdomain     = "nomad"
+  vault_cluster = module.vault_cluster
+  description   = "Nomad CA"
+  mount_name    = "nomad"
+}
+
+module "nomad_global" {
+  source = "../../modules/nomad/region"
+
+  region            = "global"
+  root_cert         = module.nomad_certificate_authority
+  vault_cluster     = module.vault_cluster
+  nomad_server_ips  = local.all_nomad_server_ips
+  consul_datacenter = module.dc1
+}
+
+module "nomad-1" {
+  source = "../../modules/nomad/server"
+
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  hostname          = "nomad-1"
+  consul_root_cert  = module.consul_certificate_authority
+  consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
+
+  initial_run = var.initial_setup
+
+  nomad_version  = "1.5.6"
+  consul_version = "1.15.2"
+
+  docker_host     = "nomad-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.81"
+}
+
+module "nomad-2" {
+  source = "../../modules/nomad/server"
+
+  region            = module.nomad_global
+  vault_cluster     = module.vault_cluster
+  hostname          = "nomad-2"
+  consul_root_cert  = module.consul_certificate_authority
+  consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
+
+  initial_run = var.initial_setup
+
+  nomad_version  = "1.5.6"
+  consul_version = "1.15.2"
+
+  docker_host     = "nomad-2.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.82"
+}
+
+module "nomad_bootstrap" {
+  source = "../../modules/nomad/bootstrap"
+
+  nomad_host        = module.nomad-1
+  aws_region        = local.aws_region
+  aws_endpoint      = local.aws_endpoint
+  aws_profile       = local.aws_profile
+  bucket_name       = "nomad-bootstrap"
+  initial_run       = var.initial_setup
 }

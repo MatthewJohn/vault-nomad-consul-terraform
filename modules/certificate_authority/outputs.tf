@@ -1,11 +1,11 @@
 output "pki_mount_path" {
   description = "PKI path"
-  value       = vault_mount.consul_pki.path
+  value       = vault_mount.this.path
 }
 
 output "pki_connect_mount_path" {
   description = "PKI Connect path"
-  value       = vault_mount.pki_connect.path
+  value       = var.create_connect_ca ? vault_mount.pki_connect[0].path : null
 }
 
 output "domain_name" {
@@ -13,9 +13,9 @@ output "domain_name" {
   value       = var.domain_name
 }
 
-output "consul_subdomain" {
-  description = "Consul subdomain of domain name for CA"
-  value       = var.consul_subdomain
+output "subdomain" {
+  description = "Subdomain of domain name for CA"
+  value       = var.subdomain
 }
 
 output "common_name" {

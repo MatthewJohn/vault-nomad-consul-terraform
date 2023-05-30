@@ -1,6 +1,6 @@
 
-variable "datacenter" {
-  description = "Datacenter name"
+variable "region" {
+  description = "Region name"
   type        = string
 }
 
@@ -19,6 +19,15 @@ variable "root_cert" {
   })
 }
 
+variable "consul_datacenter" {
+  description = "Consul datacenter"
+  type = object({
+    name                                     = string
+    common_name                              = string
+    consul_engine_mount_path                 = string
+  })
+}
+
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
@@ -29,21 +38,8 @@ variable "vault_cluster" {
   })
 }
 
-variable "global_config" {
-  description = "Global consul config"
-  type = object({
-    primary_datacenter = string
-  })
-}
-
-variable "agent_ips" {
-  description = "List of all agent IP addresses"
+variable "nomad_server_ips" {
+  description = "List of all server IP addresses"
   type        = list(string)
   default     = []
-}
-
-locals {
-  is_primary_datacenter = var.global_config.primary_datacenter == var.datacenter ? true : false
-
-  consul_engine_mount_path = "consul-${var.datacenter}"
 }

@@ -42,6 +42,15 @@ path "sys/health"
 
 #########################
 # Permissions for Consul CA
+path "sys/mounts/pki_consul"
+{
+  capabilities = ["read", "list", "create"]
+}
+# Revoke certificates
+path "pki_consul/revoke"
+{
+  capabilities = ["update"]
+}
 # Generate root CA
 path "pki_consul/root/generate/internal"
 {
@@ -90,6 +99,11 @@ path "sys/mounts/pki_connect"
 }
 
 %{for datacenter in var.consul_datacenters}
+path "sys/mounts/pki_int_consul_${datacenter}"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+
 # Generate intermediate CAs
 path "pki_int_consul_${datacenter}/intermediate/generate/internal"
 {
@@ -114,7 +128,14 @@ path "pki_int_consul_${datacenter}/roles/*"
   capabilities = ["update", "read", "delete"]
 }
 
+# Server policies
 path "sys/policies/acl/agent-consul-template-${datacenter}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Client policies
+path "sys/policies/acl/consul-client-consul-template-${datacenter}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
@@ -146,6 +167,19 @@ path "consul-${datacenter}/roles/consul-server-role"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Create consul role for clients
+path "consul-${datacenter}/roles/consul-client-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
+%{for nomad_region in keys(var.nomad_regions)}
+path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+%{endfor}
+
 # Create approle backend
 path "sys/auth/approle-consul-${datacenter}"
 {
@@ -165,6 +199,104 @@ path "sys/policies/acl/consul-connect-ca-${datacenter}"
 }
 
 %{endfor}
+
+#########################
+# Permissions for Nomad CA
+path "sys/mounts/pki_nomad"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+# Generate root CA
+path "pki_nomad/root/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# upload certificate
+path "pki_nomad/config/ca"
+{
+  capabilities = ["update"]
+}
+
+# Add roles for root cert
+path "pki_nomad/roles/*"
+{
+  capabilities = ["read", "create", "update"]
+}
+
+# Read PKI issues and update config
+path "pki_nomad/issues"
+{
+  capabilities = ["read"]
+}
+path "pki_nomad/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Update certificate URLs
+path "pki_nomad/config/urls"
+{
+  capabilities = ["update", "read"]
+}
+
+# Sign intermediate certificates
+path "pki_nomad/root/sign-intermediate"
+{
+  capabilities = ["update"]
+}
+
+# Revoke certificates
+path "pki_nomad/revoke"
+{
+  capabilities = ["update"]
+}
+
+
+%{for region in keys(var.nomad_regions)}
+
+path "sys/mounts/pki_int_nomad_${region}"
+{
+  capabilities = ["read", "list", "create", "update"]
+}
+
+# Generate intermediate CAs
+path "pki_int_nomad_${region}/intermediate/generate/internal"
+{
+  capabilities = ["update"]
+}
+
+# Set default issuer for cert
+path "pki_int_nomad_${region}/config/issuers"
+{
+  capabilities = ["update", "read"]
+}
+
+# Set self-signed certificate
+path "pki_int_nomad_${region}/intermediate/set-signed"
+{
+  capabilities = ["update"]
+}
+
+# Create/view/delete roles
+path "pki_int_nomad_${region}/roles/*"
+{
+  capabilities = ["update", "read", "delete"]
+}
+
+path "sys/policies/acl/nomad-server-consul-template-${region}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Create approle backend
+path "sys/auth/approle-nomad-${region}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
+%{endfor}
+
 
 EOF
 }

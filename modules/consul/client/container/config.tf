@@ -1,21 +1,19 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
-  server_fqdn = "server.${var.datacenter.common_name}"
+  client_fqdn = "client.${var.datacenter.common_name}"
 
   config_files = {
-    "config/templates/agent.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.crt.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
-    "config/templates/agent.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+    "config/templates/client.key.tpl" = <<EOF
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.private_key }}
 {{ end }}
-
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
@@ -29,7 +27,7 @@ vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "/consul-client-vault-agent-consul-template/auth/token"
 
   ssl {
     enabled = true
@@ -39,20 +37,20 @@ vault {
 }
 
 template {
-  source      = "/consul/config/templates/agent.crt.tpl"
-  destination = "/consul/config/agent-certs/agent.crt"
+  source      = "/consul/config/templates/client.crt.tpl"
+  destination = "/consul/config/client-certs/client.crt"
   perms       = 0700
 }
 
 template {
-  source      = "/consul/config/templates/agent.key.tpl"
-  destination = "/consul/config/agent-certs/agent.key"
+  source      = "/consul/config/templates/client.key.tpl"
+  destination = "/consul/config/client-certs/client.key"
   perms       = 0700
 }
 
 template {
   source      = "/consul/config/templates/ca.crt.tpl"
-  destination = "/consul/config/agent-certs/ca.crt"
+  destination = "/consul/config/client-certs/ca.crt"
   perms       = 0700
 }
 
@@ -115,33 +113,24 @@ EOF
     "vault/ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
 
     "config/templates/consul.hcl.tmpl" = <<EOF
+server = false
 
-%{if var.initial_run == true}
-bootstrap_expect = ${local.bootstrap_count}
-%{endif}
-
-server = true
-
-client_addr        = "0.0.0.0"
+client_addr        = "${var.listen_host}"
 bind_addr          = "${var.docker_ip}"
 advertise_addr     = "${var.docker_ip}"
 advertise_addr_wan = "${var.docker_ip}"
-node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
+node_name          = "consul-client-${var.datacenter.name}-${var.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
 ports {
   # Listener ports
   dns = 53
-  http = 8500
-  https = 8501
+  http = -1
+  https = ${var.listen_port}
+  grpc = -1
   grpc_tls = 8503
 }
-
-ui_config {
-  enabled = true
-}
-ui = true
 
 acl {
   enabled = true
@@ -149,31 +138,29 @@ acl {
   enable_token_persistence = true
   enable_token_replication = true
   tokens {
-%{if var.initial_run == false}
-{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role" }}
     agent  = "{{ .Data.token }}"
 {{ end }}
-%{endif}
   }
 }
 
 data_dir = "/consul/data"
 
-verify_incoming        = true
+verify_incoming        = false
 verify_outgoing        = true
 verify_server_hostname = true
 
-ca_file   = "/consul/config/agent-certs/ca.crt"
-cert_file = "/consul/config/agent-certs/agent.crt"
-key_file  = "/consul/config/agent-certs/agent.key"
+ca_file   = "/consul/config/client-certs/ca.crt"
+cert_file = "/consul/config/client-certs/client.crt"
+key_file  = "/consul/config/client-certs/client.key"
 
 tls {
    defaults {
-      ca_file   = "/consul/config/agent-certs/ca.crt"
-      cert_file = "/consul/config/agent-certs/agent.crt"
-      key_file  = "/consul/config/agent-certs/agent.key"
+      ca_file   = "/consul/config/client-certs/ca.crt"
+      cert_file = "/consul/config/client-certs/client.crt"
+      key_file  = "/consul/config/client-certs/client.key"
 
-      verify_incoming = true
+      verify_incoming = false
       verify_outgoing = true
    }
    internal_rpc {
@@ -181,40 +168,12 @@ tls {
    }
 }
 
-connect {
-  enabled = true
-  ca_provider = "vault"
-  ca_config {
-    address = "${var.vault_cluster.address}"
-    
-    auth_method {
-      type = "approle"
-      mount_path = "${var.datacenter.approle_mount_path}"
-      params {
-        role_id   = "${var.connect_ca_approle_role_id}"
-        secret_id = "${var.connect_ca_approle_secret_id}"
-      }
-      ca_file = "/consul/vault/ca_cert.pem"
-    }
-
-    root_pki_path         = "${var.root_cert.pki_connect_mount_path}"
-    intermediate_pki_path = "${var.datacenter.pki_connect_mount_path}"
-
-    leaf_cert_ttl         = "72h"
-    rotation_period       = "2160h"
-    intermediate_cert_ttl = "8760h"
-    private_key_type      = "rsa"
-    private_key_bits      = 2048
-  }
-}
-
 retry_join = ["${var.datacenter.common_name}"]
 
-auto_encrypt {
-  allow_tls = true
-}
-
 encrypt = "${var.gossip_key}"
+
+encrypt_verify_incoming = true
+encrypt_verify_outgoing = true
 
 disable_update_check = true
 
