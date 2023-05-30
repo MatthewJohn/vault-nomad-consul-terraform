@@ -4,7 +4,7 @@ resource "vault_policy" "client_consul_template" {
 
   policy = <<EOF
 # Access CA certs
-path "${var.region.pki_mount_path}/issue/${vault_pki_secret_backend_role.client.name}" {
+path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.client.name}" {
   capabilities = [ "read", "update" ]
 }
 
