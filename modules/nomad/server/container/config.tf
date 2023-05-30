@@ -194,6 +194,7 @@ vault {
   {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}"}}
   token = "{{.Auth.ClientToken}}"
   {{ end }}
+  enabled = true
   address = "${var.vault_cluster.address}"
 
   ca_file = "/nomad/vault/ca_cert.pem"
