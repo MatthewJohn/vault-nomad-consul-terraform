@@ -8,6 +8,15 @@ variable "image" {
   type        = string
 }
 
+variable "root_cert" {
+  description = "Nomad root certificate authority"
+  type = object({
+    pki_mount_path         = string
+    common_name            = string
+    public_key             = string
+  })
+}
+
 variable "region" {
   description = "Nomad region"
   type = object({

@@ -50,6 +50,7 @@ module "container" {
 
   image                          = module.image.image_id
   hostname                       = var.hostname
+  root_cert                      = var.root_cert
   region                         = var.region
   datacenter                     = var.datacenter
   vault_cluster                  = var.vault_cluster

@@ -296,6 +296,7 @@ module "nomad_global" {
 module "nomad-1" {
   source = "../../modules/nomad/server"
 
+  root_cert         = module.nomad_certificate_authority
   region            = module.nomad_global
   vault_cluster     = module.vault_cluster
   hostname          = "nomad-1"
@@ -317,6 +318,7 @@ module "nomad-1" {
 module "nomad-2" {
   source = "../../modules/nomad/server"
 
+  root_cert         = module.nomad_certificate_authority
   region            = module.nomad_global
   vault_cluster     = module.vault_cluster
   hostname          = "nomad-2"
@@ -338,12 +340,12 @@ module "nomad-2" {
 module "nomad_bootstrap" {
   source = "../../modules/nomad/bootstrap"
 
-  nomad_host        = module.nomad-1
-  aws_region        = local.aws_region
-  aws_endpoint      = local.aws_endpoint
-  aws_profile       = local.aws_profile
-  bucket_name       = "nomad-bootstrap"
-  initial_run       = var.initial_setup
+  nomad_host   = module.nomad-1
+  aws_region   = local.aws_region
+  aws_endpoint = local.aws_endpoint
+  aws_profile  = local.aws_profile
+  bucket_name  = "nomad-bootstrap"
+  initial_run  = var.initial_setup
 }
 
 module "nomad_dc1" {
@@ -360,6 +362,7 @@ module "nomad_dc1" {
 module "nomad-client-1" {
   source = "../../modules/nomad/client"
 
+  root_cert         = module.nomad_certificate_authority
   region            = module.nomad_global
   vault_cluster     = module.vault_cluster
   hostname          = "nomad-client-1"

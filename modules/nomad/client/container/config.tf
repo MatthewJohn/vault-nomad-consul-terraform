@@ -9,6 +9,7 @@ locals {
     "config/templates/client.crt.tpl" = <<EOF
 {{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
 {{ .Data.certificate }}
+{{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
@@ -20,8 +21,8 @@ EOF
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h"}}
-{{ .Data.issuing_ca }}
+{{ with secret "${var.root_cert.pki_mount_path}/cert/ca" }}
+{{ .Data.certificate }}
 {{ end }}
 
 EOF
