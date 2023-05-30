@@ -59,7 +59,7 @@ resource "vault_token_auth_backend_role" "server_role" {
   role_name = local.vault_server_role
   #allowed_policies         = ["dev", "test"]
   #disallowed_policies      = ["default"]
-  #allowed_policies_glob    = []
+  allowed_policies_glob    = ["nomad-job-${var.region}-*"]
   #disallowed_policies_glob = []
   orphan                 = true
   token_period           = 7 * 24 * 60 * 60 # 7 days

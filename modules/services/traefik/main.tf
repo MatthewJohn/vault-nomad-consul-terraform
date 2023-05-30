@@ -1,5 +1,5 @@
 resource "nomad_job" "traefik" {
-  jobspec = <<EOF
+  jobspec = <<EOHCL
 job "traefik" {
   datacenters = ["${var.nomad_datacenter.name}"]
   type        = "service"
@@ -24,6 +24,14 @@ job "traefik" {
 
     task "server" {
       driver = "docker"
+
+      vault {
+        policies = ["${vault_policy.traefik.name}"]
+
+        change_mode   = "signal"
+        change_signal = "SIGUSR1"
+      }
+
       config {
         image = "traefik:v2.10.1"
         ports = ["admin", "http"]
@@ -47,15 +55,39 @@ job "traefik" {
 
           # Automatically configured by Nomad through CONSUL_* environment variables
           # as long as client consul.share_ssl is enabled
-          "--providers.consulcatalog.endpoint.address=<socket|address>"
-          "--providers.consulcatalog.endpoint.tls.ca=<path>"
-        #   "--providers.consulcatalog.endpoint.tls.cert=<path>"
-        #   "--providers.consulcatalog.endpoint.tls.key=<path>"
-          "--providers.consulcatalog.endpoint.token=<token>"
+          "--providers.consulcatalog.endpoint.address=${var.consul_datacenter.address}",
+          "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
+        #   "--providers.consulcatalog.endpoint.tls.cert=<path>",
+        #   "--providers.consulcatalog.endpoint.tls.key=<path>",
+          "--providers.consulcatalog.endpoint.token=$$$${NOMAD_TOKEN}"
         ]
+
+        volumes = [
+          "secrets/consul_ca.crt:/consul/ca.crt"
+        ]
+      }
+
+      template {
+        data = <<EOF
+{{ with secret "${var.consul_root_cert.pki_mount_path}/cert/ca" }}
+{{ .Data.certificate }}
+{{ end }}
+EOF
+        destination = "secrets/consul_ca.crt"
+      }
+
+      template {
+        data = <<EOH
+{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.traefik.name}" }}
+NOMAD_TOKEN="{{ .Data.token }}"
+{{end}}
+EOH
+
+        destination = "secrets/nomad.env"
+        env         = true
       }
     }
   }
 }
-EOF
+EOHCL
 }

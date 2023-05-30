@@ -179,6 +179,11 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+path "consul-${datacenter}/roles/nomad-job-${nomad_region}-traefik"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {
@@ -313,6 +318,12 @@ path "sys/policies/acl/nomad-server-${region}"
 path "sys/auth/approle-nomad-${region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
+# Policy for jobs
+path "sys/policies/acl/nomad-job-${region}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
 }
 
 %{for nomad_dc in var.nomad_regions[region]}
