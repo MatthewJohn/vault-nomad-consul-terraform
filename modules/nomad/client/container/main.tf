@@ -63,6 +63,11 @@ resource "docker_container" "this" {
     host_path      = "/var/run/docker.sock"
   }
 
+  volumes {
+    container_path = "/var/run/docker"
+    host_path      = "/var/run/docker"
+  }
+
   lifecycle {
     replace_triggered_by = [
       null_resource.nomad_config
