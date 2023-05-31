@@ -8,7 +8,7 @@ service_prefix "" {
   policy = "read"
 }
 
-service "traefik-ingress" {
+service "traefik-http" {
   policy = "write"
 }
 

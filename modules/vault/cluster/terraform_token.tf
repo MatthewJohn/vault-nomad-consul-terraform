@@ -179,7 +179,7 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
-path "consul-${datacenter}/roles/nomad-job-${nomad_region}-traefik"
+path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
 {
   capabilities = ["create", "read", "delete", "update"]
 }
