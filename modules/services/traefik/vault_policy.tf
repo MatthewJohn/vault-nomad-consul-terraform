@@ -4,12 +4,24 @@ resource "consul_acl_policy" "traefik" {
     var.consul_datacenter.name
   ]
   rules       = <<-RULE
-service_prefix "" {
-  policy = "read"
+key_prefix "traefik-http" {
+  policy = "write"
 }
 
 service "traefik-http" {
   policy = "write"
+}
+
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "read"
 }
 
 RULE
