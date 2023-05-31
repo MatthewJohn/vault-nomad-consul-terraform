@@ -36,10 +36,11 @@ resource "vault_pki_secret_backend_role" "this" {
   backend = vault_mount.this.path
   name    = "consul-${var.datacenter}"
 
-  max_ttl          = (720 * 60 * 60) # "720h"
-  generate_lease   = true
-  allowed_domains  = [local.common_name]
-  allow_subdomains = true
+  max_ttl            = (720 * 60 * 60) # "720h"
+  generate_lease     = true
+  allowed_domains    = [local.common_name]
+  allow_subdomains   = true
+  allow_bare_domains = true
 
   depends_on = [
     vault_pki_secret_backend_intermediate_set_signed.this
