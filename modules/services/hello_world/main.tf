@@ -31,6 +31,10 @@ job "hello-world" {
     service {
       port = "http"
       tags = ["traefik.consulcatalog.connect=true"]
+
+      connect {
+        sidecar_service {}
+      }
     }
 
     task "web" {
