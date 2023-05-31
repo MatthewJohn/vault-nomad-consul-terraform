@@ -11,6 +11,9 @@ job "traefik" {
       port "http"{
          static = 80
       }
+      port "https"{
+         static = 443
+      }
       port "admin"{
          static = 8080
       }
@@ -39,6 +42,7 @@ job "traefik" {
           "--api.dashboard=true",
           "--api.insecure=true", ### For Test only, please do not use that in production
           "--entrypoints.web.address=:$${NOMAD_PORT_http}",
+          "--entrypoints.websecure.address=:$${NOMAD_PORT_https}",
           "--entrypoints.traefik.address=:$${NOMAD_PORT_admin}",
           #"--providers.nomad=true",
           #"--providers.nomad.endpoint.address=${var.nomad_region.address}"
