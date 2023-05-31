@@ -159,7 +159,8 @@ acl {
 
 data_dir = "/consul/data"
 
-verify_incoming        = true
+verify_incoming        = false
+verify_incoming_rpc    = true
 verify_outgoing        = true
 verify_server_hostname = true
 
@@ -173,9 +174,15 @@ tls {
       cert_file = "/consul/config/agent-certs/agent.crt"
       key_file  = "/consul/config/agent-certs/agent.key"
 
-      verify_incoming = true
-      verify_outgoing = true
+      verify_incoming        = true
+      verify_outgoing        = true
    }
+   https {
+     # Disable incoming https verification
+     # to allow UI access, terraform and services lik traefik
+     verify_incoming = false
+   }
+
    internal_rpc {
       verify_server_hostname = true
    }
