@@ -36,7 +36,7 @@ output "ca_chain" {
 
 output "address" {
   description = "Endpoint for cluster"
-  value       = "http://${local.common_name}:8500"
+  value       = "https://${local.common_name}:8501"
 }
 
 output "address_wo_protocol" {
