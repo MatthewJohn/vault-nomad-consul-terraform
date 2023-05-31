@@ -47,14 +47,13 @@ job "traefik" {
           #"--providers.nomad.endpoint.address=${var.nomad_region.address}"
           "--providers.consulcatalog.connectaware=true",
           # Make the communication secure by default
-          "--providers.consulcatalog.connectbydefault=true",
-          "--providers.consulcatalog.exposedbydefault=false",
+          "--providers.consulcatalog.connectByDefault=true",
+          "--providers.consulcatalog.exposedByDefault=true",
           # "--entrypoints.http=true",
           # "--entrypoints.http.address=:8080",
-          # The service name below should match the nomad/consul service above
-          # and is used for intentions in consul
-          "--providers.consulcatalog.servicename=traefik-ingress",
+          "--providers.consulcatalog.servicename=traefik-http",
           "--providers.consulcatalog.prefix=traefik",
+          "--providers.consulcatalog.connectAware=true",
 
           # Automatically configured by Nomad through CONSUL_* environment variables
           # as long as client consul.share_ssl is enabled
