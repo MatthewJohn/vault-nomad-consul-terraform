@@ -165,6 +165,7 @@ acl {
 
 consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
+  grpc_address = "${var.consul_client.listen_host}:8503"
 
   allow_unauthenticated = true
   auto_advertise        = true
@@ -172,9 +173,8 @@ consul {
   server_auto_join    = true
   client_auto_join    = true
 
+  server_service_name     = "nomad-${var.region.name}-server"
   client_service_name    = "nomad-${var.region.name}-client"
-  #client_auto_join       = true
-  #server_auto_join       = true
   #client_http_check_name = ""
 
 {{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
