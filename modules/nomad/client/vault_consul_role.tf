@@ -26,6 +26,10 @@ agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
 # Hopefully not required as servers have this permission
 #acl = "write"
 
+service "nomad-${var.region.name}-${var.datacenter.name}-client" {
+  policy = "write"
+}
+
 RULE
 }
 
