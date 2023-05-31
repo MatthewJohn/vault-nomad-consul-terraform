@@ -36,12 +36,12 @@ output "ca_chain" {
 
 output "address" {
   description = "Endpoint for cluster"
-  value       = "http://${local.common_name}:8500"
+  value       = "https://${local.common_name}:8501"
 }
 
 output "address_wo_protocol" {
   description = "Endpoint for cluster without protocol"
-  value       = "${local.common_name}:8500"
+  value       = "${local.common_name}:8501"
 }
 
 output "static_mount_path" {
