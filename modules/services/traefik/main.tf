@@ -62,7 +62,7 @@ job "traefik" {
           "--providers.consulcatalog.endpoint.datacenter=${var.consul_datacenter.name}",
           "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
           "--providers.consulcatalog.endpoint.token=$${NOMAD_TOKEN}",
-          "--providers.consulcatalog.defaultRule=Host(`{{ .Name }}.service.consul.dock.local`)"
+          "--providers.consulcatalog.defaultRule=Host(`{{ .Name }}.service.${var.nomad_datacenter.common_name}`)"
         ]
 
         volumes = [
