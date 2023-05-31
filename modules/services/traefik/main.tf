@@ -45,7 +45,6 @@ job "traefik" {
           "--entrypoints.traefik.address=:$${NOMAD_PORT_admin}",
           #"--providers.nomad=true",
           #"--providers.nomad.endpoint.address=${var.nomad_region.address}"
-          "--providers.consulcatalog.connectaware=true",
           # Make the communication secure by default
           "--providers.consulcatalog.connectByDefault=true",
           "--providers.consulcatalog.exposedByDefault=true",
