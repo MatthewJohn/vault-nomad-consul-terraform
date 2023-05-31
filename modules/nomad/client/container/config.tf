@@ -165,6 +165,7 @@ consul {
   server_auto_join    = true
   client_auto_join    = true
 
+  server_service_name     = "nomad-${var.region.name}-server"
   client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
   #client_http_check_name = ""
 
