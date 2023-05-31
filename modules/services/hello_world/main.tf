@@ -1,5 +1,6 @@
 resource "nomad_job" "hellow-world" {
   jobspec = <<EOHCL
+  
 job "hello-world" {
   // Specifies the datacenter where this job should be run
   // This can be omitted and it will default to ["*"]
@@ -21,15 +22,25 @@ job "hello-world" {
     // This can be omitted and it will default to 1.
     count = 1
 
+    //network {
+    //  port "www" {
+    //    to = 8001
+    //  }
+    //}
+    
     network {
-      port "www" {
-        to = 8001
-      }
+      mode = "bridge"
+
+     port "www" {
+       to = 8001
+     }
     }
 
     service {
-      provider = "nomad"
       port     = "www"
+      connect {
+        sidecar_service {}
+      }
     }
 
     // Tasks are individual units of work that are run by Nomad.
@@ -61,7 +72,7 @@ job "hello-world" {
       // Specify the maximum resources required to run the task
       resources {
         cpu    = 50
-        memory = 64
+        memory = 32
       }
     }
   }
