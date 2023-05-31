@@ -33,14 +33,19 @@ job "hello-world" {
 
      port "www" {
        to = 8001
+       static = 8001
      }
     }
 
     service {
       port     = "www"
+      tags = ["public"]
+      port = 8082
       connect {
         sidecar_service {}
       }
+
+      tags = ["traefik.consulcatalog.connect=true"]
     }
 
     // Tasks are individual units of work that are run by Nomad.
