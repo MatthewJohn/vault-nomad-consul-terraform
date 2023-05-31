@@ -133,6 +133,25 @@ consul:
 2023-05-23T06:02:56.429Z [WARN]  agent.server.raft: failed to get previous log: previous-index=3104 last-index=3085 error="log not found"
 ```
 
+consul-agent on nomad-client
+```
+2023-05-31T16:18:33.651Z [INFO]  agent: Synced check: check=service:_nomad-task-386c0164-0d29-767b-9342-89b1d8c74ca7-group-servers-hello-world-servers-www-sidecar-proxy:2
+2023-05-31T16:18:33.654Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.71:8300 error="rpc error making call: rpc error making call: Permission denied: token with AccessorID '9e605546-aee1-7642-1d6d-cabfdf990c7d' lacks permission 'service:write' on \"nomad-global-client\""
+2023-05-31T16:18:33.679Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21 accessorID=9e605546-aee1-7642-1d6d-cabfdf990c7d
+2023-05-31T16:18:33.685Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.73:8300 error="rpc error making call: rpc error making call: Permission denied: token with AccessorID '049cd196-93cd-cb26-24ea-b27c08f0b116' lacks permission 'service:write' on \"nomad-global-dc1-client\""
+2023-05-31T16:18:33.708Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-b7911a41cc366cb9ab916133e60fff8182525f5e accessorID=049cd196-93cd-cb26-24ea-b27c08f0b116
+2023-05-31T16:18:33.718Z [INFO]  agent: Synced check: check=service:_nomad-task-386c0164-0d29-767b-9342-89b1d8c74ca7-group-servers-hello-world-servers-www-sidecar-proxy:1
+2023-05-31T16:18:35.316Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.72:8300 error="rpc error making call: Permission denied: token with AccessorID '9e605546-aee1-7642-1d6d-cabfdf990c7d' lacks permission 'service:write' on \"nomad-global-client\""
+2023-05-31T16:18:35.317Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21 accessorID=9e605546-aee1-7642-1d6d-cabfdf990c7d
+2023-05-31T16:18:35.335Z [INFO]  agent: Synced check: check=service:_nomad-task-386c0164-0d29-767b-9342-89b1d8c74ca7-group-servers-hello-world-servers-www-sidecar-proxy:1
+2023-05-31T16:18:36.009Z [INFO]  agent: Synced service: service=_nomad-task-386c0164-0d29-767b-9342-89b1d8c74ca7-group-servers-hello-world-servers-www-sidecar-proxy
+2023-05-31T16:18:41.863Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.71:8300 error="rpc error making call: rpc error making call: Permission denied: token with AccessorID '9e605546-aee1-7642-1d6d-cabfdf990c7d' lacks permission 'service:write' on \"nomad-global-client\""
+2023-05-31T16:18:41.864Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21 accessorID=9e605546-aee1-7642-1d6d-cabfdf990c7d
+2023-05-31T16:18:43.864Z [INFO]  agent: Synced check: check=service:_nomad-task-386c0164-0d29-767b-9342-89b1d8c74ca7-group-servers-hello-world-servers-www-sidecar-proxy:1
+2023-05-31T16:20:41.151Z [ERROR] agent.envoy: Error receiving new DeltaDiscoveryRequest; closing request channel: error="rpc error: code = Canceled desc = context canceled"
+2023-05-31T16:20:42.107Z [WARN]  agent: Check is now critical: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21
+2023-05-31T16:20:42.113Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.73:8300 error="rpc error making call: rpc error making call: Permission denied: token with AccessorID '9e605546-aee1-7642-1d6d-cabfdf990c7d' lacks permission 'service:write' on \"nomad-global-client\""
+2023-05-31T16:20:42.118Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21 accessorID=9e605546-aee1-7642-1d6d-cabfdf990c7d
 ```
 2023-05-23T06:03:04.948Z [ERROR] agent: Failed to check for updates: error="Get \"https://checkpoint-api.hashicorp.com/v1/check/consul?arch=amd64&os=linux&signature=e54f3d7f-3cc0-31f7-374c-d7bccbfbab8a&version=1.15.2\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
 ```
