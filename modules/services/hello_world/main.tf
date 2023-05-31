@@ -24,7 +24,7 @@ job "hello-world" {
       mode = "bridge"
 
       port "http" {
-        to = -1
+        to = 8001
       }
     }
 
