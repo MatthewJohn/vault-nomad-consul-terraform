@@ -28,5 +28,11 @@ resource "vault_policy" "traefik" {
 path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.traefik.name}" {
   capabilities = ["read"]
 }
+
+# Allow access to read root CA
+path "${var.consul_root_cert.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
 EOF
 }
