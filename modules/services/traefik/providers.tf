@@ -18,3 +18,12 @@ provider "consul" {
   token      = var.consul_bootstrap.token
   ca_pem     = var.consul_datacenter.root_cert_public_key
 }
+
+terraform {
+  required_providers {
+    freeipa = {
+      version = "3.0.0"
+      source  = "terraform-cache.dockstudios.co.uk/rework-space-com/freeipa"
+    }
+  }
+}

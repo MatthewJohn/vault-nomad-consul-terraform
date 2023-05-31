@@ -58,3 +58,10 @@ variable "consul_bootstrap" {
     token = string
   })
 }
+
+variable "root_cert" {
+  description = "Root certificate object"
+  type = object({
+    domain_name            = string
+  })
+}

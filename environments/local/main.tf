@@ -385,6 +385,7 @@ module "nomad-client-1" {
 module "traefik" {
   source = "../../modules/services/traefik"
 
+  root_cert         = module.nomad_certificate_authority
   nomad_bootstrap   = module.nomad_bootstrap
   nomad_region      = module.nomad_global
   nomad_datacenter  = module.nomad_dc1
