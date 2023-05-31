@@ -153,5 +153,3 @@ consul-agent on nomad-client
 2023-05-31T16:20:42.113Z [ERROR] agent.client: RPC failed to server: method=Catalog.Register server=192.168.122.73:8300 error="rpc error making call: rpc error making call: Permission denied: token with AccessorID '9e605546-aee1-7642-1d6d-cabfdf990c7d' lacks permission 'service:write' on \"nomad-global-client\""
 2023-05-31T16:20:42.118Z [WARN]  agent: Check registration blocked by ACLs: check=_nomad-check-3f04a896e88b1a64f3e32128778f4f007a49ea21 accessorID=9e605546-aee1-7642-1d6d-cabfdf990c7d
 ```
-2023-05-23T06:03:04.948Z [ERROR] agent: Failed to check for updates: error="Get \"https://checkpoint-api.hashicorp.com/v1/check/consul?arch=amd64&os=linux&signature=e54f3d7f-3cc0-31f7-374c-d7bccbfbab8a&version=1.15.2\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
-```
