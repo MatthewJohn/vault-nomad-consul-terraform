@@ -21,7 +21,6 @@ job "traefik" {
 
     service {
       name = "traefik-http"
-      provider = "nomad"
       port = "http"
     }
 
