@@ -61,7 +61,7 @@ job "traefik" {
           "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
         #   "--providers.consulcatalog.endpoint.tls.cert=<path>",
         #   "--providers.consulcatalog.endpoint.tls.key=<path>",
-          "--providers.consulcatalog.endpoint.token=$$$${NOMAD_TOKEN}"
+          "--providers.consulcatalog.endpoint.token=$${NOMAD_TOKEN}"
         ]
 
         volumes = [
