@@ -182,6 +182,18 @@ consul {
   ca_file      = "/nomad/config/consul-certs/ca.crt"
 }
 
+vault {
+  enabled = true
+  address = "${var.vault_cluster.address}"
+
+  ca_file = "/nomad/vault/ca_cert.pem"
+
+  #create_from_role = "$${var.region.server_vault_role}"
+
+  # @TODO To set false in future
+  allow_unauthenticated = true
+}
+
 data_dir = "/nomad/data"
 
 disable_update_check = true
