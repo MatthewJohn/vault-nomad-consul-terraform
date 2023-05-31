@@ -8,6 +8,10 @@ service_prefix "" {
   policy = "read"
 }
 
+service "traefik-ingress" {
+  policy = "write"
+}
+
 RULE
 }
 
