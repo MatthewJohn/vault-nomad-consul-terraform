@@ -18,6 +18,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 ARG NOMAD_VERSION=1.5.6
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
 ARG CONSUL_VERSION=1.15.2
+ARG VAULT_VERSION=1.13.2
 
 # This is the location of the releases.
 ENV HASHICORP_RELEASES=https://releases.hashicorp.com
@@ -91,6 +92,38 @@ RUN set -eux && \
     rm -rf /tmp/build && \
 # tiny smoke test to ensure the binary we downloaded runs
     consul version
+
+
+# Install vault, as this is needed for nomad jobs that have vault integration
+RUN set -eux; \
+    microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
+    VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
+    found=''; \
+    for server in \
+        hkps://keys.openpgp.org \
+        hkps://keyserver.ubuntu.com \
+        hkps://pgp.mit.edu \
+    ; do \
+        echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
+        gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+    done; \
+    test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
+    mkdir -p /tmp/build && \
+    cd /tmp/build && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_SHA256SUMS && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_SHA256SUMS.sig && \
+    gpg --batch --verify vault_${VAULT_VERSION}_SHA256SUMS.sig vault_${VAULT_VERSION}_SHA256SUMS && \
+    grep vault_${VAULT_VERSION}_linux_amd64.zip vault_${VAULT_VERSION}_SHA256SUMS | sha256sum -c && \
+    unzip -d /tmp/build vault_${VAULT_VERSION}_linux_amd64.zip && \
+    cp /tmp/build/vault /bin/vault && \
+    if [ -f /tmp/build/EULA.txt ]; then mkdir -p /usr/share/doc/vault; mv /tmp/build/EULA.txt /usr/share/doc/vault/EULA.txt; fi && \
+    if [ -f /tmp/build/TermsOfEvaluation.txt ]; then mkdir -p /usr/share/doc/vault; mv /tmp/build/TermsOfEvaluation.txt /usr/share/doc/vault/TermsOfEvaluation.txt; fi && \
+    cd /tmp && \
+    rm -rf /tmp/build && \
+    gpgconf --kill dirmngr && \
+    gpgconf --kill gpg-agent && \
+    rm -rf /root/.gnupg
 
 # Install packages for nomad client to function
 RUN microdnf install -y iproute
