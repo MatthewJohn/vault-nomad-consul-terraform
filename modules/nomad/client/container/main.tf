@@ -80,14 +80,6 @@ resource "docker_container" "this" {
   }
   # Use shared mounts to fix issues with CNI tools reading netns
   mounts {
-    target = "/var/run/netns"
-    type   = "bind"
-    source      = "/var/run/netns"
-    bind_options {
-      propagation = "shared"
-    }
-  }
-  mounts {
     target = "/var/run/docker/netns"
     type   = "bind"
     source      = "/var/run/docker/netns"
