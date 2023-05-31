@@ -44,6 +44,7 @@ variable "consul_datacenter" {
   type = object({
     name                     = string
     address                  = string
+    address_wo_protocol      = string
     consul_engine_mount_path = string
     root_cert_public_key     = string
   })
