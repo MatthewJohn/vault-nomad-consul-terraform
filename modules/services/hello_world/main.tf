@@ -22,14 +22,11 @@ job "hello-world" {
     
     network {
       mode = "bridge"
-
-      port "http" {
-        to = 8001
-      }
     }
 
     service {
-      port = "http"
+      port = 8001
+
       connect {
         sidecar_service {}
       }
@@ -41,7 +38,7 @@ job "hello-world" {
       config {
         image   = "busybox:1"
         command = "httpd"
-        args    = ["-v", "-f", "-p", "$${NOMAD_PORT_http}", "-h", "/local"]
+        args    = ["-v", "-f", "-p", "8001", "-h", "/local"]
         ports   = ["http"]
       }
 
@@ -53,7 +50,7 @@ job "hello-world" {
                           <li>Group: {{env "NOMAD_GROUP_NAME"}}</li>
                           <li>Job: {{env "NOMAD_JOB_NAME"}}</li>
                           <li>Metadata value for foo: {{env "NOMAD_META_foo"}}</li>
-                          <li>Currently running on port: {{env "NOMAD_PORT_http"}}</li>
+                          <li>Currently running on port: 8001</li>
                         </ul>
                       EOF
         destination = "local/index.html"
