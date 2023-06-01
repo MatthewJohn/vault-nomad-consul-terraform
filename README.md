@@ -29,10 +29,10 @@ It attempts to provide:
 Current setup for local
 
 ```
-cd environments/local
+cd examples/local
 ```
 
-See environment/local/README.md for more information
+See examples/local/README.md for more information
 
 ## Progress
 
