@@ -56,3 +56,10 @@ variable "consul_bootstrap" {
     token = string
   })
 }
+
+variable "traefik" {
+  description = "Traefik instance"
+  type = object({
+    service_name = string
+  })
+}

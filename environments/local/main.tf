@@ -405,4 +405,5 @@ module "hello-world" {
   consul_datacenter = module.dc1
   consul_bootstrap  = module.consul_bootstrap
   vault_cluster     = module.vault_cluster
+  traefik           = module.traefik
 }

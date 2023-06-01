@@ -20,7 +20,7 @@ job "traefik" {
     }
 
     service {
-      name = "traefik-http"
+      name = "${local.consul_service_name}"
       port = "http"
     }
 
@@ -50,7 +50,7 @@ job "traefik" {
           "--providers.consulcatalog.exposedByDefault=true",
           # "--entrypoints.http=true",
           # "--entrypoints.http.address=:8080",
-          "--providers.consulcatalog.servicename=traefik-http",
+          "--providers.consulcatalog.servicename=${local.consul_service_name}",
           "--providers.consulcatalog.prefix=traefik",
           "--providers.consulcatalog.connectAware=true",
 
