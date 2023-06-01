@@ -11,7 +11,9 @@ It uses the following:
  * openkms for autounseal on KMS (requires improvement to further secure)
  * Vault
  * Consul
- * Nomad
+ * Nomad (servers and clients)
+ * Consul connect service mesh
+ * Traefik service for ingress traffic
  * consul-template (for provisioning CA certificates)
 
 It attempts to provide:
@@ -40,8 +42,9 @@ See environment/local/README.md for more information
  * Create vault cluster/boostrap - Done
  * Create consul cluster/boostrap - Done
  * Add vault backups
- * Complete nomad setup
- * Complete consul-connect setup
+ * Complete nomad setup - Done
+ * Complete consul-connect setup - Done
+ * Investigate consul using consul as connect CA
  * Further securing of KMS for vault autounseal
 
 ## Design
