@@ -1,5 +1,5 @@
 resource "consul_config_entry" "service_intentions" {
-  name = nomad_job.hellow-world.name
+  name = "hello-world"
   kind = "service-intentions"
 
   config_json = jsonencode({

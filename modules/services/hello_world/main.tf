@@ -25,6 +25,7 @@ job "hello-world" {
     }
 
     service {
+      name = "hello-world"
       port = 8001
 
       connect {
