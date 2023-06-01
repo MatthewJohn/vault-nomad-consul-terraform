@@ -27,14 +27,22 @@ resource "docker_container" "this" {
     # "VAULT_TOKEN="
   ]
 
-  volumes {
-    container_path = "/nomad/data"
-    host_path      = "/nomad/data"
+  mounts {
+    target = "/nomad/data"
+    type   = "bind"
+    source      = "/nomad/data"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
-  volumes {
-    container_path = "/nomad/config"
-    host_path      = "/nomad/config"
+  mounts {
+    target = "/nomad/config"
+    type   = "bind"
+    source      = "/nomad/config"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   volumes {
@@ -43,9 +51,13 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  volumes {
-    container_path = "/vault-agent-consul-template/auth"
-    host_path      = var.consul_template_vault_agent.token_directory
+  mounts {
+    target = "/vault-agent-consul-template/auth"
+    type   = "bind"
+    source      = var.consul_template_vault_agent.token_directory
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   # Mount cgroup due to errors when running client
@@ -57,10 +69,23 @@ resource "docker_container" "this" {
     host_path      = "/sys/fs/cgroup"
   }
 
-  # Pass through docker socket for client
-  volumes {
-    container_path = "/var/run/docker.sock"
-    host_path      = "/var/run/docker.sock"
+  # Pass through docker socket/docker runtime for client and fix issues with netns errors
+  mounts {
+    target = "/var/run"
+    type   = "bind"
+    source      = "/var/run"
+    bind_options {
+      propagation = "shared"
+    }
+  }
+  # Use shared mounts to fix issues with CNI tools reading netns
+  mounts {
+    target = "/var/run/docker/netns"
+    type   = "bind"
+    source      = "/var/run/docker/netns"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   lifecycle {

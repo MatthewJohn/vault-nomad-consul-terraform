@@ -38,6 +38,12 @@ path "${vault_auth_backend.approle.path}/login"
   capabilities = ["update"]
 }
 
+# Allow reading CA chain for int PKI
+path "${vault_mount.this.path}/cert/ca_chain"
+{
+  capabilities = ["read"]
+}
+
 EOF
 }
 

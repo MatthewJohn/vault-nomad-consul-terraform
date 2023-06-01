@@ -20,8 +20,10 @@ service_prefix "" {
 }
 
 agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
-  policy = "read"
+  policy = "write"
 }
+
+acl = "write"
 
 RULE
 }

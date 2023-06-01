@@ -19,6 +19,7 @@ resource "docker_image" "this" {
 
     build_arg = {
       NOMAD_VERSION = var.nomad_version
+      CONSUL_VERSION = var.consul_version
 
       http_proxy = var.http_proxy
       https_proxy = var.http_proxy

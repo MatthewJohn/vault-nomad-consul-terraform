@@ -31,7 +31,7 @@ output "server_dns" {
 
 output "address" {
   description = "Endpoint for cluster"
-  value       = "http://${local.server_common_name}:4646"
+  value       = "https://${local.server_common_name}:4646"
 }
 
 output "address_wo_protocol" {
@@ -52,4 +52,19 @@ output "server_consul_template_approle_role_name" {
 output "server_consul_template_policy" {
   description = "Role for server consul-template to authenticate to vault"
   value       = vault_policy.server_consul_template.name
+}
+
+output "server_consul_template_consul_server_role" {
+  description = "Role used by consul template to generate token for consul server"
+  value       = vault_token_auth_backend_role.server_consul_template_role.role_name
+}
+
+output "server_vault_policy" {
+  description = "Vault policy for nomad server vault integration"
+  value       = vault_policy.server_policy.name
+}
+
+output "server_vault_role" {
+  description = "Vault role for nomad server vault integration"
+  value       = vault_token_auth_backend_role.server_role.role_name
 }

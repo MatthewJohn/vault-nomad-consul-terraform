@@ -5,14 +5,20 @@ resource "consul_acl_policy" "agent_role" {
   datacenters = [var.datacenter.name]
 
   rules = <<EOF
-node_prefix "consul-server-${var.datacenter.name}-" {
+node "" {
   policy = "write"
 }
-node_prefix "" {
+agent "" {
+  policy = "write"
+}
+service "" {
   policy = "read"
 }
+node_prefix "" {
+   policy = "write"
+}
 service_prefix "" {
-  policy = "read"
+   policy = "read"
 }
 EOF
 }

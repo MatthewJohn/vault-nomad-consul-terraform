@@ -16,7 +16,7 @@ path "sys/policies/acl"
   capabilities = ["list"]
 }
 
-# Create token
+# Create tokens/roles
 path "auth/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
@@ -179,6 +179,11 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {
@@ -303,10 +308,22 @@ path "sys/policies/acl/nomad-server-consul-template-${region}"
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Policy for nomad server vault integration
+path "sys/policies/acl/nomad-server-${region}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 # Create approle backend
 path "sys/auth/approle-nomad-${region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
+# Policy for jobs
+path "sys/policies/acl/nomad-job-${region}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
 }
 
 %{for nomad_dc in var.nomad_regions[region]}

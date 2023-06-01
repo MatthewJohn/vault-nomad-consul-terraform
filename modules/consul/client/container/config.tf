@@ -168,6 +168,10 @@ tls {
    }
 }
 
+connect {
+  enabled = true
+}
+
 retry_join = ["${var.datacenter.common_name}"]
 
 encrypt = "${var.gossip_key}"

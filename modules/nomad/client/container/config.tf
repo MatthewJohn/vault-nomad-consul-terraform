@@ -157,6 +157,7 @@ acl {
 
 consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
+  grpc_address = "${var.consul_client.listen_host}:8503"
 
   allow_unauthenticated = true
   auto_advertise        = true
@@ -164,6 +165,7 @@ consul {
   server_auto_join    = true
   client_auto_join    = true
 
+  server_service_name     = "nomad-${var.region.name}-server"
   client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
   #client_http_check_name = ""
 
@@ -178,6 +180,18 @@ consul {
 
   grpc_ca_file = "/nomad/config/consul-certs/ca.crt"
   ca_file      = "/nomad/config/consul-certs/ca.crt"
+}
+
+vault {
+  enabled = true
+  address = "${var.vault_cluster.address}"
+
+  ca_file = "/nomad/vault/ca_cert.pem"
+
+  #create_from_role = "$${var.region.server_vault_role}"
+
+  # @TODO To set false in future
+  allow_unauthenticated = true
 }
 
 data_dir = "/nomad/data"
