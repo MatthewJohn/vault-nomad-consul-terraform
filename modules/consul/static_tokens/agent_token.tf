@@ -11,6 +11,9 @@ node "" {
 agent "" {
   policy = "write"
 }
+agent_prefix "" {
+  policy = "write"
+}
 service "" {
   policy = "read"
 }
