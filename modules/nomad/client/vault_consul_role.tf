@@ -30,6 +30,10 @@ service "nomad-${var.region.name}-${var.datacenter.name}-client" {
   policy = "write"
 }
 
+service "nomad-${var.region.name}-client" {
+  policy = "write"
+}
+
 RULE
 }
 
