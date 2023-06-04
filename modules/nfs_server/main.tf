@@ -9,11 +9,28 @@ resource "docker_container" "this" {
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""
 
-  network_mode = "host"
+  ports {
+    internal = 2049
+    external = 2049
+  }
+
+  ports {
+    internal = 111
+    external = 1211
+  }
+
+  ports {
+    internal = 32767
+    external = 32767
+  }
 
   capabilities {
-    add = ["SYS_ADMIN"]
+    add = ["SYS_ADMIN", "SYS_MODULE"]
   }
+
+  privileged = true
+
+  entrypoint = ["sh", "-c", "sleep 50000"]
 
   mounts {
     target = var.data_directory
@@ -28,6 +45,12 @@ resource "docker_container" "this" {
     host_path      = "${var.data_directory}/exports"
     container_path = "/etc/exports"
     read_only      = true
+  }
+
+  volumes {
+    host_path = "/lib/modules"
+    container_path = "/lib/modules"
+    read_only = true
   }
 
   lifecycle {

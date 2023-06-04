@@ -168,7 +168,7 @@ module "storage_server" {
   ip_address                 = var.storage_server.ip_address
   ip_gateway                 = var.storage_server.ip_gateway
   nameservers                = var.nameservers
-  memory                     = 256
+  memory                     = 384
   disk_size                  = var.storage_server.disk_size
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
