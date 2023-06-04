@@ -119,9 +119,9 @@ module "nfs_server" {
     {
       directory = "/storage/dc1"
       clients   = [
-        "nomad-1.global.nomad.${local.domain_name}",
-        "nomad-2.global.nomad.${local.domain_name}",
-        "nomad-client-1.dc1.global.nomad.${local.domain_name}"
+        "192.168.122.81",
+        "192.168.122.82",
+        "192.168.122.91"
       ]
     }
   ]
