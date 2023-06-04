@@ -1,6 +1,6 @@
 resource "nomad_job" "controller" {
   jobspec = <<EOHCL
-job "storage-controller-${var.nomad_datacenter.name}" {
+job "nfs-storage-controller-${var.nomad_datacenter.name}" {
   datacenters = ["${var.nomad_datacenter.name}"]
   type        = "service"
 
