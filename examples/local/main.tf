@@ -125,6 +125,11 @@ module "nfs_server" {
       ]
     }
   ]
+
+  nomad_bootstrap   = module.nomad_bootstrap
+  nomad_region      = module.nomad_global
+  nomad_datacenter  = module.nomad_dc1
+
   docker_username = "docker-connect"
   docker_host = "nfs-1.${local.domain_name}"
   docker_ip  = "192.168.122.51"
