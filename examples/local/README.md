@@ -1,4 +1,10 @@
 
+## Requirements
+
+ * Linux OS with Libvirt/qemu and docker
+ * Around 8GB dedicated RAM (machine with 16GB struggles with running the stack, OS, IDE and browser)
+ * 32GB free disk space
+
 ## Initial setup
 
 ```
