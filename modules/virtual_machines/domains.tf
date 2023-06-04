@@ -155,6 +155,7 @@ module "nomad_client" {
     "/consul-agent-vault-agent-consul-template/config.d",
     "/consul-agent-vault-agent-consul-template/ssl",
   ]
+  packages = ["nfs-common"]
 }
 
 module "storage_server" {
