@@ -182,4 +182,12 @@ module "storage_server" {
 
   create_directories = var.storage_server.directories
   packages = ["nfs-kernel-server"]
+
+  commands = [
+    "systemctl disable --now nfs-server",
+    "systemctl stop rpcbind.target",
+    "systemctl disable --now rpcbind.target",
+    "systemctl mask rpcbind.target",
+    "systemctl disable --now rpcbind",
+  ]
 }
