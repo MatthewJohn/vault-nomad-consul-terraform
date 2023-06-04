@@ -13,9 +13,12 @@ job "storage-controller-${var.nomad_datacenter.name}" {
 
         args = [
           "--type=controller",
+          "--endpoint=$${CSI_ENDPOINT}", # provided by csi_plugin{}
           "--node-id=$${attr.unique.hostname}",
           "--nfs-server=${var.nfs_server}:${var.nfs_directory}",
-          "--mount-options=defaults,noatime,nolock", # Adjust accordingly
+          # "--mount-options=defaults,noatime,nolock", # Adjust 
+          "--mount-options=nolock",
+          "--log-level=DEBUG",
         ]
 
         network_mode = "host" # required so the mount works even after stopping the container
