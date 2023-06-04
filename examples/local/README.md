@@ -158,3 +158,20 @@ consul-agent on nomad-client:
 2023-05-31T16:31:32.042Z [ERROR] agent.http: Request error: method=GET url=/v1/config/proxy-defaults/global from=127.0.0.1:41134 error="Config entry not found for \"proxy-defaults\" / \"global\""
 ```
 
+
+## Startup after poweroff:
+
+1. Start vault hosts (@TODO Make containers start on boot)
+2. Start consul hosts
+3. Setup consul to bootstrap:
+```
+terraform apply -target=module.consul-1 -target=module.consul-X -var initial_setup=true
+```
+4. Restart each noamd container
+```
+terraform apply -target=module.consul-1
+terraform apply -target=module.consul-X
+etc.
+```
+5. Start nomad hosts
+6. Start noamd clients
