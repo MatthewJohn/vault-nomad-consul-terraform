@@ -194,6 +194,12 @@ vault {
   allow_unauthenticated = true
 }
 
+plugin "docker" {
+  config {
+    allow_privileged = true
+  }
+}
+
 data_dir = "/nomad/data"
 
 disable_update_check = true
