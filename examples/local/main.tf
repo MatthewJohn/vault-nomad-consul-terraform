@@ -92,6 +92,13 @@ module "virtual_machines" {
       network_bridge = "virbr0"
     }
   }
+  storage_server = {
+    ip_address     = "192.168.122.51"
+    ip_gateway     = "192.168.122.1"
+    name           = "nfs-1"
+    network_bridge = "virbr0"
+    directories    = [ "/storage", "/storage/dc1" ]
+  }
 }
 
 locals {
@@ -100,6 +107,27 @@ locals {
   all_consul_ips       = ["192.168.122.71", "192.168.122.72", "192.168.122.73"]
   all_nomad_server_ips = ["192.168.122.81", "192.168.122.82"]
   all_nomad_client_ips = ["192.168.122.91"]
+}
+
+module "nfs_server" {
+  source = "../../modules/nfs_server"
+
+  hostname       = "nfs-1"
+  domain_name    = local.domain_name
+  data_directory = "/storage"
+  exports = [
+    {
+      directory = "/storage/dc1"
+      clients   = [
+        "nomad-1.global.nomad.${local.domain_name}",
+        "nomad-2.global.nomad.${local.domain_name}",
+        "nomad-client-1.dc1.global.nomad.${local.domain_name}"
+      ]
+    }
+  ]
+  docker_username = "docker-connect"
+  docker_host = "nfs-1.${local.domain_name}"
+  docker_ip  = "192.168.122.51"
 }
 
 module "vault_init" {
