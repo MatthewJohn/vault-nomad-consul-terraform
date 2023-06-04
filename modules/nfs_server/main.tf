@@ -9,7 +9,7 @@ resource "docker_container" "this" {
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""
 
-  #network_mode = "host"
+  network_mode = "host"
 
   capabilities {
     add = ["SYS_ADMIN"]
