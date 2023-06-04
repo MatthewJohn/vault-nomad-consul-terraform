@@ -126,10 +126,6 @@ module "nfs_server" {
     }
   ]
 
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
-
   docker_username = "docker-connect"
   docker_host = "nfs-1.${local.domain_name}"
   docker_ip  = "192.168.122.51"
@@ -392,6 +388,16 @@ module "nomad_dc1" {
   vault_cluster     = module.vault_cluster
   nomad_client_ips  = local.all_nomad_client_ips
   consul_datacenter = module.dc1
+}
+
+module "nomad_nfs_dc1" {
+  source = "../../modules/nomad/nfs"
+
+  nfs_server        = module.nfs_server.fqdn
+  nfs_directory     = "/storage/dc1"
+  nomad_bootstrap   = module.nomad_bootstrap
+  nomad_region      = module.nomad_global
+  nomad_datacenter  = module.nomad_dc1
 }
 
 module "nomad-client-1" {
