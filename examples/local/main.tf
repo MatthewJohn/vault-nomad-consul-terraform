@@ -434,6 +434,16 @@ module "traefik" {
   vault_cluster     = module.vault_cluster
 }
 
+module "hello-world-volume" {
+  source = "../../modules/nomad/volume"
+
+  name = "hello-world"
+
+  nomad_bootstrap   = module.nomad_bootstrap
+  nomad_region      = module.nomad_global
+  nfs               = module.nomad_nfs_dc1
+}
+
 module "hello-world" {
   source = "../../modules/services/hello_world"
 
