@@ -181,4 +181,5 @@ module "storage_server" {
   install_docker             = true
 
   create_directories = var.storage_server.directories
+  packages = ["nfs-kernel-server"]
 }
