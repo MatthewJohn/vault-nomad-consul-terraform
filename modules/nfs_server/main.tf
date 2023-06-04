@@ -1,6 +1,6 @@
 # Create NFS container
 resource "docker_container" "this" {
-  image = "fare-docker-reg.dock.studios:5000/ehough/docker-nfs-server:2.2.1-custom"
+  image = "fare-docker-reg.dock.studios:5000/googlecloudplatform/nfs-server-docker:1.0.0"
 
   name    = "nfs-server"
   rm      = false
@@ -9,20 +9,7 @@ resource "docker_container" "this" {
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""
 
-  ports {
-    internal = 2049
-    external = 2049
-  }
-
-  ports {
-    internal = 111
-    external = 1211
-  }
-
-  ports {
-    internal = 32767
-    external = 32767
-  }
+  network_mode = "host"
 
   capabilities {
     add = ["SYS_ADMIN", "SYS_MODULE"]
@@ -30,7 +17,7 @@ resource "docker_container" "this" {
 
   privileged = true
 
-  entrypoint = ["sh", "-c", "sleep 50000"]
+  # entrypoint = ["sh", "-c", "sleep 50000"]
 
   mounts {
     target = var.data_directory

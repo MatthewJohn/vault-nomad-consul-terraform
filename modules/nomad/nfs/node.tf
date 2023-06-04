@@ -35,7 +35,7 @@ job "storage-node-${var.nomad_datacenter.name}" {
 
       resources {
         cpu    = 128
-        memory = 64
+        memory = 48
       }
     }
   }
