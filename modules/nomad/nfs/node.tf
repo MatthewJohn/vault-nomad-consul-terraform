@@ -28,7 +28,7 @@ job "nfs-storage-node-${var.nomad_datacenter.name}" {
       }
 
       csi_plugin {
-        id        = "nfs" # Whatever you like, but node & controller config needs to match
+        id        = "${local.plugin_id}"
         type      = "node"
         mount_dir = "/csi"
       }

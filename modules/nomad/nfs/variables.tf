@@ -33,3 +33,7 @@ variable "nomad_bootstrap" {
     token = string
   })
 }
+
+locals {
+  plugin_id = "nfs-${var.nomad_region.name}-${var.nomad_datacenter.name}"
+}
