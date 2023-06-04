@@ -32,7 +32,7 @@ resource "docker_container" "this" {
     type   = "bind"
     source      = "/nomad/data"
     bind_options {
-      propagation = "shared"
+      propagation = "rshared"
     }
   }
 
