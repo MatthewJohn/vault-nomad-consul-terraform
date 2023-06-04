@@ -15,8 +15,6 @@ resource "docker_container" "this" {
     add = ["SYS_ADMIN"]
   }
 
-  entrypoint = ["sh", "-c", "sleep 50000"]
-
   mounts {
     target = var.data_directory
     type   = "bind"
