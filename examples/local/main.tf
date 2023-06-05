@@ -442,6 +442,8 @@ module "hello-world-volume" {
   nomad_bootstrap   = module.nomad_bootstrap
   nomad_region      = module.nomad_global
   nfs               = module.nomad_nfs_dc1
+  uid               = 1000
+  gid               = 1000
 }
 
 module "hello-world" {

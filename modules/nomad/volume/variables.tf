@@ -16,6 +16,22 @@ variable "nfs" {
   })
 }
 
+variable "uid" {
+  description = "Owner UID of the volume"
+  type        = number
+}
+
+variable "gid" {
+  description = "Group GID of the volume"
+  type        = number
+}
+
+variable "mode" {
+  description = "Mount permission mode of volume"
+  type        = string
+  default     = "770"
+}
+
 variable "nomad_region" {
   description = "Nomad region"
   type = object({

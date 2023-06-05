@@ -10,13 +10,9 @@ resource "nomad_volume" "this" {
     attachment_mode = "file-system"
   }
 
-  capability {
-    access_mode     = "single-node-writer"
-    attachment_mode = "file-system"
-  }
-
-  capability {
-    access_mode     = "multi-node-reader-only"
-    attachment_mode = "file-system"
+  parameters = {
+    uid  = var.uid
+    gid  = var.gid
+    mode = var.mode
   }
 }
