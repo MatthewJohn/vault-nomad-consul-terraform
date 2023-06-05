@@ -22,9 +22,9 @@ variable "root_cert" {
 variable "consul_datacenter" {
   description = "Consul datacenter"
   type = object({
-    name                                     = string
-    common_name                              = string
-    consul_engine_mount_path                 = string
+    name                     = string
+    common_name              = string
+    consul_engine_mount_path = string
   })
 }
 

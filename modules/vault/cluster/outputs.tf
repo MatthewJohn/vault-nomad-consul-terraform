@@ -22,3 +22,8 @@ output "consul_static_mount_path" {
   description = "Counsul static mount path"
   value       = vault_mount.consul_static.path
 }
+
+output "service_secrets_mount_path" {
+  description = "Service secrets KV mount path"
+  value       = vault_mount.service_secrets.path
+}
