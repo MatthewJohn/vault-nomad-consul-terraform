@@ -14,7 +14,8 @@ It uses the following:
  * Nomad (servers and clients)
  * Consul connect service mesh
  * Traefik service for ingress traffic
- * consul-template (for provisioning CA certificates)
+ * consul-tiemplate (for provisioning CA certificates)
+ * NFS for shared storage
 
 It attempts to provide:
  * ACLs with minimum required privileges
@@ -45,6 +46,7 @@ See examples/local/README.md for more information
  * Complete nomad setup - Done
  * Complete consul-connect setup - Done
  * Investigate consul using consul as connect CA
+ * Create NFS server and CSI confguration for nomad - DONE
  * Further securing of KMS for vault autounseal
 
 ## Design
