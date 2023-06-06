@@ -17,11 +17,19 @@ job "traefik" {
       port "admin"{
          static = 8080
       }
+
+      mode = "bridge"
     }
 
     service {
       name = "${local.consul_service_name}"
       port = "http"
+
+      connect {
+        sidecar_service {
+          proxy {}
+        }
+      }
     }
 
     task "server" {
