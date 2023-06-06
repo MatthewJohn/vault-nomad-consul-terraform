@@ -16,7 +16,7 @@ job "terrareg" {
       type            = "csi"
       source          = "terrareg"
       attachment_mode = "file-system"
-      access_mode     = "multi-node-multi-writer"
+      access_mode     = "single-node-writer"
     }
 
     service {
@@ -50,7 +50,7 @@ PUBLIC_URL=https://terrareg.${var.traefik.service_domain}
 ENABLE_ACCESS_CONTROLS=false
 ADMIN_AUTHENTICATION_TOKEN={{.Data.data.admin_password}}
 SECRET_KEY={{.Data.data.secret_key}}
-DATABASE_URL=sqlite://$${NOMAD_ALLOC_DIR}/database/sqlite.db
+DATABASE_URL=sqlite:///database/db.sqlite
 {{ end }}
 EOF
         destination = "$${NOMAD_SECRETS_DIR}/terrareg.env"
@@ -59,7 +59,7 @@ EOF
 
       volume_mount {
         volume      = "terrareg"
-        destination = "$${NOMAD_ALLOC_DIR}/database"
+        destination = "/app/database"
       }
 
       resources {
