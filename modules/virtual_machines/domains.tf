@@ -64,7 +64,6 @@ module "consul" {
   ]
 }
 
-
 module "nomad" {
   for_each = var.nomad_server_hosts
 
@@ -105,6 +104,7 @@ module "nomad" {
     "/consul/config/templates",
     "/consul/config/client-certs",
     "/consul/vault",
+    "/nomad/data",
     "/consul-agent-vault-agent-consul-template",
     "/consul-agent-vault-agent-consul-template/config.d",
     "/consul-agent-vault-agent-consul-template/ssl",
@@ -122,7 +122,7 @@ module "nomad_client" {
   ip_gateway                 = each.value.ip_gateway
   nameservers                = var.nameservers
   memory                     = 1024
-  disk_size                  = 5000
+  disk_size                  = 6500
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
   hypervisor_username        = var.hypervisor_username
@@ -139,6 +139,7 @@ module "nomad_client" {
     "/nomad/config/templates",
     "/nomad/config/client-certs",
     "/nomad/config/consul-certs",
+    "/nomad/data",
     "/nomad/vault",
     "/vault-agent-consul-template",
     "/vault-agent-consul-template/config.d",
@@ -153,5 +154,40 @@ module "nomad_client" {
     "/consul-agent-vault-agent-consul-template",
     "/consul-agent-vault-agent-consul-template/config.d",
     "/consul-agent-vault-agent-consul-template/ssl",
+  ]
+  packages = ["nfs-common"]
+}
+
+module "storage_server" {
+  count = var.storage_server != null ? 1 : 0
+
+  source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
+  version = ">= 0.0.11"
+
+  name                       = var.storage_server.name
+  ip_address                 = var.storage_server.ip_address
+  ip_gateway                 = var.storage_server.ip_gateway
+  nameservers                = var.nameservers
+  memory                     = 384
+  disk_size                  = var.storage_server.disk_size
+  base_disk_path             = var.base_disk_path
+  hypervisor_hostname        = var.hypervisor_hostname
+  hypervisor_username        = var.hypervisor_username
+  docker_ssh_key             = var.docker_ssh_key
+  domain_name                = var.domain_name
+  network_bridge             = var.storage_server.network_bridge
+  additional_dns_hostnames   = var.storage_server.additional_dns_hostnames
+  hosts_entries              = var.hosts_entries
+  install_docker             = true
+
+  create_directories = var.storage_server.directories
+  packages = ["nfs-kernel-server"]
+
+  commands = [
+    "systemctl disable --now nfs-server",
+    "systemctl stop rpcbind.target",
+    "systemctl disable --now rpcbind.target",
+    "systemctl mask rpcbind.target",
+    "systemctl disable --now rpcbind",
   ]
 }

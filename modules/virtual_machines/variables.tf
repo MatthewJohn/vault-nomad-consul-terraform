@@ -81,3 +81,18 @@ variable "nomad_client_hosts" {
   }))
   default = {}
 }
+
+variable "storage_server" {
+  description = "Configuration of shared NFS storage server"
+  type = object({
+    name                     = string
+    ip_address               = string
+    ip_gateway               = string
+    network_bridge           = optional(string)
+    additional_dns_hostnames = optional(list(string), [])
+    directories              = list(string)
+    disk_size                = optional(number, 2500)
+  })
+  default = null
+}
+

@@ -130,6 +130,12 @@ datacenter = "${var.datacenter.name}"
 
 bind_addr = "0.0.0.0"
 
+meta {
+  connect = {
+    log_level = "debug"
+  }
+}
+
 client {
   enabled = true
 
@@ -192,6 +198,12 @@ vault {
 
   # @TODO To set false in future
   allow_unauthenticated = true
+}
+
+plugin "docker" {
+  config {
+    allow_privileged = true
+  }
 }
 
 data_dir = "/nomad/data"
