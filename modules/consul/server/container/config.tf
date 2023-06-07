@@ -138,11 +138,6 @@ ports {
   grpc_tls = 8503
 }
 
-ui_config {
-  enabled = true
-}
-ui = true
-
 acl {
   enabled = true
   default_policy = "deny"
@@ -213,6 +208,23 @@ connect {
     private_key_type      = "rsa"
     private_key_bits      = 2048
   }
+}
+
+telemetry {
+  prometheus_retention_time = "2m"
+  disable_hostname          = true
+  # Causes error:
+  # * invalid config key telemetry.enable_host_metrics
+  # enable_host_metrics       = true
+}
+
+ui_config {
+  enabled = true
+
+  # metrics_provider = "prometheus"
+  # metrics_proxy {
+  #   base_url = "https://"
+  # }
 }
 
 retry_join = ["${var.datacenter.common_name}"]

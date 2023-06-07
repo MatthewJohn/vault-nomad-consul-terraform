@@ -96,3 +96,15 @@ variable "storage_server" {
   default = null
 }
 
+variable "monitoring_server" {
+  description = "Configuration of monitoring server"
+  type = object({
+    name                     = string
+    ip_address               = string
+    ip_gateway               = string
+    network_bridge           = optional(string)
+    additional_dns_hostnames = optional(list(string), [])
+    disk_size                = optional(number, 3500)
+  })
+  default = null
+}

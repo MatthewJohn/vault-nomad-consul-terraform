@@ -99,6 +99,12 @@ module "virtual_machines" {
     network_bridge = "virbr0"
     directories    = [ "/storage", "/storage/dc1" ]
   }
+  monitoring_server = {
+    ip_address     = "192.168.122.52"
+    ip_gateway     = "192.168.122.1"
+    name           = "mon-1"
+    network_bridge = "virbr0"
+  }
 }
 
 locals {
@@ -473,3 +479,21 @@ module "terrareg" {
   nfs               = module.nomad_nfs_dc1
 }
 
+
+module "victoria_metrics" {
+  source = "../../modules/victoria_metrics"
+
+  hostname          = "mon-1"
+  domain_name       = local.domain_name
+
+  vault_cluster     = module.vault_cluster
+  consul_datacenter = module.dc1
+  consul_gossip_key = module.consul_gossip_encryption.secret
+  consul_bootstrap  = module.consul_bootstrap
+  consul_root_cert  = module.consul_certificate_authority
+  consul_version    = "1.15.2"
+
+  docker_host     = "mon-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.52"
+}
