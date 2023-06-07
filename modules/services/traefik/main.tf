@@ -17,11 +17,19 @@ job "traefik" {
       port "admin"{
          static = 8080
       }
+
+      mode = "bridge"
     }
 
     service {
       name = "${local.consul_service_name}"
       port = "http"
+
+      connect {
+        sidecar_service {
+          proxy {}
+        }
+      }
     }
 
     task "server" {
@@ -62,7 +70,7 @@ job "traefik" {
           "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
           "--providers.consulcatalog.endpoint.token=$${NOMAD_TOKEN}",
           "--providers.consulcatalog.constraints=Tag(`traefik-routing`)",
-          "--providers.consulcatalog.defaultRule=Host(`{{ .Name }}.service.${var.nomad_datacenter.common_name}`)"
+          "--providers.consulcatalog.defaultRule=Host(`{{ .Name }}.${local.service_domain}`)"
         ]
 
         volumes = [

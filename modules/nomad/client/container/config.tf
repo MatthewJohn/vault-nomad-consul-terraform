@@ -130,6 +130,12 @@ datacenter = "${var.datacenter.name}"
 
 bind_addr = "0.0.0.0"
 
+meta {
+  connect = {
+    log_level = "debug"
+  }
+}
+
 client {
   enabled = true
 
