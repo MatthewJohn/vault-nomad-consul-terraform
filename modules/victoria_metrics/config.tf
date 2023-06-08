@@ -4,7 +4,7 @@ locals {
       "scrape.yml" = <<EOF
 scrape_configs:
 - job_name: consulagent
-  consulagent_sd_configs:
+  consul_sd_configs:
 
     # server is an optional Consul Agent to connect to. By default, localhost:8500 is used
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
