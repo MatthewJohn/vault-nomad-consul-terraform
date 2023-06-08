@@ -225,7 +225,7 @@ telemetry {
   disable_hostname          = true
   # Causes error:
   # * invalid config key telemetry.enable_host_metrics
-  # enable_host_metrics       = true
+  enable_host_metrics       = true
 }
 
 ui_config {

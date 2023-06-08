@@ -17,7 +17,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 # This is the release of nomad to pull in.
 ARG NOMAD_VERSION=1.5.6
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
-ARG CONSUL_VERSION=1.15.2
+ARG CONSUL_VERSION=1.15.3
 ARG VAULT_VERSION=1.13.2
 
 # This is the location of the releases.

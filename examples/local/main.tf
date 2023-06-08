@@ -249,7 +249,7 @@ module "consul-1" {
 
   gossip_key = module.consul_gossip_encryption.secret
 
-  consul_version = "1.15.2"
+  consul_version = "1.15.3"
 
   initial_run = var.initial_setup
 
@@ -268,7 +268,7 @@ module "consul-2" {
 
   gossip_key = module.consul_gossip_encryption.secret
 
-  consul_version = "1.15.2"
+  consul_version = "1.15.3"
 
   initial_run = var.initial_setup
 
@@ -287,7 +287,7 @@ module "consul-3" {
 
   gossip_key = module.consul_gossip_encryption.secret
 
-  consul_version = "1.15.2"
+  consul_version = "1.15.3"
 
   initial_run = var.initial_setup
 
