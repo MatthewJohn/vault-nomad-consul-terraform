@@ -31,7 +31,7 @@ scrape_configs:
     # services is an optional list of services for which targets are retrieved.
     # If omitted, all services are scraped.
     # See https://www.consul.io/api-docs/catalog#list-nodes-for-service .
-    # services: ["...", "..."]
+    services: ["consul-ui"]
 
     # tag_separator is an optional string by which Consul tags are joined into the __meta_consul_tags label.
     # By default, "," is used as a tag separator.
