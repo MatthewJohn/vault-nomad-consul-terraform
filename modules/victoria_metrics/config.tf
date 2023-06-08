@@ -26,6 +26,7 @@ scrape_configs:
   # TLS config for connecting to targets
   tls_config:
     ca_file: /consul/config/client-certs/ca.crt
+  bearer_token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
 
   # Force use of https for getting metrics
   relabel_configs:
