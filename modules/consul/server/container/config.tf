@@ -146,7 +146,10 @@ acl {
   tokens {
 %{if var.initial_run == false}
 {{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
-    agent  = "{{ .Data.token }}"
+    agent                            = "{{ .Data.token }}"
+{{ end }}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-service-role" }}
+    config_file_service_registration = "{{ .Data.token }}"
 {{ end }}
 %{endif}
   }
@@ -208,6 +211,12 @@ connect {
     private_key_type      = "rsa"
     private_key_bits      = 2048
   }
+}
+
+service {
+  name = "consul-ui"
+  id   = "consul-ui"
+  port = 8501
 }
 
 telemetry {

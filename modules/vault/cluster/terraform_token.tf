@@ -166,6 +166,10 @@ path "consul-${datacenter}/roles/consul-server-role"
 {
   capabilities = ["create", "read", "delete", "update"]
 }
+path "consul-${datacenter}/roles/consul-server-service-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
 
 # Create consul role for clients
 path "consul-${datacenter}/roles/consul-client-role"
