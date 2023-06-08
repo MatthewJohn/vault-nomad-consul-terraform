@@ -9,9 +9,10 @@ scrape_configs:
     # server is an optional Consul Agent to connect to. By default, localhost:8500 is used
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
 
-    # token is an optional Consul API token.
-    # If the token isn't specified, then it is read from a file pointed by CONSUL_HTTP_TOKEN_FILE
-    # environment var or from the CONSUL_HTTP_TOKEN environment var.
+- job_name: consul
+  metrics_path: '/agent/metrics?format=prometheus'
+  consul_sd_configs:
+  - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
     token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
 
     # datacenter is an optional Consul API datacenter.
