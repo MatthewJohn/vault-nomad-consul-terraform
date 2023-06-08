@@ -10,7 +10,7 @@ scrape_configs:
 #   - names: ["...", "..."]
 
 - job_name: consul
-  metrics_path: '/agent/metrics?format=prometheus'
+  metrics_path: '/v1/agent/metrics?format=prometheus'
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
     token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
