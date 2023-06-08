@@ -217,6 +217,7 @@ service {
   name = "consul-ui"
   id   = "consul-ui"
   port = 8501
+  tags = ["https"]
 }
 
 telemetry {
