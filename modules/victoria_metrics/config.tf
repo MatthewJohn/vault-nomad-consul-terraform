@@ -49,6 +49,18 @@ scrape_configs:
     # See https://docs.victoriametrics.com/sd_configs.html#http-api-client-options
     tls_config:
       ca_file: /consul/config/client-certs/ca.crt
+
+  # TLS config for connecting to targets
+  tls_config:
+    ca_file: /consul/config/client-certs/ca.crt
+
+  # Force use of https for getting metrics
+  relabel_configs:
+    - source_labels: [__meta_consul_service]
+      #regex: (SERVICE_NAME1|SERVICE_NAME2)
+      target_label: __scheme__
+      replacement: https
+
 EOF
   }
 }
