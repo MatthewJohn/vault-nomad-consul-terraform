@@ -35,6 +35,34 @@ scrape_configs:
       target_label: __scheme__
       replacement: https
 
+- job_name: nomad
+  metrics_path: '/v1/metrics?format=prometheus'
+  consul_sd_configs:
+  - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
+    token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
+    datacenter: "${var.consul_datacenter.name}"
+    scheme: "https"
+
+    services: ["nomad"]
+    filter: "\"http\" in ServiceTags"
+
+    # TLS config for connecting to consul for service discovery
+    tls_config:
+      ca_file: /consul/config/client-certs/ca.crt
+
+  # Skip TLS verification for noamd cert
+  # @TODO Provide CA certificate for verification
+  tls_config:
+    insecure_skip_verify: true
+
+  # Force use of https for getting metrics
+  relabel_configs:
+    - source_labels: [__meta_consul_service]
+      #regex: (SERVICE_NAME1|SERVICE_NAME2)
+      target_label: __scheme__
+      replacement: https
+
+
 EOF
   }
 }
