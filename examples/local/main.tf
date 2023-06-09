@@ -523,3 +523,23 @@ module "vector" {
   traefik           = module.traefik
   loki              = module.loki
 }
+
+module "grafana" {
+  source = "../../modules/grafana"
+
+  hostname    = "mon-1"
+  domain_name = local.domain_name
+
+  docker_host     = "mon-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.52"
+}
+
+module "grafana_configure" {
+  source = "../../modules/grafana/configure"
+
+  grafana          = module.grafana
+  loki             = module.loki
+  victoria_metrics = module.victoria_metrics
+}
+

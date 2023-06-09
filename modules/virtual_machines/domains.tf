@@ -187,6 +187,7 @@ module "monitoring_server" {
 
     "/grafana",
     "/grafana/data",
+    "/grafana/config",
 
     "/loki",
     "/loki/data",
