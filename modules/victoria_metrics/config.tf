@@ -11,7 +11,7 @@ scrape_configs:
 
 - job_name: consul
   metrics_path: '/v1/agent/metrics?format=prometheus'
-  scrape_interval: 30s
+  scrape_interval: 10s
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
     token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
@@ -38,7 +38,7 @@ scrape_configs:
 
 - job_name: nomad
   metrics_path: '/v1/metrics?format=prometheus'
-  scrape_interval: 30s
+  scrape_interval: 10s
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
     token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
@@ -70,7 +70,7 @@ scrape_configs:
 
 - job_name: nomad-client
   metrics_path: '/v1/metrics?format=prometheus'
-  scrape_interval: 30s
+  scrape_interval: 10s
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
     token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
@@ -98,6 +98,7 @@ scrape_configs:
 
 - job_name: 'vault'
   metrics_path: "/v1/sys/metrics?format=prometheus"
+  scrape_interval: 10s
   # params:
   #   format: ['prometheus']
   scheme: https
