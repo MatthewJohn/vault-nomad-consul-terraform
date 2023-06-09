@@ -62,7 +62,8 @@ scrape_configs:
       target_label: __scheme__
       replacement: https
     # Only keep http tagged instances
-    - source_labels: ['__meta_consul_tagpresent_http']
+    - source_labels: ['__meta_consul_tags']
+      regex: '^.*,http,.*$'
       action: keep
 
 - job_name: nomad-client
