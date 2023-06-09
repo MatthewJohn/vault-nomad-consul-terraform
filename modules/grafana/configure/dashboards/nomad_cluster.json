@@ -212,12 +212,7 @@
             },
             "inspect": false
           },
-          "links": [
-            {
-              "title": "Set time range",
-              "url": "https://mon.cinarra.com/d/4NYOvS-7z/nomad?orgId=1&var-env=$env&var-alloc_id=$${__data.fields.alloc_id}﻿﻿&from=﻿﻿$${__data.fields.from}&to=${__data.fields.to}"
-            }
-          ],
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
