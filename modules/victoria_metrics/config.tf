@@ -96,7 +96,6 @@ scrape_configs:
       target_label: __scheme__
       replacement: https
 
-
 EOF
   }
 }

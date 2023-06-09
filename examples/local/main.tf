@@ -97,7 +97,7 @@ module "virtual_machines" {
     ip_gateway     = "192.168.122.1"
     name           = "nfs-1"
     network_bridge = "virbr0"
-    directories    = [ "/storage", "/storage/dc1" ]
+    directories    = ["/storage", "/storage/dc1"]
   }
   monitoring_server = {
     ip_address     = "192.168.122.52"
@@ -124,7 +124,7 @@ module "nfs_server" {
   exports = [
     {
       directory = "/storage/dc1"
-      clients   = [
+      clients = [
         "192.168.122.81",
         "192.168.122.82",
         "192.168.122.91"
@@ -133,8 +133,8 @@ module "nfs_server" {
   ]
 
   docker_username = "docker-connect"
-  docker_host = "nfs-1.${local.domain_name}"
-  docker_ip  = "192.168.122.51"
+  docker_host     = "nfs-1.${local.domain_name}"
+  docker_ip       = "192.168.122.51"
 }
 
 module "vault_init" {
@@ -399,11 +399,11 @@ module "nomad_dc1" {
 module "nomad_nfs_dc1" {
   source = "../../modules/nomad/nfs"
 
-  nfs_server        = module.nfs_server.fqdn
-  nfs_directory     = "/storage/dc1"
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
+  nfs_server       = module.nfs_server.fqdn
+  nfs_directory    = "/storage/dc1"
+  nomad_bootstrap  = module.nomad_bootstrap
+  nomad_region     = module.nomad_global
+  nomad_datacenter = module.nomad_dc1
 }
 
 module "nomad-client-1" {
@@ -445,11 +445,11 @@ module "hello-world-volume" {
 
   name = "hello-world"
 
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nfs               = module.nomad_nfs_dc1
-  uid               = 1000
-  gid               = 1000
+  nomad_bootstrap = module.nomad_bootstrap
+  nomad_region    = module.nomad_global
+  nfs             = module.nomad_nfs_dc1
+  uid             = 1000
+  gid             = 1000
 }
 
 module "hello-world" {
@@ -483,8 +483,8 @@ module "terrareg" {
 module "victoria_metrics" {
   source = "../../modules/victoria_metrics"
 
-  hostname          = "mon-1"
-  domain_name       = local.domain_name
+  hostname    = "mon-1"
+  domain_name = local.domain_name
 
   vault_cluster     = module.vault_cluster
   consul_datacenter = module.dc1
@@ -502,8 +502,8 @@ module "victoria_metrics" {
 module "loki" {
   source = "../../modules/loki"
 
-  hostname          = "mon-1"
-  domain_name       = local.domain_name
+  hostname    = "mon-1"
+  domain_name = local.domain_name
 
   docker_host     = "mon-1.${local.domain_name}"
   docker_username = local.docker_username
