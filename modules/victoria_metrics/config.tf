@@ -99,6 +99,8 @@ scrape_configs:
 - job_name: 'vault'
   metrics_path: "/v1/sys/metrics?format=prometheus"
   scrape_interval: 10s
+  # Allow redirect to primary
+  follow_redirects: true
   # params:
   #   format: ['prometheus']
   scheme: https
