@@ -184,8 +184,13 @@ module "monitoring_server" {
     "/victoria-metrics",
     "/victoria-metrics/data",
     "/victoria-metrics/config",
+
     "/grafana",
     "/grafana/data",
+
+    "/loki",
+    "/loki/data",
+    "/loki/config",
 
     "/consul",
     "/consul/config",

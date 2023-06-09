@@ -497,3 +497,29 @@ module "victoria_metrics" {
   docker_username = local.docker_username
   docker_ip       = "192.168.122.52"
 }
+
+
+module "loki" {
+  source = "../../modules/loki"
+
+  hostname          = "mon-1"
+  domain_name       = local.domain_name
+
+  docker_host     = "mon-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.52"
+}
+
+module "vector" {
+  source = "../../modules/services/vector"
+
+  nomad_bootstrap   = module.nomad_bootstrap
+  nomad_region      = module.nomad_global
+  nomad_datacenter  = module.nomad_dc1
+  consul_root_cert  = module.consul_certificate_authority
+  consul_datacenter = module.dc1
+  consul_bootstrap  = module.consul_bootstrap
+  vault_cluster     = module.vault_cluster
+  traefik           = module.traefik
+  loki              = module.loki
+}

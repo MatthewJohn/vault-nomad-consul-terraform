@@ -203,6 +203,14 @@ vault {
 plugin "docker" {
   config {
     allow_privileged = true
+    extra_labels     = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+  }
+}
+
+client {
+  host_volume "docker-sock-ro" {
+    path = "/var/run/docker.sock"
+    read_only = true
   }
 }
 
