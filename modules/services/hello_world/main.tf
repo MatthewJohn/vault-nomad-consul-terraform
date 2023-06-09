@@ -29,7 +29,7 @@ job "hello-world" {
         sidecar_task {
           resources {
             cpu    = 50
-            memory = 32
+            memory = 48
           }
         }
       }
