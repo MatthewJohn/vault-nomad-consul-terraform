@@ -65,3 +65,15 @@ variable "root_cert" {
     domain_name            = string
   })
 }
+
+variable "memory" {
+  description = "Memory allocation to task"
+  type        = number
+  default     = 64
+}
+
+variable "cpu" {
+  description = "CPU allocation to task"
+  type        = number
+  default     = 50
+}

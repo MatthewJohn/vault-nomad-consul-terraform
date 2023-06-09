@@ -105,8 +105,8 @@ EOH
       }
 
       resources {
-        cpu    = 50
-        memory = 192
+        cpu    = ${var.cpu}
+        memory = ${var.memory}
       }
     }
   }
