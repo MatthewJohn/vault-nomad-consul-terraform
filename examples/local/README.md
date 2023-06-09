@@ -21,12 +21,29 @@ terraform apply -target=module.freeipa -target=module.s3
 docker logs -f freeipa
 # Wait till initiation
 
-# Add hosts entry for freeipa.dock.local:
-echo $(docker inspect freeipa | jq -r '.[0].NetworkSettings.Networks.bridge.IPAddress') freeipa.dock.local >> /etc/hosts
-
+# Add freeipa to hosts file
+cat >> /etc/hosts <<EOF
+$(docker inspect freeipa | jq -r '.[0].NetworkSettings.Networks.bridge.IPAddress') freeipa.dock.local
+EOF
 
 # Configure s3
 terraform apply -target=module.s3_configure
+
+# Add host file entries
+cat >> /etc/hosts <<EOF
+$(docker inspect s3 | jq -r '.[0].NetworkSettings.Networks.bridge.IPAddress') s3.dock.local
+192.168.122.51 nfs-1.dock.local
+192.168.122.52 mon-1.dock.local grafana.dock.local
+192.168.122.60 vault-1.dock.local vault-1.vault.dock.local vault.dock.local
+192.168.122.61 vault-2.dock.local vault-1.vault.dock.local
+192.168.122.71 consul-1.dock.local consul-1.dc.consul.dock.local dc1.consul.dock.local
+192.168.122.72 consul-2.dock.local consul-2.dc.consul.dock.local dc1.consul.dock.local
+192.168.122.73 consul-3.dock.local consul-3.dc.consul.dock.local dc1.consul.dock.local
+192.168.122.81 nomad-1.dock.local server.global.nomad.dock.local
+192.168.122.82 nomad-2.dock.local server.global.nomad.dock.local
+192.168.122.91 nomad-client-1.dock.local client.dc1.global.nomad.dock.local hello-world.web.dc1.global.nomad.dock.local terrareg.web.dc1.global.nomad.dock.local vector.web.dc1.global.nomad.dock.local
+EOF
+
 # Take output terraform_access_key/terraform_secret_key and set
 export AWS_ACCESS_KEY_ID=7L42ZUALDFVYXSQEQIV4; export AWS_SECRET_ACCESS_KEY=nG7QgmXwlou7iqMq9LZ1lWAySYEJardOIdKBlFev
 mv backend.tf.bak backend.tf
