@@ -40,6 +40,12 @@ path "sys/health"
   capabilities = ["read", "sudo"]
 }
 
+# Permission to create victoria metrifcs token
+path "sys/policies/acl/victoria-metrics"
+{
+  capabilities = [ "read", "create", "update", "delete" ]
+}
+
 #########################
 # Permissions for Consul CA
 path "sys/mounts/pki_consul"

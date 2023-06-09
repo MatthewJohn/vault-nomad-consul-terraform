@@ -96,7 +96,20 @@ scrape_configs:
       target_label: __scheme__
       replacement: https
 
+- job_name: 'vault'
+  metrics_path: "/v1/sys/metrics?format=prometheus"
+  # params:
+  #   format: ['prometheus']
+  scheme: https
+  tls_config:
+    ca_file: "/victoria-metrics-config/vault_ca_cert.pem"
+  bearer_token: "${module.vault_token.token}"
+  static_configs:
+  - targets: ['${var.vault_cluster.address}']
+
 EOF
+
+    "vault_ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
   }
 }
 

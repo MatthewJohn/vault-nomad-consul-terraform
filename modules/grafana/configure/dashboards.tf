@@ -15,3 +15,16 @@ resource "grafana_dashboard" "nomad_dashboard" {
   config_json = data.template_file.nomad_cluster_dashboard.rendered
   overwrite   = true
 }
+
+data "template_file" "vault_dashboard" {
+  template = file("${path.module}/dashboards/vault.json")
+  vars = {
+    victoria_metrics_datasource_id = grafana_data_source.victoria_metrics.id
+  }
+}
+
+resource "grafana_dashboard" "vault_dashboard" {
+  folder      = grafana_folder.vcn.id
+  config_json = data.template_file.vault_dashboard.rendered
+  overwrite   = true
+}

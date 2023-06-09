@@ -41,6 +41,11 @@ seal "awskms" {
   endpoint   = "http://${docker_container.kms.network_data[0].ip_address}:8080"
 }
 
+telemetry {
+  disable_hostname = true
+  prometheus_retention_time = "2m"
+}
+
 EOF
 }
 
