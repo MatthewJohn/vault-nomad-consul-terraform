@@ -20,7 +20,8 @@ resource "docker_container" "this" {
 
   env = [
     "GF_SERVER_ROOT_URL=http://${local.fqdn}:3000/",
-    "GF_SECURITY_ADMIN_PASSWORD__FILE=/grafana/config/admin_password"
+    "GF_SECURITY_ADMIN_PASSWORD__FILE=/grafana/config/admin_password",
+    "GF_INSTALL_PLUGINS=grafana-piechart-panel"
   ]
 
   volumes {
