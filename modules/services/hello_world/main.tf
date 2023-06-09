@@ -35,6 +35,10 @@ job "hello-world" {
       }
     }
 
+    ephemeral_disk {
+      size = 105
+    }
+
     task "web" {
       driver = "docker"
 

@@ -39,6 +39,10 @@ job "traefik" {
       }
     }
 
+    ephemeral_disk {
+      size = 105
+    }
+
     task "server" {
       driver = "docker"
 
