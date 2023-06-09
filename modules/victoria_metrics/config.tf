@@ -61,6 +61,9 @@ scrape_configs:
       #regex: (SERVICE_NAME1|SERVICE_NAME2)
       target_label: __scheme__
       replacement: https
+    # Only keep http tagged instances
+    - source_labels: ['__meta_consul_tagpresent_http']
+      action: keep
 
 - job_name: nomad-client
   metrics_path: '/v1/metrics?format=prometheus'
