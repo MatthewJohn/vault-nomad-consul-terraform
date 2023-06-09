@@ -138,11 +138,6 @@ ports {
   grpc_tls = 8503
 }
 
-ui_config {
-  enabled = true
-}
-ui = true
-
 acl {
   enabled = true
   default_policy = "deny"
@@ -151,7 +146,10 @@ acl {
   tokens {
 %{if var.initial_run == false}
 {{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
-    agent  = "{{ .Data.token }}"
+    agent                            = "{{ .Data.token }}"
+{{ end }}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-service-role" }}
+    config_file_service_registration = "{{ .Data.token }}"
 {{ end }}
 %{endif}
   }
@@ -213,6 +211,30 @@ connect {
     private_key_type      = "rsa"
     private_key_bits      = 2048
   }
+}
+
+service {
+  name = "consul-ui"
+  id   = "consul-ui"
+  port = 8501
+  tags = ["https"]
+}
+
+telemetry {
+  prometheus_retention_time = "2m"
+  disable_hostname          = true
+  # Causes error:
+  # * invalid config key telemetry.enable_host_metrics
+  enable_host_metrics       = true
+}
+
+ui_config {
+  enabled = true
+
+  # metrics_provider = "prometheus"
+  # metrics_proxy {
+  #   base_url = "https://"
+  # }
 }
 
 retry_join = ["${var.datacenter.common_name}"]

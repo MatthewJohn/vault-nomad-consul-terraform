@@ -15,7 +15,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 # This is the release of Consul to pull in.
-ARG CONSUL_VERSION=1.15.2
+ARG CONSUL_VERSION=1.15.3
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
 
 LABEL org.opencontainers.image.version=$CONSUL_VERSION \

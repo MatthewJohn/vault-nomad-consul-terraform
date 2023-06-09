@@ -3,13 +3,19 @@ resource "vault_policy" "agent_consul_template" {
   name = "agent-consul-template-${var.datacenter}"
 
   policy = <<EOF
-# Access CA certs
+# Issue cert using datacenter PKI
 path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}" {
   capabilities = [ "read", "update" ]
 }
 
 # Access to consul agent consul role to generate token
 path "${local.consul_engine_mount_path}/creds/consul-server-role"
+{
+  capabilities = ["read"]
+}
+
+# Access to consul server service role to generate token
+path "${local.consul_engine_mount_path}/creds/consul-server-service-role"
 {
   capabilities = ["read"]
 }

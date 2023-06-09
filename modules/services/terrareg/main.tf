@@ -25,17 +25,49 @@ job "terrareg" {
       tags = ["traefik-routing"]
 
       connect {
-        sidecar_service {}
+        sidecar_service {
+          proxy {}
+        }
+
+        sidecar_task {
+          resources {
+            cpu    = 50
+            memory = 48
+          }
+        }
       }
     }
 
     task "web" {
       driver = "docker"
 
+      # config {
+      #   image   = "fare-docker-reg.dock.studios:5000/terrareg:v2.68.3"
+      #   ports   = ["http"]
+      # }
+
+      # TEMP
       config {
-        image   = "fare-docker-reg.dock.studios:5000/terrareg:v2.68.3"
+        image   = "busybox:1"
+        command = "httpd"
+        args    = ["-v", "-f", "-p", "8001", "-h", "/local"]
         ports   = ["http"]
       }
+
+      template {
+        data        = <<EOF
+                        <h1>Hello, Nomad!</h1>
+                        <ul>
+                          <li>Task: {{env "NOMAD_TASK_NAME"}}</li>
+                          <li>Group: {{env "NOMAD_GROUP_NAME"}}</li>
+                          <li>Job: {{env "NOMAD_JOB_NAME"}}</li>
+                          <li>Metadata value for foo: {{env "NOMAD_META_foo"}}</li>
+                          <li>Currently running on port: 8001</li>
+                        </ul>
+                      EOF
+        destination = "local/index.html"
+      }
+      # END TEMP
 
       vault {
         policies = ["${vault_policy.terrareg.name}"]

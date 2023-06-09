@@ -40,6 +40,12 @@ path "sys/health"
   capabilities = ["read", "sudo"]
 }
 
+# Permission to create victoria metrifcs token
+path "sys/policies/acl/victoria-metrics"
+{
+  capabilities = [ "read", "create", "update", "delete" ]
+}
+
 #########################
 # Permissions for Consul CA
 path "sys/mounts/pki_consul"
@@ -163,6 +169,10 @@ path "consul-${datacenter}/config/access"
 
 # Create consul role for servers
 path "consul-${datacenter}/roles/consul-server-role"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+path "consul-${datacenter}/roles/consul-server-service-role"
 {
   capabilities = ["create", "read", "delete", "update"]
 }

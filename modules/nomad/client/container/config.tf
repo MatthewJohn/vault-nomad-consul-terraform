@@ -172,7 +172,7 @@ consul {
   client_auto_join    = true
 
   server_service_name     = "nomad-${var.region.name}-server"
-  client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
+  client_service_name    = "nomad-${var.region.name}-client"
   #client_http_check_name = ""
 
 {{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_client_vault_consul_role}" }}
@@ -203,7 +203,21 @@ vault {
 plugin "docker" {
   config {
     allow_privileged = true
+    extra_labels     = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
   }
+}
+
+client {
+  host_volume "docker-sock-ro" {
+    path = "/var/run/docker.sock"
+    read_only = true
+  }
+}
+
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  prometheus_metrics         = true
 }
 
 data_dir = "/nomad/data"

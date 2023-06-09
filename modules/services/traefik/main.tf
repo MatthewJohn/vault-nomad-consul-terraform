@@ -29,7 +29,18 @@ job "traefik" {
         sidecar_service {
           proxy {}
         }
+
+        sidecar_task {
+          resources {
+            cpu    = 50
+            memory = 48
+          }
+        }
       }
+    }
+
+    ephemeral_disk {
+      size = 105
     }
 
     task "server" {
@@ -78,7 +89,6 @@ job "traefik" {
         ]
       }
 
-
       template {
         data = <<EOF
 {{ with secret "${var.consul_root_cert.pki_mount_path}/cert/ca" }}
@@ -96,6 +106,11 @@ NOMAD_TOKEN="{{ .Data.token }}"
 EOH
         destination = "secrets/nomad.env"
         env         = true
+      }
+
+      resources {
+        cpu    = ${var.cpu}
+        memory = ${var.memory}
       }
     }
   }

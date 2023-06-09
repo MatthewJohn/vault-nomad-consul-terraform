@@ -1,9 +1,7 @@
 variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({
-    name        = string
-    common_name = string
-    client_dns  = string
+    name = string
   })
 }
 
@@ -59,21 +57,16 @@ variable "consul_bootstrap" {
   })
 }
 
-variable "root_cert" {
-  description = "Root certificate object"
+variable "traefik" {
+  description = "Traefik instance"
   type = object({
-    domain_name            = string
+    service_name = string
   })
 }
 
-variable "memory" {
-  description = "Memory allocation to task"
-  type        = number
-  default     = 64
-}
-
-variable "cpu" {
-  description = "CPU allocation to task"
-  type        = number
-  default     = 50
+variable "loki" {
+  description = "Loki instance"
+  type = object({
+    endpoint = string
+  })
 }

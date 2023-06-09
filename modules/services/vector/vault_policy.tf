@@ -1,5 +1,5 @@
 resource "consul_acl_policy" "this" {
-  name        = "nomad-job-${var.nomad_region.name}-hello-world"
+  name        = "nomad-job-${var.nomad_region.name}-vector"
   datacenters = [
     var.consul_datacenter.name
   ]
@@ -9,7 +9,7 @@ RULE
 }
 
 resource "vault_consul_secret_backend_role" "this" {
-  name    = "nomad-job-${var.nomad_region.name}-hello-world"
+  name    = "nomad-job-${var.nomad_region.name}-vector"
   backend = var.consul_datacenter.consul_engine_mount_path
 
   consul_policies = [
@@ -18,7 +18,7 @@ resource "vault_consul_secret_backend_role" "this" {
 }
 
 resource "vault_policy" "this" {
-  name = "nomad-job-${var.nomad_region.name}-hello-world"
+  name = "nomad-job-${var.nomad_region.name}-vector"
 
   policy = <<EOF
 
