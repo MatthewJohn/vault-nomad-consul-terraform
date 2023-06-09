@@ -13,12 +13,6 @@ job "hello-world" {
   group "servers" {
 
     count = 1
-
-    //network {
-    //  port "www" {
-    //    to = 8001
-    //  }
-    //}
     
     network {
       mode = "bridge"
@@ -31,6 +25,13 @@ job "hello-world" {
 
       connect {
         sidecar_service {}
+
+        sidecar_task {
+          resources {
+            cpu    = 50
+            memory = 32
+          }
+        }
       }
     }
 

@@ -28,6 +28,13 @@ job "terrareg" {
         sidecar_service {
           proxy {}
         }
+
+        sidecar_task {
+          resources {
+            cpu    = 50
+            memory = 32
+          }
+        }
       }
     }
 
