@@ -2,42 +2,24 @@ resource "grafana_folder" "vcn" {
   title = "Vault/Consul/Nomad"
 }
 
-data "template_file" "nomad_cluster_dashboard" {
-  template = file("${path.module}/dashboards/nomad_cluster.json")
+locals {
+  dashboards = ["nomad_cluster", "vault", "nomad_jobs", "consul_mesh"]
+}
+
+data "template_file" "dashboard" {
+  for_each = toset(local.dashboards)
+
+  template = file("${path.module}/dashboards/${each.value}.json")
   vars = {
     victoria_metrics_datasource_id = grafana_data_source.victoria_metrics.id
     loki_datasource_id             = grafana_data_source.loki.id
   }
 }
 
-resource "grafana_dashboard" "nomad_dashboard" {
+resource "grafana_dashboard" "this" {
+  for_each = toset(local.dashboards)
+
   folder      = grafana_folder.vcn.id
-  config_json = data.template_file.nomad_cluster_dashboard.rendered
-  overwrite   = true
-}
-
-data "template_file" "vault_dashboard" {
-  template = file("${path.module}/dashboards/vault.json")
-  vars = {
-    victoria_metrics_datasource_id = grafana_data_source.victoria_metrics.id
-  }
-}
-
-resource "grafana_dashboard" "vault_dashboard" {
-  folder      = grafana_folder.vcn.id
-  config_json = data.template_file.vault_dashboard.rendered
-  overwrite   = true
-}
-
-data "template_file" "nomad_jobs_dashboard" {
-  template = file("${path.module}/dashboards/nomad_jobs.json")
-  vars = {
-    victoria_metrics_datasource_id = grafana_data_source.victoria_metrics.id
-  }
-}
-
-resource "grafana_dashboard" "nomad_jobs" {
-  folder      = grafana_folder.vcn.id
-  config_json = data.template_file.nomad_jobs_dashboard.rendered
+  config_json = data.template_file.dashboard[each.key].rendered
   overwrite   = true
 }

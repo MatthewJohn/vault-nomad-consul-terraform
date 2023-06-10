@@ -1,4 +1,4 @@
-resource "nomad_job" "hellow-world" {
+resource "nomad_job" "hello-world" {
   jobspec = <<EOHCL
   
 job "hello-world" {
@@ -16,6 +16,8 @@ job "hello-world" {
     
     network {
       mode = "bridge"
+
+      port "metrics_envoy" {to = 9102}
     }
 
     service {
@@ -23,8 +25,20 @@ job "hello-world" {
       port = 8001
       tags = ["traefik-routing"]
 
+      meta {
+        # Tag for prometheus scrape-targeting via consul (envoy)
+        metrics_port_envoy = "$${NOMAD_HOST_PORT_metrics_envoy}"
+      }
+
       connect {
-        sidecar_service {}
+        sidecar_service {
+          proxy {
+            config {
+              # Expose metrics for prometheus (envoy)
+              envoy_prometheus_bind_addr = "0.0.0.0:9102"
+            }
+          }
+        }
 
         sidecar_task {
           resources {

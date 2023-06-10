@@ -17,6 +17,9 @@ job "traefik" {
       port "admin"{
          static = 8080
       }
+      port "metrics_envoy" {
+        to = 9102
+      }
 
       mode = "bridge"
     }
@@ -25,9 +28,19 @@ job "traefik" {
       name = "${local.consul_service_name}"
       port = "http"
 
+      meta {
+        # Tag for prometheus scrape-targeting via consul (envoy)
+        metrics_port_envoy = "$${NOMAD_HOST_PORT_metrics_envoy}"
+      }
+
       connect {
         sidecar_service {
-          proxy {}
+          proxy {
+            config {
+              # Expose metrics for prometheus (envoy)
+              envoy_prometheus_bind_addr = "0.0.0.0:9102"
+            }
+          }
         }
 
         sidecar_task {

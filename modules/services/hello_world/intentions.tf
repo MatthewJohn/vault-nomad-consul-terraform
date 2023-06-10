@@ -14,6 +14,6 @@ resource "consul_config_entry" "service_intentions" {
   })
 
   depends_on = [
-    nomad_job.hellow-world
+    nomad_job.hello-world
   ]
 }

@@ -115,6 +115,28 @@ scrape_configs:
   static_configs:
   - targets: ['${var.vault_cluster.address}']
 
+- job_name: consul-connect-envoy
+  scrape_interval: 10s
+  consul_sd_configs:
+  - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
+    token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
+    datacenter: "${var.consul_datacenter.name}"
+    scheme: "https"
+    # TLS config for connecting to consul for service discovery
+    tls_config:
+      ca_file: /consul/config/client-certs/ca.crt
+  relabel_configs:
+  - source_labels: [__meta_consul_service]
+    regex: (.+)-sidecar-proxy
+    action: drop
+  - source_labels: [__meta_consul_service_metadata_metrics_port_envoy]
+    regex: (.+)
+    action: keep
+  - source_labels: [__address__,__meta_consul_service_metadata_metrics_port_envoy]
+    regex: ([^:]+)(?::\d+)?;(\d+)
+    replacement: $${1}:$${2}
+    target_label: __address__
+
 EOF
 
     "vault_ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
