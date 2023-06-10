@@ -141,8 +141,9 @@ ports {
 acl {
   enabled = true
   default_policy = "deny"
-  enable_token_persistence = true
-  enable_token_replication = true
+  enable_token_persistence = false
+  # @TODO Determine after testing multiple consul DCs
+  enable_token_replication = false
   tokens {
 %{if var.initial_run == false}
 {{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-server-role" }}
