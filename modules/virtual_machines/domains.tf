@@ -168,7 +168,7 @@ module "monitoring_server" {
   ip_address                 = var.monitoring_server.ip_address
   ip_gateway                 = var.monitoring_server.ip_gateway
   nameservers                = var.nameservers
-  memory                     = 512
+  memory                     = 768
   disk_size                  = var.monitoring_server.disk_size
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
