@@ -135,8 +135,8 @@ ports {
 acl {
   enabled = true
   default_policy = "deny"
-  enable_token_persistence = true
-  enable_token_replication = true
+  enable_token_persistence = false
+  enable_token_replication = false
   tokens {
 {{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role" }}
     agent  = "{{ .Data.token }}"
