@@ -37,7 +37,9 @@ scrape_configs:
       replacement: https
 
 - job_name: nomad
-  metrics_path: '/v1/metrics?format=prometheus'
+  metrics_path: '/v1/metrics'
+  params:
+    format: ['prometheus']
   scrape_interval: 10s
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
@@ -69,7 +71,9 @@ scrape_configs:
       action: keep
 
 - job_name: nomad-client
-  metrics_path: '/v1/metrics?format=prometheus'
+  metrics_path: '/v1/metrics'
+  params:
+    format: ['prometheus']
   scrape_interval: 10s
   consul_sd_configs:
   - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
