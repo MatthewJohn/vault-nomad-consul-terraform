@@ -17,7 +17,12 @@ job "hello-world" {
     network {
       mode = "bridge"
 
-      port "metrics_envoy" {to = 9102}
+      port "http" {
+        to = 8001
+      }
+      port "metrics_envoy" {
+        to = 9102
+      }
     }
 
     service {

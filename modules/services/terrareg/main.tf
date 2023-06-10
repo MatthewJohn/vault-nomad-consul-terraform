@@ -10,6 +10,10 @@ job "terrareg" {
     
     network {
       mode = "bridge"
+
+      port "http" {
+        to = 5000
+      }
     }
 
     volume "terrareg" {

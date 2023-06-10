@@ -23,6 +23,10 @@ job "vector" {
 
     network {
       mode = "bridge"
+
+      port "http" {
+        to = 8686
+      }
     }
 
     service {
