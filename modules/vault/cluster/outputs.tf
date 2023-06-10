@@ -27,3 +27,8 @@ output "service_secrets_mount_path" {
   description = "Service secrets KV mount path"
   value       = vault_mount.service_secrets.path
 }
+
+output "approle_mount_path" {
+  description = "Global approle mount path"
+  value       = vault_auth_backend.approle.path
+}

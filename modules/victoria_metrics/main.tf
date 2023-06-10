@@ -27,6 +27,12 @@ resource "docker_container" "this" {
     host_path      = "/victoria-metrics/config"
   }
 
+  volumes {
+    container_path = module.vault_agent.token_directory
+    host_path      = module.vault_agent.token_directory
+    read_only      = true
+  }
+
   # Mount consul client cert directory for CA
   volumes {
     container_path = "/consul/config/client-certs"

@@ -110,7 +110,8 @@ scrape_configs:
   scheme: https
   tls_config:
     ca_file: "/victoria-metrics-config/vault_ca_cert.pem"
-  bearer_token: "${module.vault_token.token}"
+  authorization:
+    credentials_file: "${module.vault_agent.token_path}"
   static_configs:
   - targets: ['${var.vault_cluster.address}']
 

@@ -185,6 +185,10 @@ module "monitoring_server" {
     "/victoria-metrics/data",
     "/victoria-metrics/config",
 
+    "/victoria-metrics-vault-agent",
+    "/victoria-metrics-vault-agent/config.d",
+    "/victoria-metrics-vault-agent/ssl",
+
     "/grafana",
     "/grafana/data",
     "/grafana/config",
