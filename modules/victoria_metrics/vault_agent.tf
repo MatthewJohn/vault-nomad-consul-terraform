@@ -12,9 +12,13 @@ EOF
 }
 
 resource "vault_approle_auth_backend_role" "this" {
-  backend        = var.vault_cluster.approle_mount_path
+  backend = var.vault_cluster.approle_mount_path
+
   role_name      = "victoria-metrics"
   token_policies = [vault_policy.this.name]
+
+  token_ttl     = 5 * 60
+  token_max_ttl = 5 * 60
 }
 
 data "vault_approle_auth_backend_role_id" "this" {
