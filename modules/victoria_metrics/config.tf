@@ -104,6 +104,7 @@ scrape_configs:
   metrics_path: "/v1/sys/metrics?format=prometheus"
   scrape_interval: 10s
   # Allow redirect to primary
+  stream_parse: true
   follow_redirects: true
   # params:
   #   format: ['prometheus']
