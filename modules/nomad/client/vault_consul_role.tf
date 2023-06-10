@@ -41,6 +41,12 @@ resource "vault_consul_secret_backend_role" "nomad_client_vault_consul_role" {
   name    = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
   backend = var.consul_datacenter.consul_engine_mount_path
 
+  local = true
+
+  # Max 1 day TTL
+  ttl     = 60 * 60 * 24
+  max_ttl = 60 * 60 * 24
+
   consul_policies = [
     consul_acl_policy.nomad_client.name
   ]
