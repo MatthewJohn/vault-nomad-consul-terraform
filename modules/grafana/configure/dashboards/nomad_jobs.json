@@ -30,6 +30,72 @@
         "fieldConfig": {
           "defaults": {
             "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "hertz"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 5,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.5.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${victoria_metrics_datasource_id}"
+            },
+            "editorMode": "code",
+            "expr": "sum by () (avg by(exported_job, task, task_group) (nomad_client_allocs_cpu_allocated{exported_job=~\"$Job\"})) * 1000000",
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Allocated CPU",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${victoria_metrics_datasource_id}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
               "mode": "palette-classic"
             },
             "custom": {
@@ -82,8 +148,8 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 24,
-          "x": 0,
+          "w": 19,
+          "x": 5,
           "y": 0
         },
         "id": 1,
@@ -116,6 +182,72 @@
         ],
         "title": "Task CPU %",
         "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${victoria_metrics_datasource_id}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "decbytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 5,
+          "x": 0,
+          "y": 9
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.5.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${victoria_metrics_datasource_id}"
+            },
+            "editorMode": "code",
+            "expr": "sum by () (avg by(exported_job, task, task_group) (nomad_client_allocs_memory_allocated{exported_job=~\"$Job\"}))",
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Allocated Memory",
+        "type": "stat"
       },
       {
         "datasource": {
@@ -177,8 +309,8 @@
         },
         "gridPos": {
           "h": 11,
-          "w": 24,
-          "x": 0,
+          "w": 19,
+          "x": 5,
           "y": 9
         },
         "id": 2,
@@ -203,7 +335,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "(avg by(exported_job, task, task_group) (nomad_client_allocs_memory_usage) / avg by(exported_job, task, task_group) (nomad_client_allocs_memory_allocated)) * 100",
+            "expr": "(avg by(exported_job, task, task_group) (nomad_client_allocs_memory_usage{exported_job=~\"$Job\"}) / avg by(exported_job, task, task_group) (nomad_client_allocs_memory_allocated{exported_job=~\"$Job\"})) * 100",
             "hide": false,
             "legendFormat": "{{exported_job}} -> {{task_group}} -> {{task}}",
             "range": true,
