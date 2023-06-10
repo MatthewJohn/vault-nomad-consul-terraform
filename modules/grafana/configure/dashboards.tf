@@ -28,3 +28,16 @@ resource "grafana_dashboard" "vault_dashboard" {
   config_json = data.template_file.vault_dashboard.rendered
   overwrite   = true
 }
+
+data "template_file" "nomad_jobs_dashboard" {
+  template = file("${path.module}/dashboards/nomad_jobs.json")
+  vars = {
+    victoria_metrics_datasource_id = grafana_data_source.victoria_metrics.id
+  }
+}
+
+resource "grafana_dashboard" "nomad_jobs" {
+  folder      = grafana_folder.vcn.id
+  config_json = data.template_file.nomad_jobs_dashboard.rendered
+  overwrite   = true
+}
