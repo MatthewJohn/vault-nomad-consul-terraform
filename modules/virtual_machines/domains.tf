@@ -121,7 +121,7 @@ module "nomad_client" {
   ip_address                 = each.value.ip_address
   ip_gateway                 = each.value.ip_gateway
   nameservers                = var.nameservers
-  memory                     = 1152
+  memory                     = 1537
   disk_size                  = 6500
   base_disk_path             = var.base_disk_path
   hypervisor_hostname        = var.hypervisor_hostname
