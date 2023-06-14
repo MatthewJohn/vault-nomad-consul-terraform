@@ -214,14 +214,14 @@ connect {
   }
 }
 
-service {
+services {
   name = "consul-ui"
   id   = "consul-ui"
   port = 8501
   tags = ["https"]
 }
 
-service {
+services {
   name = "node_exporter"
   port = 9100
 
