@@ -47,6 +47,8 @@ variable "vault_hosts" {
     ip_gateway               = string
     network_bridge           = optional(string)
     additional_dns_hostnames = list(string)
+    memory                   = optional(number, 386)
+    disk_size                = optional(number, 3000)
   }))
 }
 
@@ -57,6 +59,8 @@ variable "consul_hosts" {
     ip_gateway               = string
     network_bridge           = optional(string)
     additional_dns_hostnames = list(string)
+    memory                   = optional(number, 386)
+    disk_size                = optional(number, 4000)
   }))
 }
 
@@ -67,6 +71,8 @@ variable "nomad_server_hosts" {
     ip_gateway               = string
     network_bridge           = optional(string)
     additional_dns_hostnames = optional(list(string), [])
+    memory                   = optional(number, 512)
+    disk_size                = optional(number, 5000)
   }))
   default = {}
 }
@@ -78,6 +84,8 @@ variable "nomad_client_hosts" {
     ip_gateway               = string
     network_bridge           = optional(string)
     additional_dns_hostnames = optional(list(string), [])
+    memory                   = optional(number, 1537)
+    disk_size                = optional(number, 6500)
   }))
   default = {}
 }
