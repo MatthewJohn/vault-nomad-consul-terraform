@@ -10,7 +10,7 @@ resource "docker_container" "this" {
   domainname = ""
 
   network_mode = "host"
-  pid          = "host"
+  pid_mode     = "host"
 
   command = ["--path.rootfs=/host"]
 
