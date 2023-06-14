@@ -25,7 +25,7 @@ provider "consul" {
   address    = var.consul_datacenter.address
   datacenter = var.consul_datacenter.name
   # @TODO Replace with more restrictive terraform token
-  token      = var.consul_bootstrap.token
-  ca_pem     = var.consul_datacenter.root_cert_public_key
+  token  = var.consul_bootstrap.token
+  ca_pem = var.consul_datacenter.root_cert_public_key
 }
 

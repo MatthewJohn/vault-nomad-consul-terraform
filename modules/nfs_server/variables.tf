@@ -15,7 +15,7 @@ variable "data_directory" {
 
 variable "exports" {
   description = "Export configuration"
-  type        = list(object({
+  type = list(object({
     directory = string
     clients   = list(string)
     options   = optional(string, "rw,no_subtree_check,no_root_squash,insecure,sync")

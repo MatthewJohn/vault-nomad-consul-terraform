@@ -1,9 +1,9 @@
 resource "consul_acl_policy" "traefik" {
-  name        = "nomad-job-${var.nomad_region.name}-traefik"
+  name = "nomad-job-${var.nomad_region.name}-traefik"
   datacenters = [
     var.consul_datacenter.name
   ]
-  rules       = <<-RULE
+  rules = <<-RULE
 key_prefix "${local.consul_service_name}" {
   policy = "write"
 }

@@ -5,5 +5,5 @@ output "key_id" {
 
 output "backing_key_value" {
   description = "Backing key value for KMS"
-  value = random_id.kms_backing_key.hex
+  value       = random_id.kms_backing_key.hex
 }

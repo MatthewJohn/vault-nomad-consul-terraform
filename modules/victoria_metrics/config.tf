@@ -1,7 +1,7 @@
 locals {
   config_files = {
-    
-      "scrape.yml" = <<EOF
+
+    "scrape.yml" = <<EOF
 scrape_configs:
 
 # - job_name: dns

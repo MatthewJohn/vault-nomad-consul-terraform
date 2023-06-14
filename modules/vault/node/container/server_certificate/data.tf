@@ -21,7 +21,7 @@ data "aws_s3_object" "root_ca_cert" {
 resource "null_resource" "ssl_trigger" {
   # Changes to any instance of the cluster requires re-provisioning
   triggers = {
-    public_key = sha256(data.aws_s3_object.intermediate_public_key.body)
+    public_key  = sha256(data.aws_s3_object.intermediate_public_key.body)
     private_key = sha256(data.aws_s3_object.intermediate_private_key.body)
   }
 }

@@ -37,9 +37,9 @@ resource "aws_s3_bucket_object" "intermediate_public_cert" {
   content_type = "text/plain"
 }
 resource "aws_s3_bucket_object" "intermediate_ca_bundle" {
-  bucket       = aws_s3_bucket.root_ca_certs.bucket
-  key          = "vault/intermediate-1-ca-bundle.pem"
-  content      = join("", [
+  bucket = aws_s3_bucket.root_ca_certs.bucket
+  key    = "vault/intermediate-1-ca-bundle.pem"
+  content = join("", [
     tls_locally_signed_cert.vault_int.cert_pem,
     tls_self_signed_cert.root.cert_pem,
   ])

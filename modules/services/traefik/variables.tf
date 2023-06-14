@@ -62,7 +62,7 @@ variable "consul_bootstrap" {
 variable "root_cert" {
   description = "Root certificate object"
   type = object({
-    domain_name            = string
+    domain_name = string
   })
 }
 

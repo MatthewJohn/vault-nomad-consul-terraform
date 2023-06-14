@@ -1,6 +1,6 @@
 resource "random_password" "admin_password" {
-  length           = 24
-  special          = false
+  length  = 24
+  special = false
 }
 
 locals {

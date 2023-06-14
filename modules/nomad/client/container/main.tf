@@ -30,7 +30,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/nomad/data"
     type   = "bind"
-    source      = "/nomad/data"
+    source = "/nomad/data"
     bind_options {
       propagation = "rshared"
     }
@@ -39,7 +39,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/nomad/config"
     type   = "bind"
-    source      = "/nomad/config"
+    source = "/nomad/config"
     bind_options {
       propagation = "shared"
     }
@@ -54,7 +54,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/vault-agent-consul-template/auth"
     type   = "bind"
-    source      = var.consul_template_vault_agent.token_directory
+    source = var.consul_template_vault_agent.token_directory
     bind_options {
       propagation = "shared"
     }
@@ -73,7 +73,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/var/run"
     type   = "bind"
-    source      = "/var/run"
+    source = "/var/run"
     bind_options {
       propagation = "shared"
     }
@@ -82,7 +82,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/var/run/docker/netns"
     type   = "bind"
-    source      = "/var/run/docker/netns"
+    source = "/var/run/docker/netns"
     bind_options {
       propagation = "shared"
     }

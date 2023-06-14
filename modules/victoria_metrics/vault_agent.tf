@@ -32,8 +32,8 @@ resource "vault_approle_auth_backend_role_secret_id" "this" {
 
   metadata = jsonencode(
     {
-      "node_name"  = "victoria-metrics"
-      "hostname" = var.hostname
+      "node_name" = "victoria-metrics"
+      "hostname"  = var.hostname
     }
   )
 }

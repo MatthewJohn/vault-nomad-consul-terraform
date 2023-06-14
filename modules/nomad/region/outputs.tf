@@ -26,7 +26,7 @@ output "root_cert_public_key" {
 
 output "server_dns" {
   description = "DNS for region servers"
-  value       = "${local.server_common_name}"
+  value       = local.server_common_name
 }
 
 output "address" {

@@ -17,7 +17,7 @@ resource "docker_container" "this" {
   mounts {
     target = "/host"
     type   = "bind"
-    source      = "/"
+    source = "/"
     bind_options {
       propagation = "rslave"
     }
