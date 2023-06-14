@@ -1,7 +1,7 @@
 locals {
   config_files = {
-    
-      "config.yml" = <<EOF
+
+    "config.yml" = <<EOF
 auth_enabled: false
 server:
   http_listen_port: ${var.port}

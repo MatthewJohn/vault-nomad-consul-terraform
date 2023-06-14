@@ -43,13 +43,13 @@ variable "app_role_secret" {
 
 variable "app_role_mount_path" {
   description = "Mount path for approle backend"
-  type = string
+  type        = string
 }
 
 variable "vault_version" {
   description = "Vault version"
-  type = string
-  default = "1.13.2"
+  type        = string
+  default     = "1.13.2"
 }
 
 variable "docker_username" {

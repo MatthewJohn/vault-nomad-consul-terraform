@@ -8,7 +8,7 @@ resource "tls_cert_request" "server_cert" {
   private_key_pem = tls_private_key.server_cert.private_key_pem
 
   subject {
-    common_name  = "${var.hostname}"
+    common_name = var.hostname
   }
 
   dns_names = [
@@ -44,7 +44,7 @@ resource "tls_locally_signed_cert" "server_cert" {
     ignore_changes = [
       ca_cert_pem,
       ca_private_key_pem
-    ] 
+    ]
   }
 
   # Trigger on change to MD5 hash change of s3 file contents

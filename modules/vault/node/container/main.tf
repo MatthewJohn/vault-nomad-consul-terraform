@@ -2,9 +2,9 @@
 module "server_certificate" {
   source = "./server_certificate"
 
-  hostname = var.hostname
+  hostname     = var.hostname
   vault_domain = local.vault_domain
-  ip_address = var.docker_ip
+  ip_address   = var.docker_ip
 }
 
 resource "docker_container" "this" {

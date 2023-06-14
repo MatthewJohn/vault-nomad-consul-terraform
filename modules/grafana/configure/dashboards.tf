@@ -3,7 +3,7 @@ resource "grafana_folder" "vcn" {
 }
 
 locals {
-  dashboards = ["nomad_cluster", "vault", "nomad_jobs", "consul_mesh"]
+  dashboards = ["nomad_cluster", "vault", "nomad_jobs", "consul_mesh", "node_exporter_per_host"]
 }
 
 data "template_file" "dashboard" {

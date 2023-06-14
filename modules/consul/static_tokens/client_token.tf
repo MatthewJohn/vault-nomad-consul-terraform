@@ -14,6 +14,10 @@ node_prefix "" {
 service_prefix "" {
   policy = "read"
 }
+
+service "node_exporter" {
+  policy = "write"
+}
 EOF
 }
 

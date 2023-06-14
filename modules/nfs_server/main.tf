@@ -35,9 +35,9 @@ resource "docker_container" "this" {
   }
 
   volumes {
-    host_path = "/lib/modules"
+    host_path      = "/lib/modules"
     container_path = "/lib/modules"
-    read_only = true
+    read_only      = true
   }
 
   lifecycle {

@@ -1,9 +1,9 @@
 resource "consul_acl_policy" "this" {
-  name        = "nomad-job-${var.nomad_region.name}-hello-world"
+  name = "nomad-job-${var.nomad_region.name}-hello-world"
   datacenters = [
     var.consul_datacenter.name
   ]
-  rules       = <<-RULE
+  rules = <<-RULE
 
 RULE
 }

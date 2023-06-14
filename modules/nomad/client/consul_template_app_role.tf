@@ -10,9 +10,9 @@ resource "vault_approle_auth_backend_role_secret_id" "consul_template" {
   metadata = jsonencode(
     {
       "node_name"  = "nomad-client-${var.region.name}-${var.datacenter.name}-${var.hostname}"
-      "region" = var.region.name
+      "region"     = var.region.name
       "datacenter" = var.datacenter.name
-      "hostname" = var.hostname
+      "hostname"   = var.hostname
     }
   )
 }

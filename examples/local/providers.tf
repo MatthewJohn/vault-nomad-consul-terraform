@@ -5,7 +5,7 @@ terraform {
       version = "3.0.2"
     }
     libvirt = {
-      source = "terraform-cache.dockstudios.co.uk/dockstudios-terraform/libvirt"
+      source  = "terraform-cache.dockstudios.co.uk/dockstudios-terraform/libvirt"
       version = "1.0.0"
     }
     freeipa = {

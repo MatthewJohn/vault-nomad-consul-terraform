@@ -5,21 +5,21 @@ module "vault" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.6"
 
-  name                       = each.key
-  ip_address                 = each.value.ip_address
-  ip_gateway                 = each.value.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 386
-  disk_size                  = 3000
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = each.value.network_bridge
-  additional_dns_hostnames   = each.value.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = each.key
+  ip_address               = each.value.ip_address
+  ip_gateway               = each.value.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = each.value.memory
+  disk_size                = each.value.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = each.value.network_bridge
+  additional_dns_hostnames = each.value.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = [
     "/vault",
@@ -36,21 +36,21 @@ module "consul" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.6"
 
-  name                       = each.key
-  ip_address                 = each.value.ip_address
-  ip_gateway                 = each.value.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 386
-  disk_size                  = 4000
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = each.value.network_bridge
-  additional_dns_hostnames   = each.value.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = each.key
+  ip_address               = each.value.ip_address
+  ip_gateway               = each.value.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = each.value.memory
+  disk_size                = each.value.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = each.value.network_bridge
+  additional_dns_hostnames = each.value.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = [
     "/consul",
@@ -70,21 +70,21 @@ module "nomad" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.6"
 
-  name                       = each.key
-  ip_address                 = each.value.ip_address
-  ip_gateway                 = each.value.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 512
-  disk_size                  = 5000
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = each.value.network_bridge
-  additional_dns_hostnames   = each.value.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = each.key
+  ip_address               = each.value.ip_address
+  ip_gateway               = each.value.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = each.value.memory
+  disk_size                = each.value.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = each.value.network_bridge
+  additional_dns_hostnames = each.value.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = [
     "/nomad",
@@ -117,21 +117,21 @@ module "nomad_client" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.6"
 
-  name                       = each.key
-  ip_address                 = each.value.ip_address
-  ip_gateway                 = each.value.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 1152
-  disk_size                  = 6500
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = each.value.network_bridge
-  additional_dns_hostnames   = each.value.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = each.key
+  ip_address               = each.value.ip_address
+  ip_gateway               = each.value.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = each.value.memory
+  disk_size                = each.value.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = each.value.network_bridge
+  additional_dns_hostnames = each.value.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = [
     "/nomad",
@@ -164,21 +164,21 @@ module "monitoring_server" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.11"
 
-  name                       = var.monitoring_server.name
-  ip_address                 = var.monitoring_server.ip_address
-  ip_gateway                 = var.monitoring_server.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 768
-  disk_size                  = var.monitoring_server.disk_size
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = var.monitoring_server.network_bridge
-  additional_dns_hostnames   = var.monitoring_server.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = var.monitoring_server.name
+  ip_address               = var.monitoring_server.ip_address
+  ip_gateway               = var.monitoring_server.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = 1024
+  disk_size                = var.monitoring_server.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = var.monitoring_server.network_bridge
+  additional_dns_hostnames = var.monitoring_server.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = [
     "/victoria-metrics",
@@ -214,24 +214,24 @@ module "storage_server" {
   source  = "terraform-registry.dockstudios.co.uk/dockstudios/libvirt-virtual-machine/libvirt"
   version = ">= 0.0.11"
 
-  name                       = var.storage_server.name
-  ip_address                 = var.storage_server.ip_address
-  ip_gateway                 = var.storage_server.ip_gateway
-  nameservers                = var.nameservers
-  memory                     = 384
-  disk_size                  = var.storage_server.disk_size
-  base_disk_path             = var.base_disk_path
-  hypervisor_hostname        = var.hypervisor_hostname
-  hypervisor_username        = var.hypervisor_username
-  docker_ssh_key             = var.docker_ssh_key
-  domain_name                = var.domain_name
-  network_bridge             = var.storage_server.network_bridge
-  additional_dns_hostnames   = var.storage_server.additional_dns_hostnames
-  hosts_entries              = var.hosts_entries
-  install_docker             = true
+  name                     = var.storage_server.name
+  ip_address               = var.storage_server.ip_address
+  ip_gateway               = var.storage_server.ip_gateway
+  nameservers              = var.nameservers
+  memory                   = 384
+  disk_size                = var.storage_server.disk_size
+  base_disk_path           = var.base_disk_path
+  hypervisor_hostname      = var.hypervisor_hostname
+  hypervisor_username      = var.hypervisor_username
+  docker_ssh_key           = var.docker_ssh_key
+  domain_name              = var.domain_name
+  network_bridge           = var.storage_server.network_bridge
+  additional_dns_hostnames = var.storage_server.additional_dns_hostnames
+  hosts_entries            = var.hosts_entries
+  install_docker           = true
 
   create_directories = var.storage_server.directories
-  packages = ["nfs-kernel-server"]
+  packages           = ["nfs-kernel-server"]
 
   commands = [
     "systemctl disable --now nfs-server",

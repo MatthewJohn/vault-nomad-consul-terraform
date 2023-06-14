@@ -8,8 +8,8 @@
 
 
 resource "vault_token_auth_backend_role" "server_consul_template_role" {
-  role_name = "nomad-server-consul-template-${var.region}"
-  allowed_policies         = [local.vault_server_policy]
+  role_name        = "nomad-server-consul-template-${var.region}"
+  allowed_policies = [local.vault_server_policy]
   #disallowed_policies      = ["default"]
   #allowed_policies_glob    = []
   #disallowed_policies_glob = []

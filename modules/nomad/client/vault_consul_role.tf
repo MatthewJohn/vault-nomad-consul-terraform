@@ -5,11 +5,11 @@
 # during startup
 
 resource "consul_acl_policy" "nomad_client" {
-  name        = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
+  name = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
   datacenters = [
     var.consul_datacenter.name
   ]
-  rules       = <<-RULE
+  rules = <<-RULE
 # As per https://developer.hashicorp.com/nomad/docs/integrations/consul-integration
 key_prefix "" {
   policy = "read"
@@ -25,6 +25,7 @@ agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
 
 # Hopefully not required as servers have this permission
 #acl = "write"
+
 
 service "nomad-${var.region.name}-${var.datacenter.name}-client" {
   policy = "write"

@@ -1,6 +1,6 @@
 
 locals {
-    kms_seed_config = <<EOF
+  kms_seed_config = <<EOF
 Keys:
   Symmetric:
     Aes:
@@ -38,7 +38,7 @@ resource "docker_container" "kms" {
   rm      = false
   restart = "on-failure"
 
-  hostname   = "kms"
+  hostname = "kms"
 
   volumes {
     container_path = "/init"
