@@ -9,17 +9,11 @@ variable "domain_name" {
   type        = string
 }
 
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  description = "Docker host configuration"
+  type = object({
+    ip_address = string
+    docker_username = string
+    fqdn = string
+  })
 }
