@@ -138,6 +138,18 @@ scrape_configs:
     replacement: $${1}:$${2}
     target_label: __address__
 
+- job_name: node-exporter
+  scrape_interval: 10s
+  consul_sd_configs:
+  - server: "${module.consul_client.listen_host}:${module.consul_client.port}"
+    token: "${data.consul_acl_token_secret_id.victoria_metrics.secret_id}"
+    datacenter: "${var.consul_datacenter.name}"
+    scheme: "https"
+    services: ["node_exporter"]
+    # TLS config for connecting to consul for service discovery
+    tls_config:
+      ca_file: /consul/config/client-certs/ca.crt
+
 EOF
 
     "vault_ca_cert.pem" = file(var.vault_cluster.ca_cert_file)
