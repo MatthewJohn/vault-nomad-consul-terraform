@@ -164,7 +164,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_server_live{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} ",
+            "expr": "envoy_server_live{local_cluster=~\"^$local_cluster$\"} ",
             "format": "time_series",
             "instant": true,
             "interval": "1m",
@@ -244,7 +244,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_server_days_until_first_cert_expiring{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} ",
+            "expr": "envoy_server_days_until_first_cert_expiring{local_cluster=~\"^$local_cluster$\"} ",
             "format": "time_series",
             "instant": true,
             "interval": "1m",
@@ -356,7 +356,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_listener_manager_lds_update_time{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"} ",
+            "expr": "envoy_listener_manager_lds_update_time{local_cluster=~\"$local_cluster\"} ",
             "format": "table",
             "instant": true,
             "interval": "1m",
@@ -458,7 +458,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "sum(envoy_listener_manager_total_listeners_active{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} ) by (consul_source_datacenter) ",
+            "expr": "sum(envoy_listener_manager_total_listeners_active{local_cluster=~\"^$local_cluster$\"} ) by (consul_source_datacenter) ",
             "hide": false,
             "instant": true,
             "interval": "",
@@ -563,7 +563,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "envoy_listener_manager_listener_added{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} != 0",
+            "expr": "envoy_listener_manager_listener_added{local_cluster=~\"^$local_cluster$\"} != 0",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : added",
             "refId": "A"
@@ -574,7 +574,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "envoy_listener_manager_listener_modified{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"}  != 0",
+            "expr": "envoy_listener_manager_listener_modified{local_cluster=~\"^$local_cluster$\"}  != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : modified",
@@ -586,7 +586,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "envoy_listener_manager_listener_removed{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"}  != 0",
+            "expr": "envoy_listener_manager_listener_removed{local_cluster=~\"^$local_cluster$\"}  != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : removed",
@@ -598,7 +598,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "envoy_listener_manager_listener_stopped{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"}  != 0",
+            "expr": "envoy_listener_manager_listener_stopped{local_cluster=~\"^$local_cluster$\"}  != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : stopped",
@@ -703,7 +703,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_downstream_cx_overload_reject{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval])",
+            "expr": "rate(envoy_listener_downstream_cx_overload_reject{local_cluster=~\"$local_cluster\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} ",
             "refId": "A"
@@ -819,7 +819,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_downstream_cx_total{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval]) ",
+            "expr": "rate(envoy_listener_downstream_cx_total{local_cluster=~\"$local_cluster\"}[$__interval]) ",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : all",
@@ -831,7 +831,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_downstream_cx_destroy{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval]) ",
+            "expr": "rate(envoy_listener_downstream_cx_destroy{local_cluster=~\"$local_cluster\"}[$__interval]) ",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} : destroy",
@@ -936,7 +936,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_no_filter_chain_match{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval])",
+            "expr": "rate(envoy_listener_no_filter_chain_match{local_cluster=~\"$local_cluster\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} ",
             "refId": "A"
@@ -1040,7 +1040,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_downstream_global_cx_overflow{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval])",
+            "expr": "rate(envoy_listener_downstream_global_cx_overflow{local_cluster=~\"$local_cluster\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} ",
             "refId": "A"
@@ -1144,7 +1144,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "envoy_listener_downstream_pre_cx_active{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}",
+            "expr": "envoy_listener_downstream_pre_cx_active{local_cluster=~\"$local_cluster\"}",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} ",
             "refId": "A"
@@ -1248,7 +1248,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_listener_downstream_pre_cx_timeout{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"}[$__interval])",
+            "expr": "rate(envoy_listener_downstream_pre_cx_timeout{local_cluster=~\"$local_cluster\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} : {{consul_source_service}} : {{envoy_http_conn_manager_prefix}} {{envoy_listener_address}} ",
             "refId": "A"
@@ -1357,7 +1357,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_manager_cds_update_time{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\"} ",
+            "expr": "envoy_cluster_manager_cds_update_time{local_cluster=~\"$local_cluster\"} ",
             "format": "table",
             "instant": true,
             "interval": "1m",
@@ -1459,7 +1459,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "sum(envoy_cluster_manager_active_clusters{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} ) by (consul_source_datacenter) ",
+            "expr": "sum(envoy_cluster_manager_active_clusters{local_cluster=~\"^$local_cluster$\"} ) by (consul_source_datacenter) ",
             "hide": false,
             "instant": true,
             "interval": "",
@@ -1563,7 +1563,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_membership_degraded{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target=~\"^$consul_destination_target$\"} != 0",
+            "expr": "envoy_cluster_membership_degraded{local_cluster=~\"$local_cluster\"} != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{envoy_cluster_name}} : degraded",
@@ -1575,7 +1575,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_membership_excluded{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target=~\"^$consul_destination_target$\"} != 0",
+            "expr": "envoy_cluster_membership_excluded{local_cluster=~\"$local_cluster\"} != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{envoy_cluster_name}} : excluded",
@@ -1587,7 +1587,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_membership_healthy{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target=~\"^$consul_destination_target$\"} != 0",
+            "expr": "envoy_cluster_membership_healthy{local_cluster=~\"$local_cluster\"} != 0",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{envoy_cluster_name}} : healthy",
@@ -1691,7 +1691,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_outlier_detection_ejections_active{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\"}",
+            "expr": "envoy_cluster_outlier_detection_ejections_active{local_cluster=~\"^$local_cluster$\"}",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} 🠒 {{envoy_cluster_name}}",
             "refId": "A"
@@ -1794,7 +1794,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_outlier_detection_ejections_enforced_consecutive_5xx{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\"}[$__interval])",
+            "expr": "increase(envoy_cluster_outlier_detection_ejections_enforced_consecutive_5xx{local_cluster=~\"^$local_cluster$\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} 🠒 {{envoy_cluster_name}}",
             "refId": "A"
@@ -1897,7 +1897,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_outlier_detection_ejections_enforced_consecutive_gateway_failure{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\"}[$__interval])",
+            "expr": "increase(envoy_cluster_outlier_detection_ejections_enforced_consecutive_gateway_failure{local_cluster=~\"^$local_cluster$\"}[$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} 🠒 {{envoy_cluster_name}}",
             "refId": "A"
@@ -1999,7 +1999,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "envoy_cluster_upstream_cx_active{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target!=\"\",consul_destination_target=~\"^$consul_destination_target$\"}",
+            "expr": "envoy_cluster_upstream_cx_active{local_cluster=~\"$local_cluster\"}",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : rx",
@@ -2104,7 +2104,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "delta(envoy_cluster_upstream_cx_close_notify{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[1m])",
+            "expr": "delta(envoy_cluster_upstream_cx_close_notify{local_cluster=~\"^$local_cluster$\"}[1m])",
             "hide": false,
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}}",
@@ -2207,7 +2207,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_connect_fail{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_connect_fail{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : failures",
             "refId": "A"
@@ -2309,7 +2309,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_connect_timeout{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_connect_timeout{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : connect timeout",
             "refId": "A"
@@ -2320,7 +2320,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_idle_timeout{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_idle_timeout{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : idle timeout",
@@ -2425,7 +2425,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "delta(envoy_cluster_upstream_cx_connect_attempts_exceeded{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[1m])",
+            "expr": "delta(envoy_cluster_upstream_cx_connect_attempts_exceeded{local_cluster=~\"^$local_cluster$\"}[1m])",
             "hide": false,
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}}",
@@ -2524,7 +2524,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_destroy{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_destroy{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} ",
             "refId": "A"
@@ -2622,7 +2622,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_destroy_local{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_destroy_local{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : local",
             "refId": "A"
@@ -2633,7 +2633,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_destroy_local_with_active_rq{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_destroy_local_with_active_rq{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : local_with_active_rq",
@@ -2732,7 +2732,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_destroy_remote{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_destroy_remote{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : remote",
             "refId": "A"
@@ -2743,7 +2743,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_destroy_remote_with_active_rq{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_destroy_remote_with_active_rq{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : remote_with_active_rq",
@@ -2842,7 +2842,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_none_healthy{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_none_healthy{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} ",
             "refId": "A"
@@ -2940,7 +2940,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_cx_protocol_error{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"} [1m]) ",
+            "expr": "increase(envoy_cluster_upstream_cx_protocol_error{local_cluster=~\"^$local_cluster$\"} [1m]) ",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} ",
             "refId": "A"
@@ -3039,7 +3039,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(envoy_cluster_upstream_cx_tx_bytes_total{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target!=\"\",consul_destination_target=~\"^$consul_destination_target$\"} [$__interval:])",
+            "expr": "rate(envoy_cluster_upstream_cx_tx_bytes_total{local_cluster=~\"$local_cluster\"} [$__interval:])",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : rx",
@@ -3139,7 +3139,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(envoy_cluster_upstream_cx_rx_bytes_total{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"$local_cluster\",consul_destination_target!=\"\",consul_destination_target=~\"^$consul_destination_target$\"} [$__interval:])",
+            "expr": "rate(envoy_cluster_upstream_cx_rx_bytes_total{local_cluster=~\"$local_cluster\"} [$__interval:])",
             "hide": false,
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : rx",
@@ -3239,7 +3239,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_rq_total{consul_destination_target!=\"\",consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
+            "expr": "increase(envoy_cluster_upstream_rq_total{consul_destination_target!=\"\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} -> {{consul_destination_target}}",
             "refId": "A"
@@ -3338,7 +3338,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "sum(envoy_cluster_upstream_rq_active{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\"}) by (consul_source_datacenter,consul_source_service,kubernetes_pod_name,envoy_cluster_name)",
+            "expr": "sum(envoy_cluster_upstream_rq_active{local_cluster=~\"^$local_cluster$\"}) by (consul_source_datacenter,consul_source_service,kubernetes_pod_name,envoy_cluster_name)",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} 🠒 {{envoy_cluster_name}}",
             "refId": "A"
@@ -3437,7 +3437,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_rq_timeout{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
+            "expr": "increase(envoy_cluster_upstream_rq_timeout{local_cluster=~\"^$local_cluster$\"} [$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} -> {{consul_destination_target}}",
             "refId": "A"
@@ -3536,7 +3536,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_rq_completed{consul_destination_target!=\"\",consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
+            "expr": "increase(envoy_cluster_upstream_rq_completed{consul_destination_target!=\"\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} -> {{envoy_cluster_name}}",
             "refId": "A"
@@ -3635,7 +3635,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_rq_cancelled{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
+            "expr": "increase(envoy_cluster_upstream_rq_cancelled{local_cluster=~\"^$local_cluster$\"} [$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} -> {{envoy_cluster_name}}",
             "refId": "A"
@@ -3734,7 +3734,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "increase(envoy_cluster_upstream_rq_max_duration_reached{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\"} [$__interval])",
+            "expr": "increase(envoy_cluster_upstream_rq_max_duration_reached{local_cluster=~\"^$local_cluster$\"} [$__interval])",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} -> {{envoy_cluster_name}}",
             "refId": "A"
@@ -3834,7 +3834,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "delta(envoy_cluster_upstream_rq_pending_total{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[1m])",
+            "expr": "delta(envoy_cluster_upstream_rq_pending_total{local_cluster=~\"^$local_cluster$\"}[1m])",
             "hide": false,
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}}",
@@ -3935,7 +3935,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "delta(envoy_cluster_upstream_rq_pending_failure_eject{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[1m])",
+            "expr": "delta(envoy_cluster_upstream_rq_pending_failure_eject{local_cluster=~\"^$local_cluster$\"}[1m])",
             "hide": false,
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}}",
@@ -4036,7 +4036,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "delta(envoy_cluster_upstream_rq_pending_overflow{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[1m])",
+            "expr": "delta(envoy_cluster_upstream_rq_pending_overflow{local_cluster=~\"^$local_cluster$\"}[1m])",
             "hide": false,
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}}",
@@ -4136,7 +4136,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "rate(envoy_cluster_external_upstream_rq{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[$__interval]) != 0",
+            "expr": "rate(envoy_cluster_external_upstream_rq{local_cluster=~\"^$local_cluster$\"}[$__interval]) != 0",
             "interval": "1m",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} 🠒 {{envoy_cluster_name}}",
             "refId": "A"
@@ -4183,7 +4183,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": true,
-            "expr": "sum(rate(envoy_cluster_external_upstream_rq_time_bucket{consul_source_datacenter=~\"^$consul_source_datacenter$\",local_cluster=~\"^$local_cluster$\",consul_full_target!=\"\",consul_destination_target=~\"^$consul_destination_target$\",consul_destination_target!=\"\"}[$__interval])) by (le)",
+            "expr": "sum(rate(envoy_cluster_external_upstream_rq_time_bucket{local_cluster=~\"^$local_cluster$\",consul_full_target!=\"\"}[$__interval])) by (le)",
             "format": "heatmap",
             "interval": "1m",
             "legendFormat": "{{le}}",
@@ -4321,7 +4321,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(label_replace({consul_source_datacenter=~\"$consul_source_datacenter\",consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_success\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
+            "expr": "rate(label_replace({consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_success\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : {{envoy_grpc_bridge_method}}",
             "refId": "A"
@@ -4419,7 +4419,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(label_replace({consul_source_datacenter=~\"$consul_source_datacenter\",consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_failure\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
+            "expr": "rate(label_replace({consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_failure\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{consul_destination_target}} : {{envoy_grpc_bridge_method}}",
             "refId": "A"
@@ -4517,7 +4517,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(label_replace({consul_source_datacenter=~\"$consul_source_datacenter\",consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_request_message_count\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
+            "expr": "rate(label_replace({consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_request_message_count\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{envoy_cluster_name}} : {{envoy_grpc_bridge_method}}",
             "refId": "A"
@@ -4615,7 +4615,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "exemplar": false,
-            "expr": "rate(label_replace({consul_source_datacenter=~\"$consul_source_datacenter\",consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_response_message_count\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
+            "expr": "rate(label_replace({consul_full_target!=\"\",__name__=~\"envoy_cluster_grpc_.+_response_message_count\"},\"name_label\",\"$1\",\"__name__\", \"(.+)\") [$__interval:])",
             "interval": "",
             "legendFormat": "{{consul_source_datacenter}} : {{kubernetes_pod_name}} → {{envoy_cluster_name}} : {{envoy_grpc_bridge_method}}",
             "refId": "A"
@@ -4672,14 +4672,14 @@
             "type": "prometheus",
             "uid": "${victoria_metrics_datasource_id}"
           },
-          "definition": "label_values(envoy_server_live{consul_source_datacenter=\"$consul_source_datacenter\"},local_cluster)",
+          "definition": "label_values(envoy_server_live{local_cluster)",
           "hide": 0,
           "includeAll": true,
           "multi": false,
           "name": "local_cluster",
           "options": [],
           "query": {
-            "query": "label_values(envoy_server_live{consul_source_datacenter=\"$consul_source_datacenter\"},local_cluster)",
+            "query": "label_values(envoy_server_live{local_cluster)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 2,
@@ -4703,14 +4703,14 @@
             "type": "prometheus",
             "uid": "${victoria_metrics_datasource_id}"
           },
-          "definition": "label_values(envoy_cluster_upstream_rq_time_bucket{consul_source_datacenter=\"$consul_source_datacenter\",local_cluster=\"$local_cluster\"},consul_destination_target)",
+          "definition": "label_values(envoy_cluster_upstream_rq_time_bucket{local_cluster=\"$local_cluster\"},consul_destination_target)",
           "hide": 0,
           "includeAll": true,
           "multi": true,
           "name": "consul_destination_target",
           "options": [],
           "query": {
-            "query": "label_values(envoy_cluster_upstream_rq_time_bucket{consul_source_datacenter=\"$consul_source_datacenter\",local_cluster=\"$local_cluster\"},consul_destination_target)",
+            "query": "label_values(envoy_cluster_upstream_rq_time_bucket{local_cluster=\"$local_cluster\"},consul_destination_target)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 2,
