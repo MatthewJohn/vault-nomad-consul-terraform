@@ -180,6 +180,23 @@ module "vault-1" {
   kms_backing_key_value = module.kms_config.backing_key_value
 }
 
+module "vault_1-consul_client" {
+  source = "../../modules/consul/client"
+
+  hostname      = "vault-1"
+  domain_name   = local.domain_name
+  datacenter    = module.dc1
+  vault_cluster = module.vault_cluster
+  root_cert     = module.consul_certificate_authority
+  gossip_key    = module.consul_gossip_encryption.secret
+
+  consul_version = "1.15.3"
+
+  docker_host     = "vault-1.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.60"
+}
+
 module "vault-2" {
   source = "../../modules/vault/node"
 
@@ -193,6 +210,23 @@ module "vault-2" {
 
   kms_key_id            = module.kms_config.key_id
   kms_backing_key_value = module.kms_config.backing_key_value
+}
+
+module "vault_2-consul_client" {
+  source = "../../modules/consul/client"
+
+  hostname      = "vault-2"
+  domain_name   = local.domain_name
+  datacenter    = module.dc1
+  vault_cluster = module.vault_cluster
+  root_cert     = module.consul_certificate_authority
+  gossip_key    = module.consul_gossip_encryption.secret
+
+  consul_version = "1.15.3"
+
+  docker_host     = "vault-2.${local.domain_name}"
+  docker_username = local.docker_username
+  docker_ip       = "192.168.122.61"
 }
 
 module "consul_certificate_authority" {
