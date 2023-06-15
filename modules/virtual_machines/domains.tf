@@ -26,6 +26,15 @@ module "vault" {
     "/vault/config.d",
     "/kms",
     "/kms/init",
+
+    "/consul",
+    "/consul/config",
+    "/consul/config/templates",
+    "/consul/config/client-certs",
+    "/consul/vault",
+    "/consul-agent-vault-agent-consul-template",
+    "/consul-agent-vault-agent-consul-template/config.d",
+    "/consul-agent-vault-agent-consul-template/ssl",
   ]
 }
 
