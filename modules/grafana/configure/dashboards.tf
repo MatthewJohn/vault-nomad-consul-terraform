@@ -8,6 +8,7 @@ locals {
     "vault",
     "nomad_jobs",
     "consul_mesh",
+    "node_exporter_overview",
     "node_exporter_per_host",
     "traefik_global",
     "traefik_service"
