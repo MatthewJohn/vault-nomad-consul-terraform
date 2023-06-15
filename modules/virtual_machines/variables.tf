@@ -48,7 +48,7 @@ variable "vault_hosts" {
     network_bridge           = optional(string)
     additional_dns_hostnames = list(string)
     memory                   = optional(number, 386)
-    disk_size                = optional(number, 3000)
+    disk_size                = optional(number, 4000)
   }))
 }
 
