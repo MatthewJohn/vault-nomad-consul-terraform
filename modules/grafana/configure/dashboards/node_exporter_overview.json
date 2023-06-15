@@ -163,10 +163,10 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "1 - (sum by(instance) (irate(node_cpu_seconds_total{job=\"$job\", mode=\"idle\"}[$__rate_interval])) / on(instance) group_left sum by (instance)((irate(node_cpu_seconds_total{job=\"$job\"}[$__rate_interval]))))",
+            "expr": "1 - (sum by(consul_node) (irate(node_cpu_seconds_total{job=\"$job\", mode=\"idle\"}[$__rate_interval])) / on(consul_node) group_left sum by (consul_node)((irate(node_cpu_seconds_total{job=\"$job\"}[$__rate_interval]))))",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "CPU Busy - {{ instance }}",
+            "legendFormat": "CPU Busy - {{ consul_node }}",
             "range": true,
             "refId": "F",
             "step": 240
@@ -269,7 +269,7 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "1 - (avg(node_memory_MemFree_bytes{job=\"$job\"}) by (instance)) / avg(node_memory_MemTotal_bytes{job=\"$job\"}) by (instance)",
+            "expr": "1 - (avg(node_memory_MemFree_bytes{job=\"$job\"}) by (consul_node)) / avg(node_memory_MemTotal_bytes{job=\"$job\"}) by (consul_node)",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 1,
@@ -728,10 +728,10 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "sum(irate(node_network_receive_bytes_total{job=\"$job\"}[$__rate_interval])) by (instance) * 8",
+            "expr": "sum(irate(node_network_receive_bytes_total{job=\"$job\"}[$__rate_interval])) by (consul_node) * 8",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "recv {{instance}}",
+            "legendFormat": "recv {{consul_node}}",
             "range": true,
             "refId": "A",
             "step": 240
@@ -742,10 +742,10 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "sum(irate(node_network_transmit_bytes_total{job=\"$job\"}[$__rate_interval])) by (instance) *8",
+            "expr": "sum(irate(node_network_transmit_bytes_total{job=\"$job\"}[$__rate_interval])) by (consul_node) *8",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "trans {{instance}} ",
+            "legendFormat": "trans {{consul_node}} ",
             "range": true,
             "refId": "B",
             "step": 240
@@ -851,7 +851,7 @@
             "expr": "100 - ((node_filesystem_avail_bytes{job=\"$job\",device!~'rootfs'} * 100) / node_filesystem_size_bytes{job=\"$job\",device!~'rootfs'})",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "{{instance}}:{{mountpoint}}",
+            "legendFormat": "{{consul_node}}:{{mountpoint}}",
             "range": true,
             "refId": "A",
             "step": 240
@@ -974,7 +974,7 @@
             "hide": false,
             "interval": "",
             "intervalFactor": 1,
-            "legendFormat": "Estimated error in seconds - {{instance}}",
+            "legendFormat": "Estimated error in seconds - {{consul_node}}",
             "range": true,
             "refId": "A",
             "step": 240
@@ -990,7 +990,7 @@
             "hide": false,
             "interval": "",
             "intervalFactor": 1,
-            "legendFormat": "Time offset in between local system and reference clock - {{instance}}",
+            "legendFormat": "Time offset in between local system and reference clock - {{consul_node}}",
             "range": true,
             "refId": "B",
             "step": 240
@@ -1006,7 +1006,7 @@
             "hide": false,
             "interval": "",
             "intervalFactor": 1,
-            "legendFormat": "Maximum error in seconds - {{instance}}",
+            "legendFormat": "Maximum error in seconds - {{consul_node}}",
             "range": true,
             "refId": "C",
             "step": 240
@@ -1120,11 +1120,11 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "max(irate(node_schedstat_running_seconds_total{job=\"$job\"}[$__rate_interval])) by (instance)",
+            "expr": "max(irate(node_schedstat_running_seconds_total{job=\"$job\"}[$__rate_interval])) by (consul_node)",
             "format": "time_series",
             "interval": "",
             "intervalFactor": 1,
-            "legendFormat": "{{instance}} - seconds spent running a process",
+            "legendFormat": "{{consul_node}} - seconds spent running a process",
             "range": true,
             "refId": "A",
             "step": 240
@@ -1135,11 +1135,11 @@
               "uid": "${victoria_metrics_datasource_id}"
             },
             "editorMode": "code",
-            "expr": "max(irate(node_schedstat_waiting_seconds_total{job=\"$job\"}[$__rate_interval])) by (instance)",
+            "expr": "max(irate(node_schedstat_waiting_seconds_total{job=\"$job\"}[$__rate_interval])) by (consul_node)",
             "format": "time_series",
             "interval": "",
             "intervalFactor": 1,
-            "legendFormat": "{{instance}} - seconds spent by processing waiting for this CPU",
+            "legendFormat": "{{consul_node}} - seconds spent by processing waiting for this CPU",
             "range": true,
             "refId": "B",
             "step": 240
@@ -1244,7 +1244,7 @@
             "expr": "node_procs_blocked{job=\"$job\"}",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "{{instance}} - Processes blocked waiting for I/O to complete",
+            "legendFormat": "{{consul_node}} - Processes blocked waiting for I/O to complete",
             "range": true,
             "refId": "A",
             "step": 240
@@ -1258,7 +1258,7 @@
             "expr": "node_procs_running{job=\"$job\"}",
             "format": "time_series",
             "intervalFactor": 1,
-            "legendFormat": "{{instance}} - Processes in runnable state",
+            "legendFormat": "{{consul_node}} - Processes in runnable state",
             "range": true,
             "refId": "B",
             "step": 240
@@ -1277,7 +1277,7 @@
       "list": [
         {
           "current": {
-            "selected": true,
+            "selected": false,
             "text": "default",
             "value": "default"
           },
@@ -1327,7 +1327,7 @@
       ]
     },
     "time": {
-      "from": "now-15m",
+      "from": "now-5m",
       "to": "now"
     },
     "timepicker": {
