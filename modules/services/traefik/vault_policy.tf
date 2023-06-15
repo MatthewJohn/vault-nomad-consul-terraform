@@ -12,6 +12,10 @@ service "${local.consul_service_name}" {
   policy = "write"
 }
 
+service "${local.consul_service_name}-metrics" {
+  policy = "write"
+}
+
 agent_prefix "" {
   policy = "read"
 }
