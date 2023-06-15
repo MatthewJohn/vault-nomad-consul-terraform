@@ -35,6 +35,8 @@ scrape_configs:
       #regex: (SERVICE_NAME1|SERVICE_NAME2)
       target_label: __scheme__
       replacement: https
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
 
 - job_name: nomad
   metrics_path: '/v1/metrics'
@@ -69,6 +71,8 @@ scrape_configs:
     - source_labels: ['__meta_consul_tags']
       regex: '^.*,http,.*$'
       action: keep
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
 
 - job_name: nomad-client
   metrics_path: '/v1/metrics'
@@ -99,6 +103,8 @@ scrape_configs:
       #regex: (SERVICE_NAME1|SERVICE_NAME2)
       target_label: __scheme__
       replacement: https
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
 
 - job_name: 'vault'
   metrics_path: "/v1/sys/metrics?format=prometheus"
@@ -127,16 +133,18 @@ scrape_configs:
     tls_config:
       ca_file: /consul/config/client-certs/ca.crt
   relabel_configs:
-  - source_labels: [__meta_consul_service]
-    regex: (.+)-sidecar-proxy
-    action: drop
-  - source_labels: [__meta_consul_service_metadata_metrics_port_envoy]
-    regex: (.+)
-    action: keep
-  - source_labels: [__address__,__meta_consul_service_metadata_metrics_port_envoy]
-    regex: ([^:]+)(?::\d+)?;(\d+)
-    replacement: $${1}:$${2}
-    target_label: __address__
+    - source_labels: [__meta_consul_service]
+      regex: (.+)-sidecar-proxy
+      action: drop
+    - source_labels: [__meta_consul_service_metadata_metrics_port_envoy]
+      regex: (.+)
+      action: keep
+    - source_labels: [__address__,__meta_consul_service_metadata_metrics_port_envoy]
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $${1}:$${2}
+      target_label: __address__
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
 
 - job_name: node-exporter
   scrape_interval: 10s
@@ -150,6 +158,10 @@ scrape_configs:
     tls_config:
       ca_file: /consul/config/client-certs/ca.crt
 
+  relabel_configs:
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
+
 - job_name: traefik
   scrape_interval: 10s
   consul_sd_configs:
@@ -161,6 +173,10 @@ scrape_configs:
     # TLS config for connecting to consul for service discovery
     tls_config:
       ca_file: /consul/config/client-certs/ca.crt
+
+  relabel_configs:
+    - source_labels: [__meta_consul_node]
+      target_label: consul_node
 
 EOF
 
