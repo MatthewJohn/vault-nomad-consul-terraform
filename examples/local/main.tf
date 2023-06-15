@@ -339,7 +339,8 @@ module "consul_static_tokens" {
   bootstrap     = module.consul_bootstrap
   consul_servers = [
     module.consul-1,
-    module.consul-2
+    module.consul-2,
+    module.consul-3
   ]
 }
 
