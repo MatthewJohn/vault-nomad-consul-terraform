@@ -10,6 +10,11 @@ variable "vault_subdomain" {
   default     = "vault"
 }
 
+variable "setup_host" {
+  description = "Hostname of vault host to use during initial setup"
+  type        = string
+}
+
 variable "ip_addresses" {
   description = "List of all vault IP Addresses"
   type        = list(string)

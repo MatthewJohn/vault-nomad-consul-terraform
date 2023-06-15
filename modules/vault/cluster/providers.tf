@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "vault" {
-  address      = local.cluster_address
+  address      = "https://${var.setup_host}:8200"
   ca_cert_file = var.ca_cert_file
   token        = var.root_token
 }

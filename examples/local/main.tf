@@ -157,6 +157,7 @@ module "vault_cluster" {
   ip_addresses       = local.all_vault_host_ips
   root_token         = module.vault_init.root_token
   ca_cert_file       = module.vault_init.ca_cert_file
+  setup_host         = "vault-2.vault.dock.local"
   consul_datacenters = ["dc1"]
   nomad_regions      = { "global" = ["dc1"] }
 }
