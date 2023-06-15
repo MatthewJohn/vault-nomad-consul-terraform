@@ -77,6 +77,18 @@ terraform-1.4.6 apply -target=module.nomad_global -target=module.nomad-1 -var in
 terraform-1.4.6 apply -target=module.nomad_bootstrap -var initial_setup=true
 terraform-1.4.6 apply -target=module.nomad-2
 terraform-1.4.6 apply -target=module.nomad-1
+
+terraform-1.4.6 apply -target=module.nomad-client-1
+
+# Configure monitoring
+terraform-1.4.6 apply -target=module.grafana -target=module.victoriametrics -target=module.loki
+## Configure grafana, once started
+terraform-1.4.6 apply -target=module.grafana_configure
+
+
+# Apply remaining modules
+terraform-1.4.6 apply
+
 ```
 
 ## NOTES:
