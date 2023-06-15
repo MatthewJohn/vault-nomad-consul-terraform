@@ -20,6 +20,9 @@ job "traefik" {
       port "metrics_envoy" {
         to = 9102
       }
+      port "metrics" {
+        to = 8082
+      }
 
       mode = "bridge"
     }
@@ -52,6 +55,11 @@ job "traefik" {
       }
     }
 
+    service {
+      name = "${local.consul_service_name}-metrics"
+      port = "metrics"
+    }
+
     ephemeral_disk {
       size = 105
     }
@@ -68,7 +76,7 @@ job "traefik" {
 
       config {
         image = "traefik:v2.10.1"
-        ports = ["admin", "http"]
+        ports = ["admin", "http", "metrics"]
         args = [
           "--api.dashboard=true",
           "--api.insecure=true", ### For Test only, please do not use that in production
@@ -85,6 +93,11 @@ job "traefik" {
           "--providers.consulcatalog.servicename=${local.consul_service_name}",
           "--providers.consulcatalog.prefix=traefik",
           "--providers.consulcatalog.connectAware=true",
+
+          # Prometheus metrics
+          "--metrics.prometheus=true",
+          "--entryPoints.metrics.address=:8082",
+          "--metrics.prometheus.entryPoint=metrics",
 
           # Automatically configured by Nomad through CONSUL_* environment variables
           # as long as client consul.share_ssl is enabled
