@@ -9,6 +9,10 @@ resource "consul_acl_policy" "agent_service_role" {
 service_prefix "consul-" {
    policy = "write"
 }
+
+service "node_exporter" {
+   policy = "write"
+}
 EOF
 }
 
