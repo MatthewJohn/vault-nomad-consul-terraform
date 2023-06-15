@@ -210,3 +210,20 @@ etc.
 ```
 5. Start nomad hosts
 6. Start noamd clients
+
+## Recovering 2 node vault cluster after one node has been rebuild
+
+On the node with valid data:
+
+```
+cat > /vault/raft/raft/peers.json <<EOF
+[
+  {
+    "id": "$(hostname)",
+    "address": "$(hostname).vault.$(hostname -d):8201",
+    "non_voter": false
+  }
+]
+EOF
+docker restart vault
+```
