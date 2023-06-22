@@ -95,6 +95,6 @@ job "hello-world" {
 }
 EOHCL
 
-  consul_token = data.vault_generic_secret.consul_token.data_json["Token"]
-  vault_token  = vault_approle_auth_backend_login.login.client_token
+  consul_token = data.vault_generic_secret.consul_token.data["token"]
+  vault_token  = vault_token.role_token.client_token
 }
