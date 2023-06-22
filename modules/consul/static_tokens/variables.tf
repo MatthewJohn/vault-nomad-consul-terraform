@@ -9,6 +9,14 @@ variable "datacenter" {
     address                  = string
     address_wo_protocol      = string
     consul_engine_mount_path = string
+    consul_server_token = object({
+      bucket = string
+      key    = string
+    })
+    consul_server_service_token = object({
+      bucket = string
+      key    = string
+    })
   })
 }
 

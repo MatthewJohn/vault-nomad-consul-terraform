@@ -29,6 +29,11 @@ variable "vault_cluster" {
   })
 }
 
+variable "bucket_name" {
+  description = "S3 bucket name for storing server keys"
+  type        = string
+}
+
 variable "global_config" {
   description = "Global consul config"
   type = object({
