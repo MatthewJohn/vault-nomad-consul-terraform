@@ -23,6 +23,7 @@ path "auth/token/renew-self" {
   capabilities = [ "update" ]
 }
 
+# @TODO What is this for?
 path "${vault_auth_backend.approle.path}/login"
 {
   capabilities = ["update"]

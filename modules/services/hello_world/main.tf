@@ -68,6 +68,10 @@ job "hello-world" {
         ports   = ["http"]
       }
 
+      vault {
+        policies = ["${var.service_role.vault_application_policy}"]
+      }
+
       template {
         data        = <<EOF
                         <h1>Hello, Nomad!</h1>
@@ -90,4 +94,7 @@ job "hello-world" {
   }
 }
 EOHCL
+
+  consul_token = data.vault_generic_secret.consul_token.data_json["Token"]
+  vault_token  = vault_approle_auth_backend_login.login.client_token
 }

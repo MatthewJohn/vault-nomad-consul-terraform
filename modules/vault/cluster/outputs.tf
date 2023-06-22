@@ -1,6 +1,11 @@
 output "ca_cert_file" {
-  description = "Path to root CA file"
+  description = "Path to root CA public key file"
   value       = var.ca_cert_file
+}
+
+output "ca_cert" {
+  description = "Contents of root CA public key"
+  value       = file(var.ca_cert_file)
 }
 
 output "address" {
