@@ -30,11 +30,10 @@ provider "vault" {
   }
 }
 
-# Re-login to obtain vault token used in nomad job
-resource "vault_approle_auth_backend_login" "login" {
-  backend   = var.service_role.vault_approle_deployment_path
-  role_id   = var.service_role.vault_approle_deployment_role_id
-  secret_id = var.service_role.vault_approle_deployment_secret_id
+resource "vault_token" "role_token" {
+  role_name = var.service_role.vault_role_name
+
+  renewable = true
 }
 
 # Obtain nomad token from vault consul engine

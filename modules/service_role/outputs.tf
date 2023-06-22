@@ -37,6 +37,11 @@ output "vault_approle_deployment_login_path" {
   value       = "auth/${var.nomad_region.approle_mount_path}/login"
 }
 
+output "vault_role_name" {
+  description = "Vault role name to allow token to provide application policy to nomad"
+  value       = vault_token_auth_backend_role.deployment.role_name
+}
+
 output "vault_secret_base_path" {
   description = "Base path for vault secrets"
   value       = local.vault_secret_base_path
