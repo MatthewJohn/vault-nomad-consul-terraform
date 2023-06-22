@@ -8,6 +8,13 @@ resource "consul_acl_policy" "this" {
   name = local.consul_service_name
 
   rules = <<-RULE
+key_prefix "" {
+  policy = "read"
+}
+key_prefix "" {
+  policy = "deny"
+}
+
 # Allow writing the services that the service will provide
 %{for consul_service in concat([local.consul_service_name], var.additional_consul_services)}
 service "${local.consul_service_name}"
