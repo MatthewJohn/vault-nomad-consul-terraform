@@ -18,10 +18,9 @@ output "vault_consul_engine_path" {
   value       = var.consul_datacenter.consul_engine_mount_path
 }
 
-
 output "vault_approle_deployment_role_id" {
   description = "Vault approle role ID for deployment"
-  value       = vault_approle_auth_backend_role.deployment.id
+  value       = vault_approle_auth_backend_role.deployment.role_id
 }
 output "vault_approle_deployment_secret_id" {
   description = "Vault approle secret ID for deployment"
