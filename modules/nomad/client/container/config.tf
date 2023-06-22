@@ -196,8 +196,7 @@ vault {
 
   #create_from_role = "$${var.region.server_vault_role}"
 
-  # @TODO To set false in future
-  allow_unauthenticated = true
+  allow_unauthenticated = false
 }
 
 plugin "docker" {
