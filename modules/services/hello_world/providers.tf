@@ -18,6 +18,7 @@ EOF
 provider "vault" {
   address      = var.service_role.vault.address
   ca_cert_file = data.external.temp_vault_cert.result.cert_file
+  skip_child_token = true
 
   auth_login {
     path = var.service_role.vault_approle_deployment_login_path
