@@ -45,8 +45,7 @@ data "vault_generic_secret" "consul_token" {
 provider "consul" {
   address    = var.service_role.consul.address
   datacenter = var.service_role.consul.datacenter
-  # @TODO Replace with more restrictive terraform token
-  token  = data.vault_generic_secret.consul_token.data_json["Token"]
+  token  = data.vault_generic_secret.consul_token.data["token"]
   ca_pem = var.service_role.consul.root_cert_public_key
 }
 
