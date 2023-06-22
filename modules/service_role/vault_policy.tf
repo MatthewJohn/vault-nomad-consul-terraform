@@ -20,6 +20,12 @@ path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list", "create", "update", "delete" ]
 }
+
+# Allow approle to login
+path "${var.nomad_region.approle_mount_path}/login"
+{
+  capabilities = ["update"]
+}
 EOF
 }
 
