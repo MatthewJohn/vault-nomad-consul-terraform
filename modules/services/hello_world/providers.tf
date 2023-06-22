@@ -1,17 +1,23 @@
-# Create file for vault CA cert
-resource "random_string" "vault_ca_cert" {
-  length           = 16
-  special          = false
-}
-resource "local_file" "vault_ca_cert" {
-  content = var.service_role.vault.ca_cert
-  filename = "${path.module}/vault-ca-${random_string.vault_ca_cert.result}.crt"
+# Create file for vault CA cert.
+# Vault provider current needs the vault CA cert as a file on disk,
+# unlike the other hashicorp providers, so create temporary file
+# using data source (as this needs to be available at plan-time)
+data "external" "temp_vault_cert" {
+  program = [
+    "bash", "-c", <<EOF
+temp_cert=$(mktemp)
+cat > $temp_cert <<EOC
+${var.service_role.vault.ca_cert}
+EOC
+echo "{\"cert_file\": \"$temp_cert\"}"
+EOF
+  ]
 }
 
 # Use vault provider with approle authentication
 provider "vault" {
   address      = var.service_role.vault.address
-  ca_cert_file = local_file.vault_ca_cert.filename
+  ca_cert_file = data.external.temp_vault_cert.result.cert_file
 
   auth_login {
     path = var.service_role.vault_approle_deployment_login_path
