@@ -41,10 +41,14 @@ path "sys/capabilities-self" {
     capabilities = ["update"]
 }
 
-# path "auth/token/lookup-accessor"
-# {
-#   capabilities = [ "read", "update" ]
-# }
+# Provide privileges for Terraform to be able to create a vault token
+# as per https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/token
+path "auth/token/lookup-accessor" {
+  capabilities = ["update"]
+}
+path "auth/token/revoke-accessor" {
+  capabilities = ["update"]
+}
 EOF
 }
 
