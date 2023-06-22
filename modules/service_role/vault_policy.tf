@@ -21,10 +21,13 @@ path "${local.vault_secret_base_data_path}/*"
   capabilities = [ "read", "list", "create", "update", "delete" ]
 }
 
-# Allow approle to login
+# Allow approle to create token using own role
 path "auth/token/create"
 {
   capabilities = [ "update" ]
+  allowed_parameters = {
+    "policies" = ["default", "nomad-deployment-job-${var.nomad_region.name}-${var.name}"]
+  }
 }
 
 path "auth/token/lookup-accessor"
