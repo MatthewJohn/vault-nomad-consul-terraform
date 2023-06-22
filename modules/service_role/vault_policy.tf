@@ -49,6 +49,12 @@ path "auth/token/lookup-accessor" {
 path "auth/token/revoke-accessor" {
   capabilities = ["update"]
 }
+
+# Allow creation of token using role
+path "auth/token/create/nomad-deployment-job-${var.nomad_region.name}-${var.name}"
+{
+  capabilities = [ "create", "update", "sudo" ]
+}
 EOF
 }
 
