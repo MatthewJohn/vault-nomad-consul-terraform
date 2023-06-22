@@ -68,7 +68,7 @@ output "vault" {
 output "consul" {
   description = "Connection details for Consul"
   value = {
-    datacenter_name      = var.consul_datacenter.name
+    datacenter           = var.consul_datacenter.name
     address              = var.consul_datacenter.address
     address_wo_protocol  = var.consul_datacenter.address_wo_protocol
     root_cert_public_key = var.consul_datacenter.root_cert_public_key

@@ -2,7 +2,7 @@ resource "nomad_job" "hello-world" {
   jobspec = <<EOHCL
   
 job "hello-world" {
-  datacenters = ["${var.nomad_datacenter.name}"]
+  datacenters = ["${var.service_role.nomad.datacenter}"]
 
   meta {
     // User-defined key/value pairs that can be used in your jobs.
@@ -26,7 +26,7 @@ job "hello-world" {
     }
 
     service {
-      name = "hello-world"
+      name = "${var.service_role.consul_service_name}"
       port = 8001
       tags = ["traefik-routing"]
 

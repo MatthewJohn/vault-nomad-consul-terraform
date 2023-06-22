@@ -19,7 +19,7 @@ variable "service_role" {
       address = string
     })
     consul = object({
-      datacenter_name      = string
+      datacenter           = string
       address              = string
       address_wo_protocol  = string
       root_cert_public_key = string
