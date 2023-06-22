@@ -62,5 +62,10 @@ path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list" ]
 }
+
+path "auth/token/lookup-self"
+{
+  capabilities = [ "read" ]
+}
 EOF
 }
