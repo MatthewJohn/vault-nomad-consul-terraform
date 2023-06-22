@@ -22,9 +22,14 @@ path "${local.vault_secret_base_data_path}/*"
 }
 
 # Allow approle to login
-path "${var.nomad_region.approle_mount_path}/login"
+path "auth/token/create"
 {
-  capabilities = ["update"]
+  capabilities = [ "update" ]
+}
+
+path "auth/token/lookup-accessor"
+{
+  capabilities = [ "read" ]
 }
 EOF
 }
