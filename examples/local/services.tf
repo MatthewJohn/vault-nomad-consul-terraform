@@ -30,10 +30,6 @@ module "hello-world" {
   nomad_bootstrap = module.nomad_bootstrap
 }
 
-output "bnalh" {
-  value = module.hello-world
-}
-
 module "terrareg" {
   source = "../../modules/services/terrareg"
 
