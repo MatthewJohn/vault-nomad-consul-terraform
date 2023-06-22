@@ -1,4 +1,3 @@
-
 variable "hostname" {
   description = "Hostname for docker"
   type        = string
@@ -18,6 +17,14 @@ variable "datacenter" {
     server_consul_template_approle_role_name = string
     pki_connect_mount_path                   = string
     connect_ca_approle_role_name             = string
+    consul_server_token = object({
+      bucket = string
+      key    = string
+    })
+    consul_server_service_token = object({
+      bucket = string
+      key    = string
+    })
   })
 }
 

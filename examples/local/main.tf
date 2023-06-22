@@ -255,6 +255,7 @@ module "dc1" {
   vault_cluster = module.vault_cluster
   global_config = module.consul_global_config
   agent_ips     = local.all_consul_ips
+  bucket_name   = "consul-bootstrap"
 }
 
 # @TODO Generate in datacenter and store in vault
