@@ -62,6 +62,7 @@ template {
   perms       = 0700
 
   error_on_missing_key = false
+  error_fatal = false
 }
 
 # This is the signal to listen for to trigger a reload event. The default
@@ -91,15 +92,15 @@ block_query_wait = "60s"
 # Valid options include (in order of verbosity): trace, debug, info, warn, err
 log_level = "warn"
 
-# This controls whether an error within a template will cause consul-template
-# to immediately exit. This value can be overridden within each template
-# configuration.
-template_error_fatal = true
-
-# This will cause consul-template to exit with an error if it fails to
-# successfully fetch a value for a field. Note that the retry logic defined for
-# the services don't apply to this type of error.
-err_on_failed_lookup = true
+# Do not fail on lookup errors.
+# If the consul cluster is down during startup, vault
+# will be unable to fetch the consul access tokens,
+# which would normally cause a failure.
+# Allow the template to continue.
+# If any values that are truly need fail (CA cert etc),
+# consul will fail to startup and the container will restart. 
+template_error_fatal = false
+err_on_failed_lookup = false
 
 # This is the quiescence timers; it defines the minimum and maximum amount of
 # time to wait for the cluster to reach a consistent state before rendering a
