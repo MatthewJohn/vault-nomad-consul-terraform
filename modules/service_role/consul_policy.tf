@@ -15,16 +15,13 @@ key_prefix "" {
   policy = "deny"
 }
 
-intention "${local.consul_service_name}"
-{
-  policy = "write"
-}
-
 # Allow writing the services that the service will provide
+# and modify intentions
 %{for consul_service in concat([local.consul_service_name], var.additional_consul_services)}
 service "${local.consul_service_name}"
 {
   policy = "write"
+  intentions = "write"
 }
 %{endfor}
 RULE
