@@ -9,6 +9,7 @@ variable "service_role" {
     vault_approle_deployment_role_id   = string
     vault_approle_deployment_secret_id = string
     vault_approle_deployment_path      = string
+    vault_approle_deployment_login_path = string
     vault_secret_base_path             = string
     vault_secret_base_data_path        = string
     vault_deploy_policy                = string

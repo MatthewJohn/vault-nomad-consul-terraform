@@ -32,6 +32,11 @@ output "vault_approle_deployment_path" {
   value       = var.nomad_region.approle_mount_path
 }
 
+output "vault_approle_deployment_login_path" {
+  description = "Vault approle login path for deployment"
+  value       = "auth/${var.nomad_region.approle_mount_path}/login"
+}
+
 output "vault_secret_base_path" {
   description = "Base path for vault secrets"
   value       = local.vault_secret_base_path

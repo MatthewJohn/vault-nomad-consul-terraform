@@ -14,7 +14,7 @@ provider "vault" {
   ca_cert_file = local_file.vault_ca_cert.filename
 
   auth_login {
-    path = var.service_role.vault_approle_deployment_path
+    path = var.service_role.vault_approle_deployment_login_path
 
     parameters = {
       role_id   = var.service_role.vault_approle_deployment_role_id
