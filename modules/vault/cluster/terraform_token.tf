@@ -346,6 +346,11 @@ path "sys/policies/acl/nomad-deployment-job-${region}-*"
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Assume roles for deploy nomad jobs
+path "auth/token/create/nomad-job-${region}-*"
+{
+  capabilities = [ "sudo" ]
+}
 
 %{for nomad_dc in var.nomad_regions[region]}
 
