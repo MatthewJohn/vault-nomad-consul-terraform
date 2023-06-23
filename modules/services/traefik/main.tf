@@ -1,7 +1,7 @@
 resource "nomad_job" "traefik" {
   jobspec = <<EOHCL
 job "traefik" {
-  datacenters = ["${var.nomad_datacenter.name}"]
+  datacenters = ["${var.service_role.nomad.datacenter}"]
   type        = "service"
 
   group "traefik" {
@@ -28,7 +28,7 @@ job "traefik" {
     }
 
     service {
-      name = "${local.consul_service_name}"
+      name = "${var.service_role.consul_service_name}"
       port = "http"
 
       meta {
@@ -56,7 +56,7 @@ job "traefik" {
     }
 
     service {
-      name = "${local.consul_service_name}-metrics"
+      name = "traefik-metrics"
       port = "metrics"
     }
 
@@ -68,7 +68,7 @@ job "traefik" {
       driver = "docker"
 
       vault {
-        policies = ["${vault_policy.traefik.name}"]
+        policies = ["${var.service_role.vault_application_policy}"]
 
         change_mode   = "signal"
         change_signal = "SIGUSR1"
@@ -84,13 +84,13 @@ job "traefik" {
           "--entrypoints.websecure.address=:$${NOMAD_PORT_https}",
           "--entrypoints.traefik.address=:$${NOMAD_PORT_admin}",
           #"--providers.nomad=true",
-          #"--providers.nomad.endpoint.address=${var.nomad_region.address}"
+          #"--providers.nomad.endpoint.address=${var.service_role.nomad.address}"
           # Make the communication secure by default
           "--providers.consulcatalog.connectByDefault=true",
           "--providers.consulcatalog.exposedByDefault=true",
           # "--entrypoints.http=true",
           # "--entrypoints.http.address=:8080",
-          "--providers.consulcatalog.servicename=${local.consul_service_name}",
+          "--providers.consulcatalog.servicename=${var.service_role.consul_service_name}",
           "--providers.consulcatalog.prefix=traefik",
           "--providers.consulcatalog.connectAware=true",
 
@@ -101,9 +101,9 @@ job "traefik" {
 
           # Automatically configured by Nomad through CONSUL_* environment variables
           # as long as client consul.share_ssl is enabled
-          "--providers.consulcatalog.endpoint.address=${var.consul_datacenter.address_wo_protocol}",
+          "--providers.consulcatalog.endpoint.address=${var.service_role.consul.address_wo_protocol}",
           "--providers.consulcatalog.endpoint.scheme=https",
-          "--providers.consulcatalog.endpoint.datacenter=${var.consul_datacenter.name}",
+          "--providers.consulcatalog.endpoint.datacenter=${var.service_role.consul.datacenter}",
           "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
           "--providers.consulcatalog.endpoint.token=$${NOMAD_TOKEN}",
           "--providers.consulcatalog.constraints=Tag(`traefik-routing`)",
@@ -117,7 +117,7 @@ job "traefik" {
 
       template {
         data = <<EOF
-{{ with secret "${var.consul_root_cert.pki_mount_path}/cert/ca" }}
+{{ with secret "${var.service_role.consul.root_cert_pki_mount_path}/cert/ca" }}
 {{ .Data.certificate }}
 {{ end }}
 EOF
@@ -126,7 +126,7 @@ EOF
 
       template {
         data = <<EOH
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.traefik.name}" }}
+{{ with secret "${var.service_role.vault_consul_engine_path}/creds/${var.service_role.vault_consul_role_name}" }}
 NOMAD_TOKEN="{{ .Data.token }}"
 {{end}}
 EOH
@@ -142,4 +142,7 @@ EOH
   }
 }
 EOHCL
+
+  vault_token = vault_token.role_token.client_token
+  consul_token = data.vault_generic_secret.consul_token.data["token"]
 }

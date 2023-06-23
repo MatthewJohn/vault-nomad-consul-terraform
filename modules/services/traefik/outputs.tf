@@ -1,6 +1,6 @@
 output "service_name" {
   description = "Consul service name for traefik"
-  value       = local.consul_service_name
+  value       = var.service_role.consul_service_name
 }
 
 output "service_domain" {

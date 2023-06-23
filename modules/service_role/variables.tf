@@ -3,6 +3,23 @@ variable "name" {
   type        = string
 }
 
+variable "additional_consul_policy" {
+  description = "Additional statements for consul policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_vault_application_policy" {
+  description = "Additional statements for vault application policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_vault_deployment_policy" {
+  description = "Additional statements for vault deployment policy"
+  type        = string
+  default     = ""
+}
 
 variable "additional_consul_services" {
   description = "List of additional consul services to assign to service"
@@ -14,6 +31,8 @@ variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({
     name = string
+    common_name = string
+    client_dns = string
   })
 }
 
@@ -51,6 +70,7 @@ variable "consul_root_cert" {
   type = object({
     pki_mount_path = string
     public_key     = string
+    domain_name    = string
   })
 }
 

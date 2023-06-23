@@ -77,6 +77,7 @@ output "consul" {
     address              = var.consul_datacenter.address
     address_wo_protocol  = var.consul_datacenter.address_wo_protocol
     root_cert_public_key = var.consul_datacenter.root_cert_public_key
+    root_cert_pki_mount_path = var.consul_root_cert.pki_mount_path
   }
 }
 
@@ -87,6 +88,9 @@ output "nomad" {
     root_cert_public_key = var.nomad_region.root_cert_public_key
     region               = var.nomad_region.name
     datacenter           = var.nomad_datacenter.name
+    datacenter_common_name = var.nomad_datacenter.common_name
+    datacenter_client_dns = var.nomad_datacenter.client_dns
+    root_domain_name     = var.consul_root_cert.domain_name
   }
 }
 

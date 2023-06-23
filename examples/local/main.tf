@@ -464,10 +464,13 @@ module "nomad-client-1" {
   docker_ip       = "192.168.122.91"
 }
 
-module "traefik" {
-  source = "../../modules/services/traefik"
 
-  root_cert         = module.nomad_certificate_authority
+module "traefik_service_role" {
+
+  source = "../../modules/service_role"
+
+  name = "traefik"
+
   nomad_bootstrap   = module.nomad_bootstrap
   nomad_region      = module.nomad_global
   nomad_datacenter  = module.nomad_dc1
@@ -475,6 +478,39 @@ module "traefik" {
   consul_datacenter = module.dc1
   consul_bootstrap  = module.consul_bootstrap
   vault_cluster     = module.vault_cluster
+
+  additional_consul_services = ["traefik-metrics"]
+
+  additional_consul_policy = <<EOF
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "read"
+}
+EOF
+
+  additional_vault_application_policy = <<EOF
+# Allow access to read root CA
+path "${module.consul_certificate_authority.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
+EOF
+}
+
+module "traefik" {
+  source = "../../modules/services/traefik"
+
+  service_role = module.hello-world_service_role
+
+  # to be removed
+  nomad_bootstrap = module.nomad_bootstrap
 }
 
 module "victoria_metrics" {

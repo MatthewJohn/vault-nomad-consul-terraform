@@ -18,14 +18,17 @@ key_prefix "" {
 # Allow writing the services that the service will provide
 # and modify intentions
 %{for consul_service in concat([local.consul_service_name], var.additional_consul_services)}
-service "${local.consul_service_name}"
+service "${consul_service}"
 {
   policy = "write"
   intentions = "write"
 }
 %{endfor}
+
+${var.additional_consul_policy}
 RULE
 }
+
 
 resource "vault_consul_secret_backend_role" "this" {
   name    = "nomad-deployment-job-${var.nomad_region.name}-${var.name}"

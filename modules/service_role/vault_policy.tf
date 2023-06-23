@@ -55,6 +55,8 @@ path "auth/token/create/nomad-deployment-job-${var.nomad_region.name}-${var.name
 {
   capabilities = [ "create", "update", "sudo" ]
 }
+
+${var.additional_vault_deployment_policy}
 EOF
 }
 
@@ -73,5 +75,7 @@ path "auth/token/lookup-self"
 {
   capabilities = [ "read" ]
 }
+
+${var.additional_vault_application_policy}
 EOF
 }
