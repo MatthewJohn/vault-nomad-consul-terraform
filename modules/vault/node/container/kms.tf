@@ -36,7 +36,7 @@ resource "docker_container" "kms" {
 
   name    = "kms"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname = "kms"
 

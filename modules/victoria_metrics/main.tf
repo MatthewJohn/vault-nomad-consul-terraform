@@ -8,7 +8,7 @@ resource "docker_container" "this" {
 
   name    = "victoria-metrics"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""

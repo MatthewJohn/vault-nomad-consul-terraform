@@ -12,7 +12,7 @@ resource "docker_container" "this" {
 
   name    = "vault"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname   = "${var.hostname}.${local.vault_domain}"
   domainname = ""
