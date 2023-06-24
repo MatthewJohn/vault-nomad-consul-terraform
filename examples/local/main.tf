@@ -422,6 +422,15 @@ module "nomad_bootstrap" {
   initial_run  = var.initial_setup
 }
 
+module "nomad_static_tokens" {
+  source = "../../modules/nomad/static_tokens"
+
+  root_cert     = module.nomad_certificate_authority
+  region        = module.nomad_global
+  bootstrap     = module.nomad_bootstrap
+  vault_cluster = module.vault_cluster
+}
+
 module "nomad_dc1" {
   source = "../../modules/nomad/datacenter"
 

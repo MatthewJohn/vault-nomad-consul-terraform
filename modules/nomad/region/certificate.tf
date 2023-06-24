@@ -1,8 +1,3 @@
-locals {
-  common_name         = "${var.region}.${var.root_cert.common_name}"
-  nomad_verify_domain = "${var.region}.nomad"
-  server_common_name  = "server.${local.common_name}"
-}
 
 resource "vault_pki_secret_backend_intermediate_cert_request" "this" {
   backend     = vault_mount.this.path

@@ -352,6 +352,24 @@ path "auth/token/create/nomad-job-${region}-*"
   capabilities = [ "sudo" ]
 }
 
+# Allow creation of vault secret engine for nomad
+path "sys/mounts/nomad-${region}"
+{
+  capabilities = [ "read", "list", "create", "update" ]
+}
+path "sys/mounts/nomad-${region}/tune"
+{
+  capabilities = [ "read" ]
+}
+path "nomad-${region}/config/access"
+{
+  capabilities = [ "create", "update", "read" ]
+}
+path "nomad-${region}/config/lease"
+{
+  capabilities = [ "update", "read" ]
+}
+
 %{for nomad_dc in var.nomad_regions[region]}
 
 path "sys/mounts/pki_int_nomad_${region}_${nomad_dc}"
