@@ -370,6 +370,12 @@ path "nomad-${region}/config/lease"
   capabilities = [ "update", "read" ]
 }
 
+# Create nomad engine roles for deployments
+path "nomad-${region}/role/nomad-deployment-job-${region}-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
 %{for nomad_dc in var.nomad_regions[region]}
 
 path "sys/mounts/pki_int_nomad_${region}_${nomad_dc}"
