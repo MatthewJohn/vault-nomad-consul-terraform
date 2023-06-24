@@ -105,7 +105,7 @@ job "traefik" {
           "--providers.consulcatalog.endpoint.scheme=https",
           "--providers.consulcatalog.endpoint.datacenter=${var.service_role.consul.datacenter}",
           "--providers.consulcatalog.endpoint.tls.ca=/consul/ca.crt",
-          "--providers.consulcatalog.endpoint.token=$${NOMAD_TOKEN}",
+          "--providers.consulcatalog.endpoint.token=$${CONSUL_TOKEN}",
           "--providers.consulcatalog.constraints=Tag(`traefik-routing`)",
           "--providers.consulcatalog.defaultRule=Host(`{{ .Name }}.${local.service_domain}`)"
         ]
@@ -127,10 +127,10 @@ EOF
       template {
         data = <<EOH
 {{ with secret "${var.service_role.vault_consul_engine_path}/creds/${var.service_role.vault_consul_role_name}" }}
-NOMAD_TOKEN="{{ .Data.token }}"
+CONSUL_TOKEN="{{ .Data.token }}"
 {{end}}
 EOH
-        destination = "secrets/nomad.env"
+        destination = "secrets/consul.env"
         env         = true
       }
 
