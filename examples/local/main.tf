@@ -479,7 +479,7 @@ module "traefik_service_role" {
   consul_bootstrap  = module.consul_bootstrap
   vault_cluster     = module.vault_cluster
 
-  additional_consul_services = ["traefik-metrics"]
+  additional_consul_services = ["metrics"]
 
   additional_consul_policy = <<EOF
 agent_prefix "" {
