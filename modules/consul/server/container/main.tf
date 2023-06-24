@@ -4,7 +4,7 @@ resource "docker_container" "this" {
 
   name    = "consul"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname   = "${var.hostname}.${var.datacenter.common_name}"
   domainname = ""

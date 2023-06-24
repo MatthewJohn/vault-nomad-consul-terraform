@@ -167,7 +167,7 @@ consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
   grpc_address = "${var.consul_client.listen_host}:8503"
 
-  allow_unauthenticated = true
+  allow_unauthenticated = false
   auto_advertise        = true
 
   server_auto_join    = true
@@ -201,8 +201,7 @@ vault {
 
   create_from_role = "${var.region.server_vault_role}"
 
-  # @TODO To set false in future
-  allow_unauthenticated = true
+  allow_unauthenticated = false
 }
 
 telemetry {

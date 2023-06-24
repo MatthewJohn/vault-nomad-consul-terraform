@@ -4,7 +4,7 @@ resource "docker_container" "this" {
 
   name    = "nomad"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname   = "${var.hostname}.${var.region.common_name}"
   domainname = ""

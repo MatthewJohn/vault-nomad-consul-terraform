@@ -194,6 +194,11 @@ path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+path "consul-${datacenter}/roles/nomad-deployment-job-${nomad_region}-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {
@@ -335,6 +340,41 @@ path "sys/policies/acl/nomad-job-${region}-*"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
+# Policy for job deployment
+path "sys/policies/acl/nomad-deployment-job-${region}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Assume roles for deploy nomad jobs
+path "auth/token/create/nomad-job-${region}-*"
+{
+  capabilities = [ "sudo" ]
+}
+
+# Allow creation of vault secret engine for nomad
+path "sys/mounts/nomad-${region}"
+{
+  capabilities = [ "read", "list", "create", "update" ]
+}
+path "sys/mounts/nomad-${region}/tune"
+{
+  capabilities = [ "read" ]
+}
+path "nomad-${region}/config/access"
+{
+  capabilities = [ "create", "update", "read" ]
+}
+path "nomad-${region}/config/lease"
+{
+  capabilities = [ "update", "read" ]
+}
+
+# Create nomad engine roles for deployments
+path "nomad-${region}/role/nomad-deployment-job-${region}-*"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
 
 %{for nomad_dc in var.nomad_regions[region]}
 
@@ -371,6 +411,7 @@ path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
+
 
 %{endfor}
 

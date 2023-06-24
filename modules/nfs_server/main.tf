@@ -4,7 +4,7 @@ resource "docker_container" "this" {
 
   name    = "nfs-server"
   rm      = false
-  restart = "on-failure"
+  restart = "always"
 
   hostname   = "${var.hostname}.${var.domain_name}"
   domainname = ""

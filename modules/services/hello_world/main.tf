@@ -1,8 +1,8 @@
 resource "nomad_job" "hello-world" {
   jobspec = <<EOHCL
   
-job "hello-world" {
-  datacenters = ["${var.nomad_datacenter.name}"]
+job "${var.service_role.name}" {
+  datacenters = ["${var.service_role.nomad.datacenter}"]
 
   meta {
     // User-defined key/value pairs that can be used in your jobs.
@@ -26,7 +26,7 @@ job "hello-world" {
     }
 
     service {
-      name = "hello-world"
+      name = "${var.service_role.consul_service_name}"
       port = 8001
       tags = ["traefik-routing"]
 
@@ -68,6 +68,10 @@ job "hello-world" {
         ports   = ["http"]
       }
 
+      vault {
+        policies = ["${var.service_role.vault_application_policy}"]
+      }
+
       template {
         data        = <<EOF
                         <h1>Hello, Nomad!</h1>
@@ -90,4 +94,7 @@ job "hello-world" {
   }
 }
 EOHCL
+
+  consul_token = data.vault_generic_secret.consul_token.data["token"]
+  vault_token  = vault_token.role_token.client_token
 }

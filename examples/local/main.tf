@@ -422,6 +422,15 @@ module "nomad_bootstrap" {
   initial_run  = var.initial_setup
 }
 
+module "nomad_static_tokens" {
+  source = "../../modules/nomad/static_tokens"
+
+  root_cert     = module.nomad_certificate_authority
+  region        = module.nomad_global
+  bootstrap     = module.nomad_bootstrap
+  vault_cluster = module.vault_cluster
+}
+
 module "nomad_dc1" {
   source = "../../modules/nomad/datacenter"
 
@@ -464,58 +473,52 @@ module "nomad-client-1" {
   docker_ip       = "192.168.122.91"
 }
 
+
+module "traefik_service_role" {
+
+  source = "../../modules/service_role"
+
+  name = "traefik"
+
+  nomad_bootstrap     = module.nomad_bootstrap
+  nomad_region        = module.nomad_global
+  nomad_datacenter    = module.nomad_dc1
+  consul_root_cert    = module.consul_certificate_authority
+  consul_datacenter   = module.dc1
+  consul_bootstrap    = module.consul_bootstrap
+  vault_cluster       = module.vault_cluster
+  nomad_static_tokens = module.nomad_static_tokens
+
+  additional_consul_services = ["metrics"]
+
+  additional_consul_policy = <<EOF
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "read"
+}
+EOF
+
+  additional_vault_application_policy = <<EOF
+# Allow access to read root CA
+path "${module.consul_certificate_authority.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
+EOF
+}
+
 module "traefik" {
   source = "../../modules/services/traefik"
 
-  root_cert         = module.nomad_certificate_authority
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
-  consul_root_cert  = module.consul_certificate_authority
-  consul_datacenter = module.dc1
-  consul_bootstrap  = module.consul_bootstrap
-  vault_cluster     = module.vault_cluster
+  service_role = module.traefik_service_role
 }
-
-module "hello-world-volume" {
-  source = "../../modules/nomad/volume"
-
-  name = "hello-world"
-
-  nomad_bootstrap = module.nomad_bootstrap
-  nomad_region    = module.nomad_global
-  nfs             = module.nomad_nfs_dc1
-  uid             = 1000
-  gid             = 1000
-}
-
-module "hello-world" {
-  source = "../../modules/services/hello_world"
-
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
-  consul_root_cert  = module.consul_certificate_authority
-  consul_datacenter = module.dc1
-  consul_bootstrap  = module.consul_bootstrap
-  vault_cluster     = module.vault_cluster
-  traefik           = module.traefik
-}
-
-module "terrareg" {
-  source = "../../modules/services/terrareg"
-
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
-  consul_root_cert  = module.consul_certificate_authority
-  consul_datacenter = module.dc1
-  consul_bootstrap  = module.consul_bootstrap
-  vault_cluster     = module.vault_cluster
-  traefik           = module.traefik
-  nfs               = module.nomad_nfs_dc1
-}
-
 
 module "victoria_metrics" {
   source = "../../modules/victoria_metrics"

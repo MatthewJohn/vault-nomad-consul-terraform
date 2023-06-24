@@ -1,5 +1,5 @@
 resource "consul_config_entry" "service_intentions" {
-  name = "hello-world"
+  name = var.service_role.consul_service_name
   kind = "service-intentions"
 
   config_json = jsonencode({

@@ -31,7 +31,7 @@ output "server_dns" {
 
 output "address" {
   description = "Endpoint for cluster"
-  value       = "https://${local.server_common_name}:4646"
+  value       = local.server_address
 }
 
 output "address_wo_protocol" {
