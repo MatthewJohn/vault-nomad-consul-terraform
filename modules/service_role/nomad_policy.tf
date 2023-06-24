@@ -4,9 +4,9 @@ resource "nomad_acl_policy" "this" {
   name        = "nomad-deployment-job-${var.nomad_region.name}-${var.name}"
 
   rules_hcl   = <<EOT
-namespace "default" {
+namespace "${var.nomad_namespace}" {
   policy       = "read"
-  capabilities = ["submit-job"]
+  capabilities = ["submit-job","dispatch-job"]
 }
 EOT
 }

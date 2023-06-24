@@ -106,6 +106,7 @@ output "nomad" {
     datacenter_common_name = var.nomad_datacenter.common_name
     datacenter_client_dns = var.nomad_datacenter.client_dns
     root_domain_name     = var.consul_root_cert.domain_name
+    namespace            = var.nomad_namespace
   }
 }
 

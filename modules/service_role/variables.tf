@@ -3,6 +3,12 @@ variable "name" {
   type        = string
 }
 
+variable "nomad_namespace" {
+  description = "Nomad namespace for the service to be deployed to"
+  type        = string
+  default     = "default"
+}
+
 variable "additional_consul_policy" {
   description = "Additional statements for consul policy"
   type        = string
