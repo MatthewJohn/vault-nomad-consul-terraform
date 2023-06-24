@@ -15,6 +15,12 @@ path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_sec
   capabilities = ["read"]
 }
 
+# Allow generation of nomad token using assigned consul policy
+path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this.role}"
+{
+  capabilities = ["read"]
+}
+
 # Allow writing to secrets
 path "${local.vault_secret_base_data_path}/*"
 {

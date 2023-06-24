@@ -23,6 +23,16 @@ output "vault_consul_engine_path" {
   value       = var.consul_datacenter.consul_engine_mount_path
 }
 
+output "vault_nomad_role_name" {
+  description = "Vault nomad engine role name for nomad token"
+  value       = vault_nomad_secret_role.this.role
+}
+
+output "vault_nomad_engine_path" {
+  description = "Vault nomad engine path"
+  value       = var.nomad_static_tokens.nomad_engine_mount_path
+}
+
 output "vault_approle_deployment_role_id" {
   description = "Vault approle role ID for deployment"
   value       = vault_approle_auth_backend_role.deployment.role_id

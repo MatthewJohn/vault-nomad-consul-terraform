@@ -480,13 +480,14 @@ module "traefik_service_role" {
 
   name = "traefik"
 
-  nomad_bootstrap   = module.nomad_bootstrap
-  nomad_region      = module.nomad_global
-  nomad_datacenter  = module.nomad_dc1
-  consul_root_cert  = module.consul_certificate_authority
-  consul_datacenter = module.dc1
-  consul_bootstrap  = module.consul_bootstrap
-  vault_cluster     = module.vault_cluster
+  nomad_bootstrap     = module.nomad_bootstrap
+  nomad_region        = module.nomad_global
+  nomad_datacenter    = module.nomad_dc1
+  consul_root_cert    = module.consul_certificate_authority
+  consul_datacenter   = module.dc1
+  consul_bootstrap    = module.consul_bootstrap
+  vault_cluster       = module.vault_cluster
+  nomad_static_tokens = module.nomad_static_tokens
 
   additional_consul_services = ["metrics"]
 

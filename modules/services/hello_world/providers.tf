@@ -49,9 +49,14 @@ provider "consul" {
   ca_pem = var.service_role.consul.root_cert_public_key
 }
 
+# Obtain nomad token from vault nomad engine
+data "vault_generic_secret" "nomad_token" {
+  path = "${var.service_role.vault_nomad_engine_path}/creds/${var.service_role.vault_nomad_role_name}"
+}
+
 provider "nomad" {
   address   = var.service_role.nomad.address
   region    = var.service_role.nomad.region
-  secret_id = var.nomad_bootstrap.token
+  secret_id = data.vault_generic_secret.consul_token.data["token"]
   ca_pem    = var.service_role.nomad.root_cert_public_key
 }

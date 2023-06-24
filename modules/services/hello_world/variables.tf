@@ -7,6 +7,8 @@ variable "service_role" {
     consul_policy_name                  = string
     vault_consul_role_name              = string
     vault_consul_engine_path            = string
+    vault_nomad_role_name               = string
+    vault_nomad_engine_path             = string
     vault_approle_deployment_role_id    = string
     vault_approle_deployment_secret_id  = string
     vault_approle_deployment_path       = string

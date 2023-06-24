@@ -53,6 +53,13 @@ variable "nomad_bootstrap" {
   })
 }
 
+variable "nomad_static_tokens" {
+  description = "Nomad static tokens object"
+  type = object({
+    nomad_engine_mount_path = string
+  })
+}
+
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
