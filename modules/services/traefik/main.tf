@@ -56,7 +56,7 @@ job "${var.service_role.name}" {
     }
 
     service {
-      name = "traefik-metrics"
+      name = "nomad-job-traefik-metrics"
       port = "metrics"
     }
 
