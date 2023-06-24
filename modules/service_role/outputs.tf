@@ -1,3 +1,8 @@
+output "name" {
+  description = "Nomad service name"
+  value       = var.name
+}
+
 output "consul_service_name" {
   description = "Primary consul service name"
   value       = local.consul_service_name

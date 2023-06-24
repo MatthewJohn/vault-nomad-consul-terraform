@@ -2,6 +2,7 @@
 variable "service_role" {
   description = "Pre-configured service role to deploy to"
   type = object({
+    name                                = string
     consul_service_name                 = string
     consul_policy_name                  = string
     vault_consul_role_name              = string

@@ -1,6 +1,6 @@
 resource "nomad_job" "traefik" {
   jobspec = <<EOHCL
-job "traefik" {
+job "${var.service_role.name}" {
   datacenters = ["${var.service_role.nomad.datacenter}"]
   type        = "service"
 

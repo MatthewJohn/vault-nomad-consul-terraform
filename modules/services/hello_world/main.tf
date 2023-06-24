@@ -1,7 +1,7 @@
 resource "nomad_job" "hello-world" {
   jobspec = <<EOHCL
   
-job "hello-world" {
+job "${var.service_role.name}" {
   datacenters = ["${var.service_role.nomad.datacenter}"]
 
   meta {
