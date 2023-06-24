@@ -57,6 +57,6 @@ data "vault_generic_secret" "nomad_token" {
 provider "nomad" {
   address   = var.service_role.nomad.address
   region    = var.service_role.nomad.region
-  secret_id = data.vault_generic_secret.consul_token.data["token"]
+  secret_id = data.vault_generic_secret.nomad_token.data["secret_id"]
   ca_pem    = var.service_role.nomad.root_cert_public_key
 }
