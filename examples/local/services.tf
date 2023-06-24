@@ -27,9 +27,6 @@ module "hello-world" {
 
   service_role      = module.hello-world_service_role
   traefik           = module.traefik
-
-  # to be removed
-  nomad_bootstrap = module.nomad_bootstrap
 }
 
 module "terrareg" {

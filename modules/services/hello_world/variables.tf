@@ -43,11 +43,3 @@ variable "traefik" {
     service_name = string
   })
 }
-
-# TO BE REMOVED!!!
-variable "nomad_bootstrap" {
-  description = "Nomad bootstrap object"
-  type = object({
-    token = string
-  })
-}
