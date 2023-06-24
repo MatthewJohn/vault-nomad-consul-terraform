@@ -507,7 +507,7 @@ EOF
 module "traefik" {
   source = "../../modules/services/traefik"
 
-  service_role = module.hello-world_service_role
+  service_role = module.traefik_service_role
 
   # to be removed
   nomad_bootstrap = module.nomad_bootstrap
