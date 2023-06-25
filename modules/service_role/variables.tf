@@ -27,6 +27,12 @@ variable "additional_vault_deployment_policy" {
   default     = ""
 }
 
+variable "additional_nomad_policy" {
+  description = "Additional statements for the nomad policy"
+  type        = string
+  default     = ""
+}
+
 variable "additional_consul_services" {
   description = "List of additional consul services to assign to service"
   type        = list(string)

@@ -8,6 +8,8 @@ namespace "${var.nomad_namespace}" {
   policy       = "read"
   capabilities = ["submit-job","dispatch-job"]
 }
+
+${var.additional_nomad_policy}
 EOT
 }
 
