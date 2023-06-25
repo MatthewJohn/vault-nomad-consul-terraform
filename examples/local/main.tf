@@ -456,6 +456,16 @@ module "nomad_nfs_dc1_service_role" {
   consul_bootstrap    = module.consul_bootstrap
   vault_cluster       = module.vault_cluster
   nomad_static_tokens = module.nomad_static_tokens
+
+  additional_nomad_policy = <<EOF
+namespace "default" {
+  capabilities = ["csi-register-plugin"]
+}
+
+plugin {
+  policy = "write"
+}
+EOF
 }
 
 module "nomad_nfs_dc1" {
