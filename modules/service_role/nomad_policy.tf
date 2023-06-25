@@ -1,12 +1,16 @@
 
 
+locals {
+  nomad_namespace_capabilities = concat(["submit-job", "dispatch-job"], var.additional_nomad_namespace_capabilities)
+}
+
 resource "nomad_acl_policy" "this" {
   name        = "nomad-deployment-job-${var.nomad_region.name}-${var.name}"
 
   rules_hcl   = <<EOT
 namespace "${var.nomad_namespace}" {
   policy       = "read"
-  capabilities = ["submit-job","dispatch-job"]
+  capabilities = ${jsonencode(local.nomad_namespace_capabilities)}
 }
 
 ${var.additional_nomad_policy}

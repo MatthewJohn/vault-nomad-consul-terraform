@@ -457,14 +457,12 @@ module "nomad_nfs_dc1_service_role" {
   vault_cluster       = module.vault_cluster
   nomad_static_tokens = module.nomad_static_tokens
 
-  additional_nomad_policy = <<EOF
-namespace "default" {
-  capabilities = ["csi-register-plugin"]
-}
+  additional_nomad_namespace_capabilities = ["csi-register-plugin"]
 
-plugin {
-  policy = "write"
-}
+  additional_nomad_policy = <<EOF
+# plugin {
+#   policy = "write"
+# }
 EOF
 }
 

@@ -39,6 +39,12 @@ variable "additional_consul_services" {
   default     = []
 }
 
+variable "additional_nomad_namespace_capabilities" {
+  description = "List of additional capabilities for nomad namespace permissions"
+  type        = list(string)
+  default     = []
+}
+
 variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({
