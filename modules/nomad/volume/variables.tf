@@ -32,22 +32,6 @@ variable "mode" {
   default     = "770"
 }
 
-variable "nomad_region" {
-  description = "Nomad region"
-  type = object({
-    name                 = string
-    address              = string
-    root_cert_public_key = string
-  })
-}
-
-variable "nomad_bootstrap" {
-  description = "Nomad bootstrap object"
-  type = object({
-    token = string
-  })
-}
-
 locals {
   external_id = var.directory != null ? var.directory : var.name
 }
