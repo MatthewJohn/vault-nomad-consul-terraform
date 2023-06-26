@@ -4,6 +4,8 @@ resource "nomad_job" "terrareg" {
 job "terrareg" {
   datacenters = ["${var.service_role.nomad.datacenter}"]
 
+  namespace = "${var.service_role.nomad.namespace}"
+
   group "web" {
 
     count = 1
@@ -20,7 +22,7 @@ job "terrareg" {
     }
 
     service {
-      name = "${var.service_role.name}"
+      name = "${var.service_role.consul_service_name}"
       port = 5000
       tags = ["traefik-routing"]
 

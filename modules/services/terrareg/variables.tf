@@ -33,6 +33,7 @@ variable "service_role" {
       root_cert_public_key = string
       region               = string
       datacenter           = string
+      namespace            = string
     })
   })
 }
