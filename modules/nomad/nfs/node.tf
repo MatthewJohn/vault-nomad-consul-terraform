@@ -1,8 +1,9 @@
 resource "nomad_job" "node" {
   jobspec = <<EOHCL
-job "nfs-storage-node-${var.nomad_datacenter.name}" {
-  datacenters = ["${var.nomad_datacenter.name}"]
+job "nfs-storage-node-${var.service_role.nomad.datacenter}" {
+  datacenters = ["${var.service_role.nomad.datacenter}"]
   type        = "system"
+  namespace   = "${var.service_role.nomad.namespace}"
 
   group "node" {
     task "node" {

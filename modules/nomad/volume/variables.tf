@@ -3,6 +3,12 @@ variable "name" {
   type        = string
 }
 
+variable "namespace" {
+  description = "Nomad namespace to register the volume in"
+  type        = string
+  default     = "default"
+}
+
 variable "directory" {
   description = "Sub-directory on NFS server DC mount for volume. Defaults to name of volume"
   type        = string
@@ -30,22 +36,6 @@ variable "mode" {
   description = "Mount permission mode of volume"
   type        = string
   default     = "770"
-}
-
-variable "nomad_region" {
-  description = "Nomad region"
-  type = object({
-    name                 = string
-    address              = string
-    root_cert_public_key = string
-  })
-}
-
-variable "nomad_bootstrap" {
-  description = "Nomad bootstrap object"
-  type = object({
-    token = string
-  })
 }
 
 locals {

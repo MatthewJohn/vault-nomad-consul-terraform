@@ -4,6 +4,7 @@ resource "nomad_volume" "this" {
   volume_id   = var.name
   name        = var.name
   external_id = local.external_id
+  namespace   = var.namespace
 
   capability {
     access_mode     = "multi-node-multi-writer"

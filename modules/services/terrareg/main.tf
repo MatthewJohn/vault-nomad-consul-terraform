@@ -2,7 +2,9 @@ resource "nomad_job" "terrareg" {
   jobspec = <<EOHCL
   
 job "terrareg" {
-  datacenters = ["${var.nomad_datacenter.name}"]
+  datacenters = ["${var.service_role.nomad.datacenter}"]
+
+  namespace = "${var.service_role.nomad.namespace}"
 
   group "web" {
 
@@ -10,10 +12,6 @@ job "terrareg" {
     
     network {
       mode = "bridge"
-
-      port "http" {
-        to = 5000
-      }
     }
 
     volume "terrareg" {
@@ -24,20 +22,13 @@ job "terrareg" {
     }
 
     service {
-      name = "terrareg"
+      name = "${var.service_role.consul_service_name}"
       port = 5000
       tags = ["traefik-routing"]
 
       connect {
         sidecar_service {
           proxy {}
-        }
-
-        sidecar_task {
-          resources {
-            cpu    = 50
-            memory = 48
-          }
         }
       }
     }
@@ -74,12 +65,12 @@ job "terrareg" {
       # END TEMP
 
       vault {
-        policies = ["${vault_policy.terrareg.name}"]
+        policies = ["${var.service_role.vault_application_policy}"]
       }
 
       template {
         data        = <<EOF
-{{ with secret "service_secrets_kv/${var.nomad_region.name}/${var.nomad_datacenter.name}/terrareg" }}
+{{ with secret "${var.service_role.vault_secret_base_path}/terrareg" }}
 MIGRATE_DATABASE=True
 DOMAIN_NAME=terrareg.${var.traefik.service_domain}
 PUBLIC_URL=https://terrareg.${var.traefik.service_domain}
@@ -106,4 +97,7 @@ EOF
   }
 }
 EOHCL
+
+  consul_token = data.vault_generic_secret.consul_token.data["token"]
+  vault_token  = vault_token.role_token.client_token
 }

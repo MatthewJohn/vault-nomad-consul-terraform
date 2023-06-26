@@ -4,9 +4,8 @@ module "volume" {
 
   name = "terrareg"
 
-  nomad_bootstrap = var.nomad_bootstrap
-  nomad_region    = var.nomad_region
-  nfs             = var.nfs
-  uid             = 0
-  gid             = 0
+  nfs       = var.nfs
+  uid       = 0
+  gid       = 0
+  namespace = var.service_role.nomad.namespace
 }
