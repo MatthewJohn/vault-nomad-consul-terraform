@@ -3,6 +3,12 @@ variable "name" {
   type        = string
 }
 
+variable "namespace" {
+  description = "Nomad namespace to register the volume in"
+  type        = string
+  default     = "default"
+}
+
 variable "directory" {
   description = "Sub-directory on NFS server DC mount for volume. Defaults to name of volume"
   type        = string
