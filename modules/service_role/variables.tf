@@ -45,6 +45,12 @@ variable "additional_nomad_namespace_capabilities" {
   default     = []
 }
 
+variable "allow_volume_creation" {
+  description = "Whether to allow service to create/mount volumes"
+  type        = bool
+  default     = false
+}
+
 variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({

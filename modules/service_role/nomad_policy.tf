@@ -1,7 +1,11 @@
 
 
 locals {
-  nomad_namespace_capabilities = concat(["submit-job", "dispatch-job"], var.additional_nomad_namespace_capabilities)
+  nomad_namespace_capabilities = concat(
+    ["submit-job", "dispatch-job"],
+    var.allow_volume_creation == true ? ["csi-write-volume", "csi-read-volume", "csi-mount-volume"] : [],
+    var.additional_nomad_namespace_capabilities
+  )
 }
 
 resource "nomad_acl_policy" "this" {
@@ -12,6 +16,12 @@ namespace "${var.nomad_namespace}" {
   policy       = "read"
   capabilities = ${jsonencode(local.nomad_namespace_capabilities)}
 }
+
+%{if var.allow_volume_creation}
+plugin {
+  policy = "read"
+}
+%{endif}
 
 ${var.additional_nomad_policy}
 EOT
