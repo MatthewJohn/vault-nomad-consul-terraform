@@ -42,14 +42,14 @@ module "terrareg_service_role" {
 module "hello-world" {
   source = "../../modules/services/hello_world"
 
-  service_role      = module.hello-world_service_role
-  traefik           = module.traefik
+  service_role = module.hello-world_service_role
+  traefik      = module.traefik
 }
 
 module "terrareg" {
   source = "../../modules/services/terrareg"
 
-  service_role      = module.terrareg_service_role
-  traefik           = module.traefik
-  nfs               = module.nomad_nfs_dc1
+  service_role = module.terrareg_service_role
+  traefik      = module.traefik
+  nfs          = module.nomad_nfs_dc1
 }
