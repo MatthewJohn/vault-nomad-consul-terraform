@@ -17,6 +17,10 @@ module "freeipa" {
   freeipa_password = local.freeipa_password
 }
 
+data "http" "freeipa_ca_cert" {
+  url = "http://${module.freeipa.ip_address}/ipa/config/ca.crt"
+}
+
 resource "libvirt_pool" "local-disks" {
   name = "local-disks"
   type = "dir"
@@ -160,6 +164,14 @@ module "vault_cluster" {
   setup_host         = "vault-2.vault.dock.local"
   consul_datacenters = ["dc1"]
   nomad_regions      = { "global" = ["dc1"] }
+
+  ldap = {
+    url         = "ldaps://freeipa.dock.local:636"
+    userdn      = "cn=users,cn=accounts,dc=DOCK,dc=LOCAL"
+    userattr    = "uid"
+    groupdn     = "cn=groups,cn=accounts,dc=DOCK,dc=LOCAL"
+    certificate = data.http.freeipa_ca_cert.body
+  }
 }
 
 module "kms_config" {
