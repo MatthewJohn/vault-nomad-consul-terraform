@@ -54,3 +54,17 @@ variable "nomad_regions" {
   type        = map(list(string))
   default     = {}
 }
+
+variable "ldap" {
+  description = "LDAP authentication details"
+  type        = object({
+    url         = string
+    userdn      = string
+    userattr    = string
+    userfilter  = optional(string, null)
+    groupdn     = string
+    groupfilter = optional(string, null)
+    certificate = optional(string, null)
+  })
+  default     = null
+}
