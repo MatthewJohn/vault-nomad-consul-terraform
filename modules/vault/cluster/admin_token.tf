@@ -84,3 +84,18 @@ path "sys/health"
 }
 EOF
 }
+
+resource freeipa_group "vault_admins" {
+  count = var.ldap != null ? 1 : 0
+
+  name = "vault-admins"
+  description = "Vault admins"
+}
+
+resource "vault_ldap_auth_backend_group" "group" {
+  count = var.ldap != null ? 1 : 0
+
+  groupname = freeipa_group.vault_admins[count.index].name
+  policies  = [module.admin_token.policy_name, module.terraform_token.policy_name]
+  backend   = vault_ldap_auth_backend.ldap[count.index].path
+}
