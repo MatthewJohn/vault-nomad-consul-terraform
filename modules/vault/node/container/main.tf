@@ -5,6 +5,13 @@ module "server_certificate" {
   hostname     = var.hostname
   vault_domain = local.vault_domain
   ip_address   = var.docker_ip
+
+  vault_adm_pki_backend = var.vault_adm_pki_backend
+  vault_adm_pki_role    = var.vault_adm_pki_role
+
+  providers = {
+    vault.vault-adm = vault.vault-adm
+  }
 }
 
 resource "docker_container" "this" {

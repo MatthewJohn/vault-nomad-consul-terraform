@@ -51,3 +51,13 @@ variable "all_vault_hosts" {
   type        = list(string)
   default     = []
 }
+
+variable "vault_adm_pki_role" {
+  description = "Vault adm PKI role"
+  type        = string
+}
+
+variable "vault_adm_pki_backend" {
+  description = "Vault ADM PKI mount"
+  type        = string
+}

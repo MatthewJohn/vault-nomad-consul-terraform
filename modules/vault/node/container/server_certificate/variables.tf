@@ -24,3 +24,13 @@ variable "ecdsa_curve" {
   type        = string
   default     = "P384"
 }
+
+variable "vault_adm_pki_role" {
+  description = "Vault adm PKI role"
+  type        = string
+}
+
+variable "vault_adm_pki_backend" {
+  description = "Vault ADM PKI mount"
+  type        = string
+}

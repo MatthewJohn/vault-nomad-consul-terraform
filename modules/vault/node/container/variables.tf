@@ -55,6 +55,16 @@ variable "vault_subdomain" {
   }
 }
 
+variable "vault_adm_pki_role" {
+  description = "Vault adm PKI role"
+  type        = string
+}
+
+variable "vault_adm_pki_backend" {
+  description = "Vault ADM PKI mount"
+  type        = string
+}
+
 locals {
   vault_domain = "${var.vault_subdomain}.${var.domain_name}"
 }
