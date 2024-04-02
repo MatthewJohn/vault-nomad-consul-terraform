@@ -8,7 +8,7 @@ output "public_key" {
 
 output "full_chain" {
   value = join(
-    "",
+    "\n",
     [
       vault_pki_secret_backend_cert.server_cert.certificate,
       vault_pki_secret_backend_cert.server_cert.ca_chain,

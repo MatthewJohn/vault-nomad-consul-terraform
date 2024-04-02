@@ -42,7 +42,7 @@ resource "docker_container" "this" {
 
   env = [
     "SERVER_SSL_KEY=${module.server_certificate.private_key}",
-    "SERVER_SSL_CERT=${module.server_certificate.public_key}",
+    "SERVER_SSL_CERT=${module.server_certificate.full_chain}",
     "ROOT_CA_CERT=${module.server_certificate.root_ca_cert}",
 
     # Disable proxy
