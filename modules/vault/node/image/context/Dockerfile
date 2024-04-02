@@ -37,6 +37,11 @@ RUN set -eux; \
     gpgconf --kill gpg-agent && \
     rm -rf /root/.gnupg
 
+ENV http_proxy=
+ENV https_proxy=
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
+
 RUN groupadd --gid 1000 vault && \
     adduser --uid 100 --system -g vault vault && \
     usermod -a -G root vault

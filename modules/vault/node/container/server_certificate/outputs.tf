@@ -17,7 +17,5 @@ output "full_chain" {
 }
 
 output "root_ca_cert" {
-  #value = data.aws_s3_object.intermediate_ca_bundle.body
-  #value = data.aws_s3_object.intermediate_public_key.body
   value = vault_pki_secret_backend_cert.server_cert.issuing_ca
 }

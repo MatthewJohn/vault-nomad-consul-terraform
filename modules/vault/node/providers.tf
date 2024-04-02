@@ -11,7 +11,7 @@ terraform {
 }
 
 provider "docker" {
-  host = "ssh://${var.docker_username}@${var.docker_host}:22"
+  host = "ssh://${var.docker_host.username}@${var.docker_host.fqdn}:22"
 
   alias = "vault"
 }

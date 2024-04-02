@@ -11,7 +11,8 @@ bucket_name=$6
 bucket_key=$7
 initial_run=$8
 
-ca_cert_file="`pwd`/root_ca.pem"
+ca_cert_file="`pwd`/root_cert.pem"
+export AWS_CA_BUNDLE=$ca_cert_file
 root_tokens_json_file="`pwd`/root_tokens.json"
 vault_unseal_debug_file="`pwd`/unseal-debug.log"
 root_token=""
@@ -30,13 +31,6 @@ function f_execute_vault_command() {
 
 echo "Starting unseal" > $vault_unseal_debug_file
 
-# Obtain Root SSL cert, if it's not downloaded
-if [ ! -f "$ca_cert_file" ]
-then
-    echo "Downloading root certificate" >> $vault_unseal_debug_file
-    aws s3 cp s3://root-ca-certs/vault/root_ca.pem ./ \
-      --endpoint="$aws_endpoint" --profile="$aws_profile" --region="$aws_region" >> $vault_unseal_debug_file
-fi
 
 # Attempt to download existing root credentials
 echo "Attempting to download root tokens" >> $vault_unseal_debug_file
@@ -94,6 +88,6 @@ root_token=$(cat ${root_tokens_json_file} | jq -r '.root_token')
 
 ca_cert=$(cat $ca_cert_file | sed 's/$/\\n/g' | tr -d '\n')
 
-rm -f ${root_tokens_json_file}
+# rm -f ${root_tokens_json_file}
 
 echo "{\"root_token\": \"$root_token\", \"ca_cert_file\": \"${ca_cert_file}\", \"ca_cert\": \"$ca_cert\"}"
