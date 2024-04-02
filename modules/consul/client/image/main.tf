@@ -17,7 +17,7 @@ resource "docker_image" "this" {
     remove          = false
     suppress_output = false
 
-    build_arg = {
+    build_args = {
       CONSUL_VERSION = var.consul_version
 
       http_proxy  = var.http_proxy

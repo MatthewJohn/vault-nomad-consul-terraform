@@ -2,6 +2,7 @@ module "vault_image" {
   source = "./image"
 
   vault_version = var.vault_version
+  http_proxy    = var.http_proxy
 
   providers = {
     docker = docker.vault

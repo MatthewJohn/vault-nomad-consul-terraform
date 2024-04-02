@@ -59,4 +59,8 @@ resource "docker_container" "kms" {
       null_resource.kms_seed_config
     ]
   }
+
+  depends_on = [
+    null_resource.kms_seed_config
+  ]
 }

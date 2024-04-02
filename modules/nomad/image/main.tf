@@ -17,7 +17,7 @@ resource "docker_image" "this" {
     remove          = false
     suppress_output = false
 
-    build_arg = {
+    build_args = {
       NOMAD_VERSION  = var.nomad_version
       CONSUL_VERSION = var.consul_version
 

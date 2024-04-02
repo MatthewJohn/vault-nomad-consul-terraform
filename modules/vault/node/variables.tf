@@ -61,3 +61,8 @@ variable "vault_adm_pki_backend" {
   description = "Vault ADM PKI mount"
   type        = string
 }
+
+variable "http_proxy" {
+  description = "HTTP proxy"
+  type        = string
+}
