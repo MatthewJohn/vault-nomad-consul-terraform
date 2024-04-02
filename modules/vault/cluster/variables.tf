@@ -65,6 +65,7 @@ variable "ldap" {
     groupdn     = string
     groupfilter = optional(string, null)
     certificate = optional(string, null)
+    admin_group = optional(string, "vault-admins")
   })
   default     = null
 }
