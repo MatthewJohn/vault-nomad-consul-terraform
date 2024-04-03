@@ -16,8 +16,8 @@ data "external" "init_consul" {
   program = [
     "bash",
     "${path.module}/init.sh",
-    var.consul_host,
-    var.host_ssh_username,
+    var.docker_host.fqdn,
+    var.docker_host.username,
     var.aws_profile,
     var.aws_region,
     var.aws_endpoint,

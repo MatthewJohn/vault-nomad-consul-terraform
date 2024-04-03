@@ -1,14 +1,15 @@
-
-variable "consul_host" {
-  description = "Node domain of main consul node"
-  type        = string
+variable "docker_host" {
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
-
-variable "host_ssh_username" {
-  description = "SSH username to connect consul host"
-  type        = string
-}
-
 variable "aws_profile" {
   description = "Name of AWS profile"
   type        = string

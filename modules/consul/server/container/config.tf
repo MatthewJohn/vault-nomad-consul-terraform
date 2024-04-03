@@ -1,18 +1,18 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.datacenter.common_name}"
   server_fqdn = "server.${var.datacenter.common_name}"
 
   config_files = {
     "config/templates/agent.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
     "config/templates/agent.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
@@ -124,10 +124,10 @@ bootstrap_expect = ${local.bootstrap_count}
 server = true
 
 client_addr        = "0.0.0.0"
-bind_addr          = "${var.docker_ip}"
-advertise_addr     = "${var.docker_ip}"
-advertise_addr_wan = "${var.docker_ip}"
-node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
+bind_addr          = "${var.docker_host.ip}"
+advertise_addr     = "${var.docker_host.ip}"
+advertise_addr_wan = "${var.docker_host.ip}"
+node_name          = "consul-server-${var.datacenter.name}-${var.docker_host.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
@@ -273,8 +273,11 @@ resource "null_resource" "consul_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {

@@ -1,6 +1,14 @@
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
+variable "docker_host" {
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
 
 variable "datacenter" {
@@ -34,7 +42,6 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
   })
 }
 
@@ -62,20 +69,5 @@ variable "initial_run" {
 
 variable "consul_version" {
   description = "Version of consul"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
-variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
   type        = string
 }

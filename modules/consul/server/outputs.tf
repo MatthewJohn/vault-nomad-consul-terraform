@@ -1,4 +1,4 @@
 output "hostname" {
   description = "Hostname of consul machine"
-  value       = var.hostname
+  value       = var.docker_host.hostname
 }

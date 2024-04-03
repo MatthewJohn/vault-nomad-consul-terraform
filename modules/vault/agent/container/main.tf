@@ -6,7 +6,7 @@ resource "docker_container" "this" {
   rm      = false
   restart = "always"
 
-  hostname   = "${var.hostname}.${var.domain_name}"
+  hostname   = "${var.docker_host.hostname}.${var.domain_name}"
   domainname = ""
 
   command = concat(

@@ -4,7 +4,6 @@ variable "vault_cluster" {
   type = object({
     ca_cert_file             = string
     address                  = string
-    token                    = string
     consul_static_mount_path = string
   })
 }
@@ -34,29 +33,22 @@ variable "base_directory" {
   type        = string
 }
 
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
-}
-
 variable "domain_name" {
-  description = "Domain name"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
+  description = "Container domain name"
   type        = string
 }
 
 variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
 
 variable "image" {

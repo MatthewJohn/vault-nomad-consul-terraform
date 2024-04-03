@@ -51,8 +51,11 @@ resource "null_resource" "config_files" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {
