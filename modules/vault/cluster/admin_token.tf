@@ -96,6 +96,6 @@ resource "vault_ldap_auth_backend_group" "group" {
   count = var.ldap != null ? 1 : 0
 
   groupname = freeipa_group.vault_admins[count.index].name
-  policies  = [module.admin_token.policy_name, module.terraform_token.policy_name]
+  policies  = [module.admin_token.policy_name, vault_policy.terraform.name]
   backend   = vault_ldap_auth_backend.ldap[count.index].path
 }

@@ -18,9 +18,14 @@ output "admin_token" {
   value       = module.admin_token.token
 }
 
-output "token" {
+output "terraform_app_role" {
   description = "Terraform token"
-  value       = module.terraform_token.token
+  value       = {
+    approle_mount_path = vault_auth_backend.approle.path
+    role_id            = vault_approle_auth_backend_role.terraform.role_id
+    secret_id          = vault_approle_auth_backend_role_secret_id.terraform.secret_id
+  }
+  sensitive = true
 }
 
 output "pki_mount_path" {
