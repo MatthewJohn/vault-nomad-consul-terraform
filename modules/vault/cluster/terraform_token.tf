@@ -201,6 +201,15 @@ path "sys/policies/acl/consul-connect-ca-${datacenter}"
   capabilities = ["create", "update", "read"]
 }
 
+# Create static token
+path "consul_static/data/${datacenter}/consul_tokens"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/consul_tokens"
+{
+  capabilities = ["read", "delete"]
+}
 %{endfor}
 
 #########################

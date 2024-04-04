@@ -26,12 +26,8 @@ variable "datacenter" {
     pki_connect_mount_path                   = string
     connect_ca_approle_role_name             = string
     consul_server_token = object({
-      bucket = string
-      key    = string
-    })
-    consul_server_service_token = object({
-      bucket = string
-      key    = string
+      mount = string
+      name  = string
     })
   })
 }

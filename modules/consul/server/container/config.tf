@@ -146,12 +146,14 @@ acl {
   # @TODO Determine after testing multiple consul DCs
   enable_token_replication = false
   tokens {
-%{if data.aws_s3_object.consul_server_token.body != ""}
-    agent                            = "${data.aws_s3_object.consul_server_token.body}"
-%{endif}
-%{if data.aws_s3_object.consul_server_service_token.body != ""}
-    config_file_service_registration = "${data.aws_s3_object.consul_server_service_token.body}"
-%{endif}
+{{- with secret "${var.datacenter.consul_server_token.mount}/${var.datacenter.consul_server_token.name}" -}}
+{{ if eq .Data.server_token "" }}
+    agent                            = "{{ .Data.server_token }}"
+{{- end -}}
+{{ if eq .Data.server_service_token "" }}
+    config_file_service_registration = "{{ .Data.server_service_token }}"
+{{- end -}}
+{{- end -}}
   }
 }
 

@@ -103,15 +103,7 @@ output "connect_ca_approle_role_name" {
 output "consul_server_token" {
   description = "S3 details for consul server token"
   value = {
-    bucket = aws_s3_object.consul_server_token.bucket
-    key    = aws_s3_object.consul_server_token.key
-  }
-}
-
-output "consul_server_service_token" {
-  description = "S3 details for consul server service token"
-  value = {
-    bucket = aws_s3_object.consul_server_service_token.bucket
-    key    = aws_s3_object.consul_server_service_token.key
+    mount = vault_kv_secret_v2.static_token.mount
+    name  = vault_kv_secret_v2.static_token.name
   }
 }
