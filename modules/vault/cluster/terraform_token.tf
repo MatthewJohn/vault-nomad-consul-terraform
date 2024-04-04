@@ -46,51 +46,24 @@ path "sys/policies/acl/victoria-metrics"
 
 #########################
 # Permissions for Consul CA
-path "sys/mounts/pki_consul"
+path "sys/mounts/pki"
 {
-  capabilities = ["read", "list", "create"]
+  capabilities = ["read", "list"]
 }
 # Revoke certificates
-path "pki_consul/revoke"
-{
-  capabilities = ["update"]
-}
-# Generate root CA
-path "pki_consul/root/generate/internal"
-{
-  capabilities = ["update"]
-}
-
-# upload certificate
-path "pki_consul/config/ca"
+path "pki/revoke"
 {
   capabilities = ["update"]
 }
 
 # Add roles for root cert
-path "pki_consul/roles/*"
+path "pki/roles/*"
 {
   capabilities = ["read", "create", "update"]
 }
 
-# Read PKI issues and update config
-path "pki_consul/issues"
-{
-  capabilities = ["read"]
-}
-path "pki_consul/config/issuers"
-{
-  capabilities = ["update", "read"]
-}
-
-# Update certificate URLs
-path "pki_consul/config/urls"
-{
-  capabilities = ["update", "read"]
-}
-
 # Sign intermediate certificates
-path "pki_consul/root/sign-intermediate"
+path "pki/root/sign-intermediate"
 {
   capabilities = ["update"]
 }
@@ -109,7 +82,7 @@ path "sys/mounts/pki_int_consul_${datacenter}"
 }
 
 # Generate intermediate CAs
-path "pki_int_consul_${datacenter}/intermediate/generate/internal"
+path "pki_int_consul_${datacenter}/issuers/generate/intermediate/internal"
 {
   capabilities = ["update"]
 }
@@ -211,6 +184,10 @@ path "sys/auth/approle-consul-${datacenter}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
 }
+path "sys/mounts/auth/approle-consul-${datacenter}"
+{
+  capabilities = ["read"]
+}
 
 # Consul connect
 ## Intermediate CA
@@ -287,7 +264,7 @@ path "sys/mounts/pki_int_nomad_${region}"
 }
 
 # Generate intermediate CAs
-path "pki_int_nomad_${region}/intermediate/generate/internal"
+path "pki_int_nomad_${region}/issuers/intermediate/generate/internal"
 {
   capabilities = ["update"]
 }
@@ -331,6 +308,10 @@ path "sys/policies/acl/nomad-server-${region}"
 path "sys/auth/approle-nomad-${region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+path "sys/mounts/auth/approle-nomad-${region}"
+{
+  capabilities = ["read"]
 }
 
 # Policy for jobs
@@ -382,7 +363,7 @@ path "sys/mounts/pki_int_nomad_${region}_${nomad_dc}"
 }
 
 # Generate intermediate CAs
-path "pki_int_nomad_${region}_${nomad_dc}/intermediate/generate/internal"
+path "pki_int_nomad_${region}_${nomad_dc}/issuers/generate/intermediate/internal"
 {
   capabilities = ["update"]
 }

@@ -24,7 +24,6 @@ variable "vault_cluster" {
   type = object({
     ca_cert_file             = string
     address                  = string
-    token                    = string
     consul_static_mount_path = string
   })
 }
