@@ -23,6 +23,11 @@ output "token" {
   value       = module.terraform_token.token
 }
 
+output "pki_mount_path" {
+  description = "PKI mount path"
+  value       = vault_mount.pki.path
+}
+
 output "consul_static_mount_path" {
   description = "Counsul static mount path"
   value       = vault_mount.consul_static.path

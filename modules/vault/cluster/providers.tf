@@ -4,6 +4,9 @@ terraform {
       version = "3.0.0"
       source  = "terraform-cache.dockstudios.co.uk/rework-space-com/freeipa"
     }
+    vault = {
+      configuration_aliases = [ vault.vault-adm ]
+    }
   }
 }
 
