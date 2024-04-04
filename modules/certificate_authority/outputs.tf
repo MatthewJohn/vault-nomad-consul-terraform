@@ -1,6 +1,6 @@
 output "pki_mount_path" {
   description = "PKI path"
-  value       = vault_mount.this.path
+  value       = var.vault_cluster.pki_mount_path
 }
 
 output "pki_connect_mount_path" {
@@ -35,7 +35,7 @@ output "ou" {
 
 output "public_key" {
   description = "Public key for root CA"
-  value       = tls_self_signed_cert.this.cert_pem
+  value       = var.root_ca_cert
 }
 
 output "issuer" {

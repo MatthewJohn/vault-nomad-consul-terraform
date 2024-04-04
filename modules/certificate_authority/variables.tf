@@ -26,7 +26,13 @@ variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
     address = string
+    pki_mount_path = string
   })
+}
+
+variable "root_ca_cert" {
+  description = "Root CA public key"
+  type        = string
 }
 
 variable "create_connect_ca" {
@@ -44,7 +50,6 @@ variable "description" {
   description = "Description of Mount for CA"
   type        = string
 }
-
 
 locals {
   common_name = "${var.subdomain}.${var.domain_name}"
