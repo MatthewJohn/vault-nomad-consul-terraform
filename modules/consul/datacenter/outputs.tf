@@ -107,3 +107,11 @@ output "consul_server_token" {
     name  = vault_kv_secret_v2.static_token.name
   }
 }
+
+output "gossip_encryption" {
+  description = "Vault details for consul gossip token"
+  value = {
+    mount = vault_kv_secret_v2.gossip.mount
+    name  = vault_kv_secret_v2.gossip.name
+  }
+}

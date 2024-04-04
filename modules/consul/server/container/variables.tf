@@ -19,6 +19,10 @@ variable "datacenter" {
       mount = string
       name  = string
     })
+    gossip_encryption = object({
+      mount = string
+      name  = string
+    })
   })
 }
 
@@ -59,11 +63,6 @@ variable "connect_ca_approle_role_id" {
 
 variable "connect_ca_approle_secret_id" {
   description = "Approle secret ID for connect CA"
-  type        = string
-}
-
-variable "gossip_key" {
-  description = "Gossip secret"
   type        = string
 }
 

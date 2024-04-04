@@ -29,6 +29,10 @@ variable "datacenter" {
       mount = string
       name  = string
     })
+    gossip_encryption = object({
+      mount = string
+      name  = string
+    })
   })
 }
 
@@ -50,11 +54,6 @@ variable "root_cert" {
     ou                     = string
     pki_connect_mount_path = string
   })
-}
-
-variable "gossip_key" {
-  description = "Gossip secret"
-  type        = string
 }
 
 variable "initial_run" {

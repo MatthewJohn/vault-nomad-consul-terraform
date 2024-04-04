@@ -9,11 +9,11 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}"
 }
 
 # Access vault static tokens
-path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/agent-tokens/*"
+path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/*"
 {
   capabilities = [ "read" ]
 }
-path "${var.vault_cluster.consul_static_mount_path}/${var.datacenter}/agent-tokens/*"
+path "${var.vault_cluster.consul_static_mount_path}/${var.datacenter}/*"
 {
   capabilities = [ "read" ]
 }

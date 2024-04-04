@@ -210,6 +210,14 @@ path "consul_static/metadata/${datacenter}/consul_tokens"
 {
   capabilities = ["read", "delete"]
 }
+path "consul_static/data/${datacenter}/gossip"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/gossip"
+{
+  capabilities = ["read", "delete"]
+}
 %{endfor}
 
 #########################

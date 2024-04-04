@@ -257,7 +257,9 @@ auto_encrypt {
   allow_tls = true
 }
 
-encrypt = "${var.gossip_key}"
+{{- with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" -}}
+encrypt = "{{ .Data.value }}"
+{{- end -}}
 
 disable_update_check = true
 
