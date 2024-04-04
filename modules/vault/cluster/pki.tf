@@ -1,36 +1,3 @@
-# Obtain certificate from vault-adm
-# resource "vault_pki_secret_backend_cert" "ca_cert" {
-#   backend = "pki"
-#   name    = var.domain_name
-
-#   common_name = "svc.${var.domain_name}"
-
-#   revoke = true
-
-#   format = "pem"
-#   private_key_format = "der"
-
-#   auto_renew = true
-
-#   # 19 years - need to adjust as root CA expires
-#   ttl = 19 * 365 * 24 * 60 * 60
-
-#   provider = vault.vault-adm
-# }
-
-# resource "vault_pki_secret_backend_config_ca" "ca_config" {
-#   backend = vault_mount.this.path
-#   pem_bundle = join("\n", [
-#     vault_pki_secret_backend_cert.ca_cert.certificate,
-#     vault_pki_secret_backend_cert.ca_cert.ca_chain,
-#     vault_pki_secret_backend_cert.ca_cert.private_key
-#   ])
-
-#   depends_on = [
-#     vault_mount.this
-#   ]
-# }
-
 resource "vault_mount" "pki" {
   path        = "pki"
   type        = "pki"
@@ -66,7 +33,7 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "root_ca" {
 
 resource "vault_pki_secret_backend_intermediate_set_signed" "root_ca" {
   backend     = vault_mount.pki.path
-  certificate = vault_pki_secret_backend_root_sign_intermediate.root_ca.certificate
+  certificate = vault_pki_secret_backend_root_sign_intermediate.root_ca.certificate_bundle
 }
 
 resource "vault_pki_secret_backend_config_urls" "pki" {
@@ -81,14 +48,27 @@ resource "vault_pki_secret_backend_config_urls" "pki" {
   ]
 }
 
-# resource "vault_pki_secret_backend_role" "role" {
-#   backend = vault_mount.pki.path
-#   name    = var.root_cert.root_domain
+resource "vault_pki_secret_backend_config_issuers" "pki" {
+  backend                       = vault_mount.pki.path
+  default                       = vault_pki_secret_backend_intermediate_set_signed.root_ca.imported_issuers[0]
+  default_follows_latest_issuer = true
+}
 
-#   key_type = "rsa"
-#   key_bits = 4096
-#   allowed_domains = [
-#     var.root_cert.root_domain
+# # Hack aroudn setting default issuers
+# data "vault_generic_secret" "pki_default_issuer" {
+#   depends_on = [
+#     vault_pki_secret_backend_intermediate_set_signed.root_ca
 #   ]
-#   allow_subdomains = true
+
+#   path = "${vault_mount.pki.path}/config/issuers"
+# }
+# # Set default_follows_latest_issuer
+# resource "vault_generic_endpoint" "pki_config_issuers" {
+#   path = "${vault_mount.pki.path}/config/issuers"
+
+#   data_json = jsonencode({
+#     default                       = data.vault_generic_secret.pki_default_issuer.data.default,
+#     default_follows_latest_issuer = true,
+#   })
+#   disable_delete = true
 # }
