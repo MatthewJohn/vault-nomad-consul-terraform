@@ -146,14 +146,14 @@ acl {
   # @TODO Determine after testing multiple consul DCs
   enable_token_replication = false
   tokens {
-{{- with secret "${var.datacenter.consul_server_token.mount}/${var.datacenter.consul_server_token.name}" -}}
-{{ if eq .Data.server_token "" }}
-    agent                            = "{{ .Data.server_token }}"
-{{- end -}}
-{{ if eq .Data.server_service_token "" }}
-    config_file_service_registration = "{{ .Data.server_service_token }}"
-{{- end -}}
-{{- end -}}
+{{ with secret "${var.datacenter.consul_server_token.mount}/${var.datacenter.consul_server_token.name}" }}
+{{ if ne .Data.data.server_token "" }}
+    agent                            = "{{ .Data.data.server_token }}"
+{{ end }}
+{{ if ne .Data.data.server_service_token "" }}
+    config_file_service_registration = "{{ .Data.data.server_service_token }}"
+{{ end }}
+{{ end }}
   }
 }
 
@@ -257,9 +257,9 @@ auto_encrypt {
   allow_tls = true
 }
 
-{{- with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" -}}
-encrypt = "{{ .Data.value }}"
-{{- end -}}
+{{ with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" }}
+encrypt = "{{ .Data.data.value }}"
+{{ end }}
 
 disable_update_check = true
 
