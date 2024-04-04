@@ -5,7 +5,7 @@ output "pki_mount_path" {
 
 output "pki_connect_mount_path" {
   description = "PKI Connect path"
-  value       = var.create_connect_ca ? vault_mount.pki_connect[0].path : null
+  value       = var.vault_cluster.pki_mount_path
 }
 
 output "domain_name" {
