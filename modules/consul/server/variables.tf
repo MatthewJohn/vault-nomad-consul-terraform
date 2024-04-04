@@ -62,6 +62,11 @@ variable "initial_run" {
   default     = false
 }
 
+variable "http_proxy" {
+  description = "HTTP proxy URL"
+  type        = string
+}
+
 variable "consul_version" {
   description = "Version of consul"
   type        = string

@@ -25,6 +25,11 @@ variable "base_directory" {
   default     = "/vault-agent"
 }
 
+variable "http_proxy" {
+  description = "HTTP proxy URL"
+  type        = string
+}
+
 variable "app_role_id" {
   description = "App role ID for authentication"
   type        = string

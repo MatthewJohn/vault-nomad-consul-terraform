@@ -4,6 +4,8 @@ module "image" {
   vault_version = var.vault_version
   image_name    = var.container_name
 
+  http_proxy = var.http_proxy
+
   providers = {
     docker = docker.vault
   }

@@ -17,6 +17,11 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 # This is the release of Consul to pull in.
 ARG CONSUL_VERSION=1.15.3
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
+ARG http_proxy
+ENV http_proxy=$http_proxy
+ENV https_proxy=$http_proxy
+ENV HTTP_PROXY=$http_proxy
+ENV HTTPS_PROXY=$http_proxy
 
 LABEL org.opencontainers.image.version=$CONSUL_VERSION \
       org.opencontainers.image.authors="Consul Team <consul@hashicorp.com>" \
@@ -41,7 +46,7 @@ RUN set -eux && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     consulArch=amd64 && \
@@ -91,6 +96,11 @@ RUN mkdir -p /consul/data && \
     mkdir -p /consul/config && \
     chown -R consul /consul && \
     chgrp -R 0 /consul && chmod -R g+rwX /consul
+
+ENV http_proxy=
+ENV https_proxy=
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
 
 # set up nsswitch.conf for Go's "netgo" implementation which is used by Consul,
 # otherwise DNS supercedes the container's hosts file, which we don't want.

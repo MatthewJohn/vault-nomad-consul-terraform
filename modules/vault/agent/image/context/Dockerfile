@@ -1,6 +1,11 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
-ARG VAULT_VERSION=1.13.2
+ARG VAULT_VERSION
+ARG http_proxy
+ENV http_proxy=$http_proxy
+ENV https_proxy=$http_proxy
+ENV HTTP_PROXY=$http_proxy
+ENV HTTPS_PROXY=$http_proxy
 
 RUN set -eux; \
     microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
@@ -12,7 +17,7 @@ RUN set -eux; \
         hkps://pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-        gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+        gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
@@ -35,6 +40,11 @@ RUN set -eux; \
 RUN groupadd --gid 1000 vault && \
     adduser --uid 100 --system -g vault vault && \
     usermod -a -G root vault
+
+ENV http_proxy=
+ENV https_proxy=
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
 
 # /vault/logs is made available to use as a location to store audit logs, if
 # desired; /vault/file is made available to use as a location with the file

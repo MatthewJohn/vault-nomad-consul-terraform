@@ -3,6 +3,7 @@ module "consul_image" {
   source = "./image"
 
   consul_version = var.consul_version
+  http_proxy     = var.http_proxy
 
   providers = {
     docker = docker.consul
@@ -17,6 +18,8 @@ module "consul_template_vault_agent" {
   container_name = "vault-agent-consul-template"
 
   base_directory = "/vault-agent-consul-template"
+
+  http_proxy = var.http_proxy
 
   app_role_id         = data.vault_approle_auth_backend_role_id.consul_template.role_id
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
