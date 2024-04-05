@@ -29,15 +29,13 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  # Fix shared access from host and container, since it's
-  # shared with multiple containers
-  mounts {
-    target = "/vault-agent/auth"
-    type   = "bind"
-    source = "${var.base_directory}/auth"
-    bind_options {
-      propagation = "shared"
-    }
+  # @TODO Convert to bind.
+  # If you modify the file on the host and then restart the container
+  # the file is not repopulated.
+  # This requires the "auth" directory to exists on machines beforehand
+  volumes {
+    container_path = "/vault-agent/auth"
+    host_path      = "${var.base_directory}/auth"
   }
 
   volumes {
