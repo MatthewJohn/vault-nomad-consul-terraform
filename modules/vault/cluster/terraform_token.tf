@@ -154,6 +154,16 @@ path "consul-${datacenter}/roles/consul-client-role"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Create role and read token for terraform role
+path "consul-${datacenter}/roles/terraform"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+path "consul-${datacenter}/creds/terraform"
+{
+  capabilities = ["read"]
+}
+
 %{for nomad_region in keys(var.nomad_regions)}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
 {
