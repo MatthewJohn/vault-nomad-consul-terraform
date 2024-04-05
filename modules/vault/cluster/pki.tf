@@ -33,7 +33,10 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "root_ca" {
 
 resource "vault_pki_secret_backend_intermediate_set_signed" "root_ca" {
   backend     = vault_mount.pki.path
-  certificate = vault_pki_secret_backend_root_sign_intermediate.root_ca.certificate_bundle
+  certificate = join("\n", concat(
+    [vault_pki_secret_backend_root_sign_intermediate.root_ca.certificate],
+    vault_pki_secret_backend_root_sign_intermediate.root_ca.ca_chain
+  ))
 }
 
 resource "vault_pki_secret_backend_config_urls" "pki" {
@@ -48,27 +51,12 @@ resource "vault_pki_secret_backend_config_urls" "pki" {
   ]
 }
 
-resource "vault_pki_secret_backend_config_issuers" "pki" {
+resource "vault_pki_secret_backend_config_issuers" "config" {
   backend                       = vault_mount.pki.path
-  default                       = vault_pki_secret_backend_intermediate_set_signed.root_ca.imported_issuers[0]
+  default                       = "30f7f2f2-2dd9-efa3-d3f7-abb08e9249a3"
   default_follows_latest_issuer = true
+
+  lifecycle {
+    ignore_changes = [ default ]
+  }
 }
-
-# # Hack aroudn setting default issuers
-# data "vault_generic_secret" "pki_default_issuer" {
-#   depends_on = [
-#     vault_pki_secret_backend_intermediate_set_signed.root_ca
-#   ]
-
-#   path = "${vault_mount.pki.path}/config/issuers"
-# }
-# # Set default_follows_latest_issuer
-# resource "vault_generic_endpoint" "pki_config_issuers" {
-#   path = "${vault_mount.pki.path}/config/issuers"
-
-#   data_json = jsonencode({
-#     default                       = data.vault_generic_secret.pki_default_issuer.data.default,
-#     default_follows_latest_issuer = true,
-#   })
-#   disable_delete = true
-# }
