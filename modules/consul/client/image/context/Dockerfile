@@ -106,6 +106,8 @@ ENV HTTPS_PROXY=
 # otherwise DNS supercedes the container's hosts file, which we don't want.
 RUN test -e /etc/nsswitch.conf || echo 'hosts: files dns' > /etc/nsswitch.conf
 
+ENV HOME=/consul
+
 # Expose the consul data directory as a volume since there's mutable state in there.
 VOLUME /consul/data
 
