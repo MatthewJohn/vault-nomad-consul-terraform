@@ -26,7 +26,7 @@ resource "vault_policy" "server_consul_template" {
 
   policy = <<EOF
 # Access CA certs
-path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}" {
+path "${var.root_cert.pki_mount_path}/issue/${vault_pki_secret_backend_role.this.name}" {
   capabilities = [ "read", "update" ]
 }
 
