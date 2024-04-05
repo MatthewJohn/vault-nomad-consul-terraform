@@ -5,6 +5,7 @@ module "image" {
   nomad_version  = var.nomad_version
   consul_version = var.consul_version
   vault_version  = var.vault_version
+  http_proxy     = var.http_proxy
 
   providers = {
     docker = docker.consul
