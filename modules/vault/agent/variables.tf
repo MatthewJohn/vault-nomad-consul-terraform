@@ -48,7 +48,6 @@ variable "app_role_mount_path" {
 variable "vault_version" {
   description = "Vault version"
   type        = string
-  default     = "1.13.2"
 }
 
 variable "docker_host" {
