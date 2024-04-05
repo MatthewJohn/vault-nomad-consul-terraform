@@ -16,9 +16,9 @@ data "external" "init_nomad" {
   program = [
     "bash",
     "${path.module}/init.sh",
-    var.nomad_host.docker_host,
-    var.nomad_host.docker_username,
-    var.nomad_host.nomad_https_port,
+    var.nomad_host.fqdn,
+    var.nomad_host.username,
+    "4646",
     var.aws_profile,
     var.aws_region,
     var.aws_endpoint,

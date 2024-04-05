@@ -2,9 +2,8 @@
 variable "nomad_host" {
   description = "Nomad hot to perform bootstrapping on"
   type = object({
-    docker_host      = string
-    docker_username  = string
-    nomad_https_port = number
+    fqdn      = string
+    username  = string
   })
 }
 
