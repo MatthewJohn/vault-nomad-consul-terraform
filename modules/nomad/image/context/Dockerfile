@@ -168,6 +168,11 @@ RUN mkdir -p /nomad/data && \
 # otherwise DNS supercedes the container's hosts file, which we don't want.
 RUN test -e /etc/nsswitch.conf || echo 'hosts: files dns' > /etc/nsswitch.conf
 
+ENV http_proxy=
+ENV https_proxy=
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
+
 ENV HOME=/nomad
 
 # Expose the nomad data directory as a volume since there's mutable state in there.
