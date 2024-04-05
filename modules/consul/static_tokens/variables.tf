@@ -23,15 +23,6 @@ variable "bootstrap" {
   })
 }
 
-variable "vault_cluster" {
-  description = "Vault cluster config"
-  type = object({
-    ca_cert_file             = string
-    address                  = string
-    consul_static_mount_path = string
-  })
-}
-
 variable "consul_servers" {
   description = "List of consul servers"
   type = list(object({

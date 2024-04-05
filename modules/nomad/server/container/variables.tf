@@ -1,8 +1,3 @@
-variable "hostname" {
-  description = "Hostname for noamd"
-  type        = string
-}
-
 variable "image" {
   description = "Image to be used"
   type        = string
@@ -14,13 +9,6 @@ variable "root_cert" {
     pki_mount_path = string
     common_name    = string
     public_key     = string
-  })
-}
-
-variable "vault_init" {
-  description = "Vault init"
-  type = object({
-    ca_cert = string
   })
 }
 
@@ -45,7 +33,6 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
   })
 }
 
@@ -64,13 +51,6 @@ variable "consul_datacenter" {
     name                     = string
     ca_chain                 = string
     consul_engine_mount_path = string
-  })
-}
-
-variable "consul_root_cert" {
-  description = "Consul root certificate authority"
-  type = object({
-    public_key = string
   })
 }
 
@@ -98,17 +78,14 @@ variable "initial_run" {
   default     = false
 }
 
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  type           = object({
+    ip           = string
+    username     = string
+    hostname     = string
+    fqdn         = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }

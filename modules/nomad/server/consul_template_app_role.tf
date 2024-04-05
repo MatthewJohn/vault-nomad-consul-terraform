@@ -9,7 +9,7 @@ resource "vault_approle_auth_backend_role_secret_id" "consul_template" {
 
   metadata = jsonencode(
     {
-      "node_name" = "nomad-server-${var.region.name}-${var.hostname}"
+      "node_name" = "nomad-server-${var.region.name}-${var.docker_host.hostname}"
       "region"    = var.region.name
     }
   )

@@ -19,7 +19,6 @@ module "consul_client" {
   datacenter    = var.consul_datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
-  gossip_key    = var.consul_gossip_key
 
   consul_version = var.consul_version
 
@@ -31,10 +30,11 @@ module "consul_client" {
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
-  hostname       = var.hostname
   domain_name    = var.region.common_name
   vault_cluster  = var.vault_cluster
   container_name = "vault-agent-consul-template"
+  vault_version  = var.vault_version
+  http_proxy     = var.http_proxy
 
   base_directory = "/vault-agent-consul-template"
 
@@ -42,9 +42,7 @@ module "consul_template_vault_agent" {
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
   app_role_mount_path = var.region.approle_mount_path
 
-  docker_username = var.docker_username
   docker_host     = var.docker_host
-  docker_ip       = var.docker_ip
 }
 
 module "container" {

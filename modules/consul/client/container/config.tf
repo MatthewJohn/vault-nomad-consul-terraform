@@ -4,14 +4,14 @@ locals {
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
     "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 EOF
@@ -116,10 +116,10 @@ EOF
 server = false
 
 client_addr        = "${var.listen_host}"
-bind_addr          = "${var.docker_ip}"
-advertise_addr     = "${var.docker_ip}"
-advertise_addr_wan = "${var.docker_ip}"
-node_name          = "consul-client-${var.datacenter.name}-${var.hostname}"
+bind_addr          = "${var.docker_host.ip}"
+advertise_addr     = "${var.docker_host.ip}"
+advertise_addr_wan = "${var.docker_host.ip}"
+node_name          = "consul-client-${var.datacenter.name}-${var.docker_host.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
@@ -188,7 +188,9 @@ connect {
 
 retry_join = ["${var.datacenter.common_name}"]
 
-encrypt = "${var.gossip_key}"
+{{ with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" }}
+encrypt = "{{ .Data.data.value }}"
+{{ end }}
 
 encrypt_verify_incoming = true
 encrypt_verify_outgoing = true
@@ -209,8 +211,11 @@ resource "null_resource" "consul_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_user = var.docker_host.bastion_user
+    bastion_host = var.docker_host.bastion_host
   }
 
   provisioner "file" {

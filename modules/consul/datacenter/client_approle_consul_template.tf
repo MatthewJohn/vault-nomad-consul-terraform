@@ -14,6 +14,16 @@ path "${local.consul_engine_mount_path}/creds/consul-client-role"
   capabilities = ["read"]
 }
 
+# Access to gossip token
+path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/gossip"
+{
+  capabilities = [ "read" ]
+}
+path "${var.vault_cluster.consul_static_mount_path}/${var.datacenter}/gossip"
+{
+  capabilities = [ "read" ]
+}
+
 # Renew leases
 path "sys/leases/renew" {
   capabilities = [ "update" ]

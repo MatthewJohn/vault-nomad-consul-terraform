@@ -1,20 +1,20 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.region.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.region.common_name}"
   server_fqdn = "server.${var.region.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
   verify_domain = "server.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
@@ -121,7 +121,7 @@ EOF
 
     "config/templates/server.hcl.tmpl" = <<EOF
 
-name = "${var.hostname}"
+name = "${var.docker_host.hostname}"
 
 region = "${var.region.name}"
 
@@ -228,8 +228,11 @@ resource "null_resource" "noamd_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_user = var.docker_host.bastion_user
+    bastion_host = var.docker_host.bastion_host
   }
 
   provisioner "file" {

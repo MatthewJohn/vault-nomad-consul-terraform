@@ -15,10 +15,15 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 # This is the release of nomad to pull in.
-ARG NOMAD_VERSION=1.5.6
+ARG NOMAD_VERSION
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
-ARG CONSUL_VERSION=1.15.3
-ARG VAULT_VERSION=1.13.2
+ARG CONSUL_VERSION
+ARG VAULT_VERSION
+ARG http_proxy
+ENV http_proxy=$http_proxy
+ENV https_proxy=$http_proxy
+ENV HTTP_PROXY=$http_proxy
+ENV HTTPS_PROXY=$http_proxy
 
 # This is the location of the releases.
 ENV HASHICORP_RELEASES=https://releases.hashicorp.com
@@ -33,7 +38,7 @@ RUN set -eux && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     nomadArch=amd64 && \
@@ -75,7 +80,7 @@ RUN set -eux && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     consulArch=amd64 && \
@@ -105,7 +110,7 @@ RUN set -eux; \
         hkps://pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-        gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+        gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \

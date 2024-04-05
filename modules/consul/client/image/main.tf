@@ -1,8 +1,9 @@
 
 resource "null_resource" "image_trigger" {
   triggers = {
-    "entrypoint" = filesha512("${path.module}/context/docker-entrypoint.sh")
-    "Dockerfile" = filesha512("${path.module}/context/Dockerfile")
+    entrypoint = filesha512("${path.module}/context/docker-entrypoint.sh")
+    Dockerfile = filesha512("${path.module}/context/Dockerfile")
+    http_proxy = var.http_proxy
   }
 }
 
@@ -20,10 +21,7 @@ resource "docker_image" "this" {
     build_args = {
       CONSUL_VERSION = var.consul_version
 
-      http_proxy  = var.http_proxy
-      https_proxy = var.http_proxy
-      HTTP_PROXY  = var.http_proxy
-      HTTPS_PROXY = var.http_proxy
+      http_proxy = var.http_proxy
     }
 
     label = {

@@ -10,5 +10,5 @@ output "listen_host" {
 
 output "agent_name" {
   description = "Agent name"
-  value       = "consul-client-${var.datacenter.name}-${var.hostname}"
+  value       = "consul-client-${var.datacenter.name}-${var.docker_host.hostname}"
 }
