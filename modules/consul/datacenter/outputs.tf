@@ -21,7 +21,7 @@ output "client_ca_role_name" {
 
 output "pki_mount_path" {
   description = "PKI path"
-  value       = vault_mount.this.path
+  value       = var.root_cert.pki_mount_path  # vault_mount.this.path
 }
 
 output "root_cert_public_key" {
@@ -31,7 +31,7 @@ output "root_cert_public_key" {
 
 output "ca_chain" {
   description = "Intermediate certificate CA chain"
-  value       = join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
+  value       = var.root_cert.public_key # join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
 }
 
 output "address" {

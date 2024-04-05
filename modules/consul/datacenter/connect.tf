@@ -52,4 +52,3 @@ resource "vault_approle_auth_backend_role" "connect_ca" {
   role_name      = "consul-connect-ca-${var.datacenter}"
   token_policies = [vault_policy.connect_ca.name]
 }
-

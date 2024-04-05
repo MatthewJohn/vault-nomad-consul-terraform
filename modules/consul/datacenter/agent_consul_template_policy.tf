@@ -4,7 +4,7 @@ resource "vault_policy" "agent_consul_template" {
 
   policy = <<EOF
 # Issue cert using datacenter PKI
-path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.this.name}" {
+path "${var.root_cert.pki_mount_path}/issue/${vault_pki_secret_backend_role.this.name}" {
   capabilities = [ "read", "update" ]
 }
 
@@ -33,7 +33,7 @@ path "${vault_auth_backend.approle.path}/login"
 }
 
 # Allow reading CA chain for int PKI
-path "${vault_mount.this.path}/cert/ca_chain"
+path "${var.root_cert.pki_mount_path}/cert/ca_chain"
 {
   capabilities = ["read"]
 }

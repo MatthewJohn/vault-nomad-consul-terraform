@@ -195,6 +195,10 @@ path "sys/mounts/pki_int_connect_${datacenter}"
 {
   capabilities = ["create", "update", "read"]
 }
+path "sys/mounts/pki_int_connect_${datacenter}/tune"
+{
+  capabilities = ["create", "update", "read"]
+}
 ## CA policy
 path "sys/policies/acl/consul-connect-ca-${datacenter}"
 {
