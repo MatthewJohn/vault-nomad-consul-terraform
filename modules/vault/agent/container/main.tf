@@ -29,9 +29,15 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  volumes {
-    container_path = "/vault-agent/auth"
-    host_path      = "${var.base_directory}/auth"
+  # Fix shared access from host and container, since it's
+  # shared with multiple containers
+  mounts {
+    target = "/vault-agent/auth"
+    type   = "bind"
+    source = "${var.base_directory}/auth"
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   volumes {

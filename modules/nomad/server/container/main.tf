@@ -43,9 +43,13 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  volumes {
-    container_path = "/vault-agent-consul-template/auth"
-    host_path      = var.consul_template_vault_agent.token_directory
+  mounts {
+    target = "/vault-agent-consul-template/auth"
+    type   = "bind"
+    source = var.consul_template_vault_agent.token_directory
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   # Mount cgroup due to errors when running client

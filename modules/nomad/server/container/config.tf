@@ -34,7 +34,7 @@ vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "${var.consul_template_vault_agent.token_path}"
 
   ssl {
     enabled = true
