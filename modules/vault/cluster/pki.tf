@@ -31,12 +31,16 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "root_ca" {
   provider = vault.vault-adm
 }
 
-resource "vault_pki_secret_backend_intermediate_set_signed" "root_ca" {
-  backend     = vault_mount.pki.path
-  certificate = join("\n", concat(
+locals {
+  full_chain = join("\n", concat(
     [vault_pki_secret_backend_root_sign_intermediate.root_ca.certificate],
     vault_pki_secret_backend_root_sign_intermediate.root_ca.ca_chain
   ))
+}
+
+resource "vault_pki_secret_backend_intermediate_set_signed" "root_ca" {
+  backend     = vault_mount.pki.path
+  certificate = local.full_chain
 }
 
 resource "vault_pki_secret_backend_config_urls" "pki" {

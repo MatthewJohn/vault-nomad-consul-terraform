@@ -8,6 +8,11 @@ output "ca_cert" {
   value       = file(var.ca_cert_file)
 }
 
+output "ca_chain" {
+  description = "CA Certificate chain"
+  value       = local.full_chain
+}
+
 output "address" {
   description = "Address of cluster"
   value       = local.cluster_address
