@@ -1,8 +1,9 @@
 
 resource "null_resource" "image_trigger" {
   triggers = {
-    "entrypoint" = filesha512("${path.module}/context/docker-entrypoint.sh")
-    "Dockerfile" = filesha512("${path.module}/context/Dockerfile")
+    "entrypoint"     = filesha512("${path.module}/context/docker-entrypoint.sh")
+    "Dockerfile"     = filesha512("${path.module}/context/Dockerfile")
+    "consul_version" = var.consul_version
   }
 }
 

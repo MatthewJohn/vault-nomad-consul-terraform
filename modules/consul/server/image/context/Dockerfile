@@ -15,7 +15,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 # This is the release of Consul to pull in.
-ARG CONSUL_VERSION=1.15.3
+ARG CONSUL_VERSION
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
 ARG http_proxy
 ENV http_proxy=$http_proxy
@@ -86,6 +86,8 @@ RUN set -eux && \
 # but this is kept for consistency with our other images.
 RUN groupadd consul && \
     adduser --uid 100 --system -g consul consul
+
+ENV HOME=/consul
 
 # The /consul/data dir is used by Consul to store state. The agent will be started
 # with /consul/config as the configuration directory so you can add additional
