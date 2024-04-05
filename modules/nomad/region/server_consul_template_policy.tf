@@ -50,7 +50,7 @@ path "${vault_auth_backend.approle.path}/login"
 }
 
 # Allow access to read root CA
-path "${var.root_cert.pki_mount_path}/cert/ca"
+path "${var.root_cert.pki_mount_path}/cert/ca_chain"
 {
   capabilities = ["read"]
 }
