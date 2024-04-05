@@ -25,8 +25,12 @@ path "/sys/mounts/${vault_mount.connect_intermediate.path}/tune" {
   capabilities = [ "update" ]
 }
 
-path "/${var.root_cert.pki_connect_mount_path}/" {
+path "/${var.root_cert.pki_connect_mount_path}/*" {
   capabilities = [ "read" ]
+}
+
+path "/${var.root_cert.pki_connect_mount_path}/root/generate/internal" {
+  capabilities = [ "create", "update" ]
 }
 
 path "/${var.root_cert.pki_connect_mount_path}/root/sign-intermediate" {
