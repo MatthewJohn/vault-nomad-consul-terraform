@@ -22,7 +22,7 @@ variable "aws_region" {
   type        = string
 }
 
-variable "bucket_name" {
+variable "cluster_name" {
   description = "Bucket name to store bootstrap credentials"
   type        = string
 }

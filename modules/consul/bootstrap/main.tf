@@ -1,7 +1,12 @@
 
 # Create bucket for unseal tokens
+locals {
+  bucket_name = "${var.cluster_name}-consul-bootstrap"
+  consul_bootstrap_path = "${var.cluster_name}/consul/bootstrap"
+}
+
 resource "aws_s3_bucket" "consul_unseal" {
-  bucket = var.bucket_name
+  bucket = local.bucket_name
 }
 
 resource "aws_s3_bucket_versioning" "consul_unseal" {
@@ -10,6 +15,36 @@ resource "aws_s3_bucket_versioning" "consul_unseal" {
   versioning_configuration {
     status = "Enabled"
   }
+}
+
+resource "vault_kv_secret_v2" "root_token_init" {
+  mount               = "admin-terraform"
+  name                = local.consul_bootstrap_path
+  cas                 = 1
+  delete_all_versions = false
+  data_json = jsonencode(
+    {
+      token        = ""
+      bootstrapped = false
+    }
+  )
+
+  lifecycle {
+    ignore_changes = [ data_json ]
+  }
+
+  provider = vault.vault-adm
+}
+
+data "vault_kv_secret_v2" "root_token" {
+  mount               = "admin-terraform"
+  name                = local.consul_bootstrap_path
+
+  depends_on = [
+    vault_kv_secret_v2.root_token_init
+  ]
+
+  provider = vault.vault-adm
 }
 
 data "external" "init_consul" {
@@ -26,3 +61,23 @@ data "external" "init_consul" {
     var.initial_run == true ? "1" : "0"
   ]
 }
+
+resource "vault_kv_secret_v2" "root_token" {
+  mount               = "admin-terraform"
+  name                = local.consul_bootstrap_path
+  cas                 = 1
+  delete_all_versions = false
+  data_json = jsonencode(
+    {
+      token        = data.external.init_consul.result.token
+      bootstrapped = true
+    }
+  )
+
+  provider = vault.vault-adm
+
+  depends_on = [
+    vault_kv_secret_v2.root_token_init
+  ]
+}
+
