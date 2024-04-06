@@ -345,23 +345,6 @@ path "sys/mounts/auth/approle-nomad-${region}"
   capabilities = ["read"]
 }
 
-# Policy for jobs
-path "sys/policies/acl/nomad-job-${region}-*"
-{
-  capabilities = ["update", "read", "create", "delete"]
-}
-# Policy for job deployment
-path "sys/policies/acl/nomad-deployment-job-${region}-*"
-{
-  capabilities = ["update", "read", "create", "delete"]
-}
-
-# Assume roles for deploy nomad jobs
-path "auth/token/create/nomad-job-${region}-*"
-{
-  capabilities = [ "sudo" ]
-}
-
 # Allow creation of vault secret engine for nomad
 path "sys/mounts/nomad-${region}"
 {
@@ -418,6 +401,26 @@ path "pki_int_nomad_${region}_${nomad_dc}/roles/*"
 }
 
 path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Policy for jobs
+path "sys/policies/acl/nomad-job-${region}-${nomad_dc}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+path "sys/policies/acl/nomad-submit-${region}-${nomad_dc}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Policy for job deployment
+path "sys/policies/acl/nomad-deployment-${region}-${nomad_dc}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Policy for Terraform auth
+path "sys/policies/acl/nomad-terraform-${region}-${nomad_dc}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }

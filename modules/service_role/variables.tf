@@ -1,54 +1,7 @@
-variable "name" {
-  description = "Service name"
-  type        = string
-}
-
 variable "nomad_namespace" {
   description = "Nomad namespace for the service to be deployed to"
   type        = string
   default     = "default"
-}
-
-variable "additional_consul_policy" {
-  description = "Additional statements for consul policy"
-  type        = string
-  default     = ""
-}
-
-variable "additional_vault_application_policy" {
-  description = "Additional statements for vault application policy"
-  type        = string
-  default     = ""
-}
-
-variable "additional_vault_deployment_policy" {
-  description = "Additional statements for vault deployment policy"
-  type        = string
-  default     = ""
-}
-
-variable "additional_nomad_policy" {
-  description = "Additional statements for the nomad policy"
-  type        = string
-  default     = ""
-}
-
-variable "additional_consul_services" {
-  description = "List of additional consul services to assign to service"
-  type        = list(string)
-  default     = []
-}
-
-variable "additional_nomad_namespace_capabilities" {
-  description = "List of additional capabilities for nomad namespace permissions"
-  type        = list(string)
-  default     = []
-}
-
-variable "allow_volume_creation" {
-  description = "Whether to allow service to create/mount volumes"
-  type        = bool
-  default     = false
 }
 
 variable "nomad_datacenter" {
@@ -70,13 +23,6 @@ variable "nomad_region" {
   })
 }
 
-variable "nomad_bootstrap" {
-  description = "Nomad bootstrap object"
-  type = object({
-    token = string
-  })
-}
-
 variable "nomad_static_tokens" {
   description = "Nomad static tokens object"
   type = object({
@@ -91,7 +37,6 @@ variable "vault_cluster" {
     ca_cert                    = string
     address                    = string
     consul_static_mount_path   = string
-    token                      = string
     service_secrets_mount_path = string
   })
 }
@@ -113,12 +58,5 @@ variable "consul_datacenter" {
     address_wo_protocol      = string
     consul_engine_mount_path = string
     root_cert_public_key     = string
-  })
-}
-
-variable "consul_bootstrap" {
-  description = "Value of consul bootstrap"
-  type = object({
-    token = string
   })
 }
