@@ -406,21 +406,21 @@ path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
 }
 
 # Policy for jobs
-path "sys/policies/acl/nomad-job-${region}-${nomad_dc}"
+path "sys/policies/acl/nomad-job-${region}-${nomad_dc}-*"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
-path "sys/policies/acl/nomad-submit-${region}-${nomad_dc}"
+path "sys/policies/acl/nomad-submit-${region}-${nomad_dc}-*"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
 # Policy for job deployment
-path "sys/policies/acl/nomad-deployment-${region}-${nomad_dc}"
+path "sys/policies/acl/nomad-deployment-${region}-${nomad_dc}-*"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
 # Policy for Terraform auth
-path "sys/policies/acl/nomad-terraform-${region}-${nomad_dc}"
+path "sys/policies/acl/nomad-terraform-${region}-${nomad_dc}-*"
 {
   capabilities = ["update", "read", "create", "delete"]
 }

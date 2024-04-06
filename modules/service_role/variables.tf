@@ -1,3 +1,8 @@
+variable "service_name"{
+  description = "Name of service"
+  type        = string
+}
+
 variable "nomad_namespace" {
   description = "Nomad namespace for the service to be deployed to"
   type        = string
@@ -60,3 +65,46 @@ variable "consul_datacenter" {
     root_cert_public_key     = string
   })
 }
+
+variable "additional_consul_policy" {
+  description = "Additional statements for consul policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_vault_application_policy" {
+  description = "Additional statements for vault application policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_vault_deployment_policy" {
+  description = "Additional statements for vault deployment policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_nomad_policy" {
+  description = "Additional statements for the nomad policy"
+  type        = string
+  default     = ""
+}
+
+variable "additional_consul_services" {
+  description = "List of additional consul services to assign to service"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_nomad_namespace_capabilities" {
+  description = "List of additional capabilities for nomad namespace permissions"
+  type        = list(string)
+  default     = []
+}
+
+variable "allow_volume_creation" {
+  description = "Whether to allow service to create/mount volumes"
+  type        = bool
+  default     = false
+}
+
