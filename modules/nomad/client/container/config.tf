@@ -1,13 +1,13 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.datacenter.common_name}"
   client_fqdn = "client.${var.datacenter.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
   verify_domain = "client.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ end }}
@@ -17,7 +17,7 @@ locals {
 EOF
 
     "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
 {{ .Data.private_key }}
 {{ end }}
 
@@ -37,7 +37,7 @@ vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "${var.consul_template_vault_agent.token_path}"
 
   ssl {
     enabled = true
@@ -124,7 +124,7 @@ EOF
 
     "config/templates/client.hcl.tmpl" = <<EOF
 
-name       = "${var.hostname}"
+name       = "${var.docker_host.hostname}"
 region     = "${var.region.name}"
 datacenter = "${var.datacenter.name}"
 
@@ -237,8 +237,11 @@ resource "null_resource" "nomad_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {

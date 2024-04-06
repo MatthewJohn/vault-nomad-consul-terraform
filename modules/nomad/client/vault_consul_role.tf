@@ -5,7 +5,7 @@
 # during startup
 
 resource "consul_acl_policy" "nomad_client" {
-  name = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
+  name = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.docker_host.hostname}"
   datacenters = [
     var.consul_datacenter.name
   ]
@@ -19,7 +19,7 @@ service_prefix "" {
   policy = "write"
 }
 
-agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
+agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
 
@@ -39,7 +39,7 @@ RULE
 }
 
 resource "vault_consul_secret_backend_role" "nomad_client_vault_consul_role" {
-  name    = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
+  name    = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.docker_host.hostname}"
   backend = var.consul_datacenter.consul_engine_mount_path
 
   local = true

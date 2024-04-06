@@ -4,6 +4,8 @@ module "image" {
 
   nomad_version  = var.nomad_version
   consul_version = var.consul_version
+  vault_version  = var.vault_version
+  http_proxy     = var.http_proxy
 
 
   providers = {
@@ -14,18 +16,16 @@ module "image" {
 module "consul_client" {
   source = "../../consul/client"
 
-  hostname      = var.hostname
-  domain_name   = var.datacenter.common_name
+  # domain_name   = var.datacenter.common_name
   datacenter    = var.consul_datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
   http_proxy    = var.http_proxy
 
   consul_version = var.consul_version
+  vault_version  = var.vault_version
 
-  docker_username = var.docker_username
   docker_host     = var.docker_host
-  docker_ip       = var.docker_ip
 }
 
 module "consul_template_vault_agent" {
@@ -50,7 +50,6 @@ module "container" {
   source = "./container"
 
   image                          = module.image.image_id
-  hostname                       = var.hostname
   root_cert                      = var.root_cert
   region                         = var.region
   datacenter                     = var.datacenter
@@ -61,8 +60,6 @@ module "container" {
   nomad_client_vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
 
   docker_host     = var.docker_host
-  docker_username = var.docker_username
-  docker_ip       = var.docker_ip
 
   consul_template_vault_agent = module.consul_template_vault_agent
 
