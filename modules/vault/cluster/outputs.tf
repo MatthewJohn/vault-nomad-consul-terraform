@@ -53,7 +53,7 @@ output "service_deployment_mount_path" {
   value       = vault_mount.deployment_secrets.path
 }
 
-output "terraform_aws_credential_secre_path" {
+output "terraform_aws_credential_secret_path" {
   description = "Secret path for Terraform AWS credentials"
   value       = vault_kv_secret_v2.terraform_aws_credentials.name
 }

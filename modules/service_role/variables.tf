@@ -47,13 +47,14 @@ variable "nomad_static_tokens" {
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
-    ca_cert_file                  = string
-    ca_cert                       = string
-    address                       = string
-    consul_static_mount_path      = string
-    service_secrets_mount_path    = string
-    service_deployment_mount_path = string
-    gitlab_jwt_auth_backend_path  = string
+    ca_cert_file                         = string
+    ca_cert                              = string
+    address                              = string
+    consul_static_mount_path             = string
+    service_secrets_mount_path           = string
+    service_deployment_mount_path        = string
+    terraform_aws_credential_secret_path = string
+    gitlab_jwt_auth_backend_path         = string
   })
 }
 

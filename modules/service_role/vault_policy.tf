@@ -30,22 +30,16 @@ path "auth/token/lookup-self"
   capabilities = [ "read" ]
 }
 
-# Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
-{
-  capabilities = ["read"]
-}
-
-# Allow generation of nomad token using assigned consul policy
-path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this.role}"
-{
-  capabilities = ["read"]
-}
-
 # Allow reading
 path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list" ]
+}
+
+# Allow generation of consul token using assigned consul policy
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
+{
+  capabilities = ["read"]
 }
 
 EOF
@@ -106,6 +100,18 @@ path "auth/token/create/${vault_token_auth_backend_role.nomad.role_name}"
   capabilities = [ "update" ]
 }
 
+# Allow generation of consul token using assigned consul policy
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
+{
+  capabilities = ["read"]
+}
+
+# Allow generation of nomad token using assigned consul policy
+path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this.role}"
+{
+  capabilities = ["read"]
+}
+
 # Allow writing to secrets
 path "${local.vault_secret_base_data_path}/*"
 {
@@ -113,7 +119,13 @@ path "${local.vault_secret_base_data_path}/*"
 }
 
 # Allow reading config secret
-path "${var.vault_cluster.service_deployment_mount_path}/konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+path "${var.vault_cluster.service_deployment_mount_path}/data/konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+{
+  capabilities = [ "read", "list" ]
+}
+
+# Allow reading AWS Secrets
+path "${var.vault_cluster.service_deployment_mount_path}/data/${var.vault_cluster.terraform_aws_credential_secret_path}"
 {
   capabilities = [ "read", "list" ]
 }
