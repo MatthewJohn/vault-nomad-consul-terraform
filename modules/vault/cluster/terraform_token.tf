@@ -20,6 +20,12 @@ path "auth/*"
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+# Update vault deployment secrets
+path "${vault_mount.deployment_secrets.path}/*"
+{
+  capabilities = ["list", "read", "create", "update", "delete"]
+}
+
 # List enabled secrets engines
 path "sys/mounts"
 {

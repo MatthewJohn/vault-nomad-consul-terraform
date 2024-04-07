@@ -57,7 +57,8 @@ resource "vault_token_auth_backend_role" "nomad" {
   role_name              = local.vault_nomad_policy_role
 
   allowed_policies       = [
-    vault_policy.nomad_policy.name
+    vault_policy.nomad_policy.name,
+    vault_policy.application_policy.name,
   ]
   orphan                 = true
   token_period           = "86400"
@@ -109,6 +110,12 @@ path "auth/token/create/${vault_token_auth_backend_role.nomad.role_name}"
 path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list", "create", "update", "delete" ]
+}
+
+# Allow reading config secret
+path "${var.vault_cluster.service_deployment_mount_path}/konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+{
+  capabilities = [ "read", "list" ]
 }
 
 ${var.additional_vault_deployment_policy}

@@ -3,6 +3,15 @@ variable "service_name"{
   type        = string
 }
 
+# variable "gitlab_project_id" {
+#   description = "Name of gitlab project to setup JWT role"
+#   type        = string
+# }
+variable "gitlab_project_path" {
+  description = "Gitlab project path"
+  type        = string
+}
+
 variable "nomad_namespace" {
   description = "Nomad namespace for the service to be deployed to"
   type        = string
@@ -38,11 +47,13 @@ variable "nomad_static_tokens" {
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
-    ca_cert_file               = string
-    ca_cert                    = string
-    address                    = string
-    consul_static_mount_path   = string
-    service_secrets_mount_path = string
+    ca_cert_file                  = string
+    ca_cert                       = string
+    address                       = string
+    consul_static_mount_path      = string
+    service_secrets_mount_path    = string
+    service_deployment_mount_path = string
+    gitlab_jwt_auth_backend_path  = string
   })
 }
 

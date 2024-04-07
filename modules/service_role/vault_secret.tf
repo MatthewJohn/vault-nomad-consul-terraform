@@ -1,6 +1,6 @@
 # Store secret values back into vault admin to be able to consume in applications
 resource "vault_kv_secret_v2" "secrets" {
-  mount               = "admin-terraform"
+  mount               = var.vault_cluster.service_deployment_mount_path
   name                = "konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
   cas                 = 1
   delete_all_versions = true
@@ -17,7 +17,7 @@ resource "vault_kv_secret_v2" "secrets" {
       vault_approle_deployment_secret_id  = vault_approle_auth_backend_role_secret_id.terraform.secret_id
       vault_approle_deployment_path       = var.nomad_region.approle_mount_path
       vault_approle_deployment_login_path = "auth/${var.nomad_region.approle_mount_path}/login"
-      vault_nomad_role_name               = vault_token_auth_backend_role.nomad.role_name
+      vault_submit_role_name              = vault_token_auth_backend_role.nomad.role_name
       vault_secret_base_path              = local.vault_secret_base_path
       vault_secret_base_data_path         = local.vault_secret_base_data_path
       vault_deploy_policy                 = vault_policy.terraform_policy.name
@@ -46,6 +46,4 @@ resource "vault_kv_secret_v2" "secrets" {
       }
     }
   )
-
-  provider = vault.vault-adm
 }

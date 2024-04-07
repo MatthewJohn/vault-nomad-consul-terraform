@@ -48,6 +48,21 @@ output "service_secrets_mount_path" {
   value       = vault_mount.service_secrets.path
 }
 
+output "service_deployment_mount_path" {
+  description = "Service deployment KV mount path"
+  value       = vault_mount.deployment_secrets.path
+}
+
+output "terraform_aws_credential_secre_path" {
+  description = "Secret path for Terraform AWS credentials"
+  value       = vault_kv_secret_v2.terraform_aws_credentials.name
+}
+
+output "gitlab_jwt_auth_backend_path" {
+  description = "Gitlab JWT auth backent"
+  value       = vault_jwt_auth_backend.gitlab.path
+}
+
 output "approle_mount_path" {
   description = "Global approle mount path"
   value       = vault_auth_backend.approle.path

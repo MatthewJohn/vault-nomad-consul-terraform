@@ -23,6 +23,10 @@ service "${local.consul_service_name}${consul_service_suffix != "" ? "-${consul_
   policy = "write"
   intentions = "write"
 }
+service "nomad-job-${var.service_name}-metrics"
+{
+  policy = "write"
+}
 
 key_prefix "${local.consul_service_name}${consul_service_suffix != "" ? "-${consul_service_suffix}" : ""}" {
   policy = "write"

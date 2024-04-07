@@ -55,6 +55,12 @@ variable "nomad_regions" {
   default     = {}
 }
 
+variable "gitlab_url" {
+  description = "Gitlab URL for JWT authentication"
+  type        = string
+  default     = null
+}
+
 variable "ldap" {
   description = "LDAP authentication details"
   type        = object({
