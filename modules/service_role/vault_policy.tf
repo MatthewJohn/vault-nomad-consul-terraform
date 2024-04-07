@@ -16,6 +16,11 @@ path "auth/token/lookup-self" {
     capabilities = ["read"]
 }
 
+# Allow generation of consul token using assigned consul policy
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
+{
+  capabilities = ["read"]
+}
 ${var.additional_vault_application_policy}
 EOF
 }
@@ -34,12 +39,6 @@ path "auth/token/lookup-self"
 path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list" ]
-}
-
-# Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
-{
-  capabilities = ["read"]
 }
 
 EOF
