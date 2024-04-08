@@ -1,7 +1,7 @@
 
 
 locals {
-  consul_service_name = "nomad-job-${var.nomad_datacenter.name}-${var.service_name}-${var.service_name}"
+  consul_service_name = "nomad-job-${var.nomad_datacenter.name}-${var.service_name}"
 }
 
 resource "consul_acl_policy" "this" {
