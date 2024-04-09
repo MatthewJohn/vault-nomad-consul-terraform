@@ -16,7 +16,6 @@ variable "datacenter" {
   type = object({
     name                                     = string
     common_name                              = string
-    root_app_domain                          = string
     role_name                                = string
     pki_mount_path                           = string
     agent_consul_template_policy             = string
@@ -54,6 +53,13 @@ variable "root_cert" {
     organisation           = string
     ou                     = string
     pki_connect_mount_path = string
+  })
+}
+
+variable "app_cert" {
+  description = "App certificate object"
+  type = object({
+    common_name            = string
   })
 }
 

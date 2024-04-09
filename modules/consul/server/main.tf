@@ -34,6 +34,7 @@ module "container" {
 
   image         = module.consul_image.image_id
   datacenter    = var.datacenter
+  app_cert      = var.app_cert
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert
   initial_run   = var.initial_run

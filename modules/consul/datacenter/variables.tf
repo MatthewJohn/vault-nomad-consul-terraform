@@ -4,11 +4,6 @@ variable "datacenter" {
   type        = string
 }
 
-variable "root_app_domain" {
-  description = "App DNS query domain"
-  type        = string
-}
-
 variable "root_cert" {
   description = "Root certificate object"
   type = object({
