@@ -16,6 +16,7 @@ variable "datacenter" {
   type = object({
     name                                     = string
     common_name                              = string
+    root_app_domain                          = string
     role_name                                = string
     pki_mount_path                           = string
     agent_consul_template_policy             = string

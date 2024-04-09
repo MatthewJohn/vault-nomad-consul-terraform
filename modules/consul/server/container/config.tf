@@ -132,6 +132,7 @@ advertise_addr_wan = "${var.docker_host.ip}"
 node_name          = "consul-server-${var.datacenter.name}-${var.docker_host.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
+alt_domain         = "${var.datacenter.root_app_domain}"
 
 ports {
   # Listener ports
