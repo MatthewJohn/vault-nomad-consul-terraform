@@ -9,6 +9,16 @@ output "common_name" {
   value       = local.common_name
 }
 
+output "app_domain" {
+  description = "App domain for DC"
+  value       = "${var.datacenter}.${var.app_cert.common_name}"
+}
+
+output "app_service_domain" {
+  description = "App service domain for DC"
+  value       = "service.${var.datacenter}.${var.app_cert.common_name}"
+}
+
 output "role_name" {
   description = "Role name for certificate"
   value       = vault_pki_secret_backend_role.this.name

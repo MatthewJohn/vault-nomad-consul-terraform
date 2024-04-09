@@ -75,6 +75,7 @@ variable "consul_datacenter" {
     address_wo_protocol      = string
     consul_engine_mount_path = string
     root_cert_public_key     = string
+    app_service_domain       = string
   })
 }
 

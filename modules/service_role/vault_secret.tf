@@ -30,6 +30,7 @@ resource "vault_kv_secret_v2" "secrets" {
       consul = {
         datacenter               = var.consul_datacenter.name
         address                  = var.consul_datacenter.address
+        app_service_domain       = var.consul_datacenter.app_service_domain
         address_wo_protocol      = var.consul_datacenter.address_wo_protocol
         root_cert_public_key     = var.consul_datacenter.root_cert_public_key
         root_cert_pki_mount_path = var.consul_root_cert.pki_mount_path
