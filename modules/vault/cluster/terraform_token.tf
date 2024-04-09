@@ -228,7 +228,7 @@ path "consul_static/data/${datacenter}/consul_tokens"
 }
 path "consul_static/metadata/${datacenter}/consul_tokens"
 {
-  capabilities = ["read", "delete"]
+  capabilities = ["read", "delete", "update" ]
 }
 path "consul_static/data/${datacenter}/gossip"
 {

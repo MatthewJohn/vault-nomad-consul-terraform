@@ -155,6 +155,9 @@ acl {
 {{ if ne .Data.data.server_service_token "" }}
     config_file_service_registration = "{{ .Data.data.server_service_token }}"
 {{ end }}
+{{ if ne .Data.data.default_token "" }}
+    default                          = "{{ .Data.data.default_token }}"
+{{ end }}
 {{ end }}
   }
 }

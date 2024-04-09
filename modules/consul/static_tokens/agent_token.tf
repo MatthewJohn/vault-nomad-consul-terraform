@@ -35,20 +35,3 @@ resource "consul_acl_token" "consul_server_token" {
 data "consul_acl_token_secret_id" "consul_server_token" {
   accessor_id = consul_acl_token.consul_server_token.id
 }
-
-resource "vault_kv_secret_v2" "static_token" {
-  mount               = var.datacenter.consul_server_token.mount
-  name                = var.datacenter.consul_server_token.name
-  cas                 = 1
-  delete_all_versions = true
-  data_json = jsonencode(
-    {
-      server_token         = data.consul_acl_token_secret_id.consul_server_token.secret_id
-      server_service_token = data.consul_acl_token_secret_id.agent_service_role.secret_id
-    }
-  )
-
-  lifecycle {
-    ignore_changes = [ data_json ]
-  }
-}
