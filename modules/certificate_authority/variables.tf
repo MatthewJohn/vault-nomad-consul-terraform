@@ -35,6 +35,12 @@ variable "root_ca_cert" {
   type        = string
 }
 
+variable "allow_wildcard_certificates" {
+  description = "Whether role should allow wildcards"
+  type        = bool
+  default     = null
+}
+
 variable "create_connect_ca" {
   description = "Whether to create additional Consul connect CA"
   type        = bool

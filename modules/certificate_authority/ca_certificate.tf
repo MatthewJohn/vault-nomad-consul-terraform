@@ -9,4 +9,6 @@ resource "vault_pki_secret_backend_role" "role" {
     local.common_name
   ]
   allow_subdomains = true
+
+  allow_wildcard_certificates = var.allow_wildcard_certificates
 }
