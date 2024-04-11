@@ -53,6 +53,28 @@ path "secret/*"
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+# List, create, update, and delete key/value secrets at deployment_secrets_kv/
+path "deployment_secrets_kv/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# List, create, update, and delete key/value secrets at service_secrets_kv/
+path "service_secrets_kv/*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Access consul/nomad secret engines
+path "consul*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+path "nomad*"
+{
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 # Manage transit secrets engine
 path "transit/*"
 {
