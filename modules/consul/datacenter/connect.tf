@@ -25,8 +25,21 @@ path "/sys/mounts/${vault_mount.connect_intermediate.path}/tune" {
   capabilities = [ "update" ]
 }
 
+path "${vault_mount.connect_intermediate.path}/sign/leaf-cert" {
+  capabilities = ["update"]
+}
+
+# @TODO Investigate how to minimise this
+path "${vault_mount.connect_intermediate.path}/*" {
+  capabilities = ["create", "read", "update", "delete"]
+}
+
 path "/${var.root_cert.pki_connect_mount_path}/*" {
   capabilities = [ "read" ]
+}
+
+path "/${var.root_cert.pki_connect_mount_path}/root/sign-self-issued" {
+  capabilities = ["update"]
 }
 
 path "/${var.root_cert.pki_connect_mount_path}/root/generate/internal" {
