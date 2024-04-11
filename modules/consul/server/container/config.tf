@@ -166,7 +166,7 @@ acl {
 data_dir = "/consul/data"
 
 verify_incoming        = false
-verify_incoming_rpc    = true
+#verify_incoming_rpc    = true
 verify_outgoing        = true
 verify_server_hostname = true
 
@@ -188,6 +188,10 @@ tls {
      # to allow UI access, terraform and services lik traefik
      verify_incoming = false
    }
+
+  grpc {
+    verify_incoming = false
+  }
 
    internal_rpc {
       verify_server_hostname = true

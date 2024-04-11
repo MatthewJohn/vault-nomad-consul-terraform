@@ -159,17 +159,20 @@ cert_file = "/consul/config/client-certs/client.crt"
 key_file  = "/consul/config/client-certs/client.key"
 
 tls {
-   defaults {
-      ca_file   = "/consul/config/client-certs/ca.crt"
-      cert_file = "/consul/config/client-certs/client.crt"
-      key_file  = "/consul/config/client-certs/client.key"
+  defaults {
+    ca_file   = "/consul/config/client-certs/ca.crt"
+    cert_file = "/consul/config/client-certs/client.crt"
+    key_file  = "/consul/config/client-certs/client.key"
 
-      verify_incoming = false
-      verify_outgoing = true
-   }
-   internal_rpc {
-      verify_server_hostname = true
-   }
+    verify_incoming = false
+    verify_outgoing = true
+  }
+  grpc {
+    verify_incoming = false
+  }
+  internal_rpc {
+    verify_server_hostname = true
+  }
 }
 
 service {
