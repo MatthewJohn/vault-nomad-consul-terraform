@@ -41,6 +41,8 @@ path "${local.vault_secret_base_data_path}/*"
   capabilities = [ "read", "list" ]
 }
 
+${var.additional_vault_deployment_policy}
+
 EOF
 }
 
