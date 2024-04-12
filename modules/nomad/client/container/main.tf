@@ -88,6 +88,20 @@ resource "docker_container" "this" {
     }
   }
 
+  # Pass through data volume for client
+  dynamic "mounts" {
+    for_each = toset(var.container_data_directory != null ? [var.container_data_directory] : [])
+
+    content {
+      target = mounts.value
+      type   = "bind"
+      source = mounts.value
+      bind_options {
+        propagation = "shared"
+      }
+    }
+  }
+
   lifecycle {
     replace_triggered_by = [
       null_resource.nomad_config

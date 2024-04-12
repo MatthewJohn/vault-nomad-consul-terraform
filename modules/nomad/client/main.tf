@@ -57,6 +57,7 @@ module "container" {
   consul_root_cert               = var.consul_root_cert
   consul_client                  = module.consul_client
   consul_datacenter              = var.consul_datacenter
+  container_data_directory       = var.container_data_directory
   nomad_client_vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
 
   docker_host     = var.docker_host

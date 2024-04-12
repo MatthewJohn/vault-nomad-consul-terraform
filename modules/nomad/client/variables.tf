@@ -93,6 +93,12 @@ variable "http_proxy" {
   type        = string
 }
 
+variable "container_data_directory" {
+  description = "Container data directory"
+  type        = string
+  default     = null
+}
+
 variable "docker_host" {
   description = "Docker host to connect to"
   type        = object({

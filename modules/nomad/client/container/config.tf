@@ -203,6 +203,9 @@ plugin "docker" {
   config {
     allow_privileged = true
     extra_labels     = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+    volumes {
+      enabled = true
+    }
   }
 }
 
@@ -211,6 +214,12 @@ client {
     path = "/var/run/docker.sock"
     read_only = true
   }
+  %{if var.container_data_directory != null}
+  host_volume "container-data" {
+    path = "${var.container_data_directory}"
+    read_only = false
+  }
+  %{endif}
 }
 
 telemetry {

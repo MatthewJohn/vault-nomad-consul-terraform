@@ -3,6 +3,11 @@ variable "image" {
   type        = string
 }
 
+variable "container_data_directory" {
+  description = "Container data directory"
+  type        = string
+}
+
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
