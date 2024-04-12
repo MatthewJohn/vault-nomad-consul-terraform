@@ -18,7 +18,13 @@ resource "vault_kv_secret_v2" "secrets" {
       vault_approle_deployment_path       = var.nomad_region.approle_mount_path
       vault_approle_deployment_login_path = "auth/${var.nomad_region.approle_mount_path}/login"
       vault_submit_role_name              = vault_token_auth_backend_role.nomad.role_name
+      # Secret engine
+      vault_secret_engine_path            = var.vault_cluster.service_secrets_mount_path
+      # Secret Path within secret mount
+      vault_secret_path                   = local.vault_secret_path
+      # Secret Path with mount
       vault_secret_base_path              = local.vault_secret_base_path
+      # Secret path with mount and 'data'
       vault_secret_base_data_path         = local.vault_secret_base_data_path
       vault_deploy_policy                 = vault_policy.terraform_policy.name
       vault_nomad_policy                  = vault_policy.nomad_policy.name

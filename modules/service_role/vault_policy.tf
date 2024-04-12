@@ -3,7 +3,8 @@ locals {
   vault_terraform_policy_role  = "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
   vault_nomad_policy_role      = "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
   vault_job_policy_role        = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_secret_base_path       = "${var.vault_cluster.service_secrets_mount_path}/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+  vault_secret_path            = "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+  vault_secret_base_path       = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
   vault_secret_base_data_path  = "${var.vault_cluster.service_secrets_mount_path}/data/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
 }
 
