@@ -5,7 +5,7 @@ locals {
   vault_job_policy_role        = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
   vault_secret_path            = "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
   vault_secret_base_path       = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
-  vault_secret_base_data_path  = "${var.vault_cluster.service_secrets_mount_path}/data/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+  vault_secret_base_data_path  = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
 }
 
 # Policy that will be attached to the application
@@ -124,6 +124,12 @@ path "${local.vault_secret_base_data_path}/*"
 path "${var.vault_cluster.service_deployment_mount_path}/data/konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
 {
   capabilities = [ "read", "list" ]
+}
+
+# Allow managing secret meta
+path "${var.vault_cluster.service_secrets_mount_path}/metadata/${local.vault_secret_path}/*"
+{
+  capabilities = [ "read", "update", "create" ]
 }
 
 # Allow reading AWS Secrets
