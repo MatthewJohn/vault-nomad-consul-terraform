@@ -22,6 +22,17 @@ path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_sec
 {
   capabilities = ["read"]
 }
+
+# Allow reading secrets
+path "${local.vault_secret_base_path}/*"
+{
+  capabilities = [ "read", "list" ]
+}
+path "${local.vault_secret_base_data_path}/*"
+{
+  capabilities = [ "read", "list" ]
+}
+
 ${var.additional_vault_application_policy}
 EOF
 }
