@@ -145,7 +145,7 @@ ports {
 acl {
   enabled = true
   default_policy = "deny"
-  enable_token_persistence = false
+  enable_token_persistence = true
   # @TODO Determine after testing multiple consul DCs
   enable_token_replication = false
   tokens {
