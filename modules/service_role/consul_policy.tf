@@ -28,6 +28,17 @@ key_prefix "${local.consul_service_name}${consul_service_suffix != "" ? "-${cons
   policy = "write"
 }
 
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "nomad-job-${var.nomad_datacenter.name}-" {
+  policy = "read"
+}
 
 %{endfor}
 
