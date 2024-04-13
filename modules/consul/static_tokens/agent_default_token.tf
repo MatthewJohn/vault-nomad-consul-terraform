@@ -1,7 +1,7 @@
 # Token for consul agent service registration
-resource "consul_acl_policy" "default_service_role" {
+resource "consul_acl_policy" "server_dns_service_role" {
 
-  name = "consul-server-default-${var.datacenter.name}"
+  name = "consul-server-dns-${var.datacenter.name}"
 
   datacenters = [var.datacenter.name]
 
@@ -20,12 +20,12 @@ query_prefix "" {
 EOF
 }
 
-resource "consul_acl_token" "default_service_role" {
-  description = "consul-server-default-${var.datacenter.name}"
-  policies = ["${consul_acl_policy.default_service_role.name}"]
+resource "consul_acl_token" "server_dns_service_role" {
+  description = "consul-server-dns-${var.datacenter.name}"
+  policies = ["${consul_acl_policy.server_dns_service_role.name}"]
   local = true
 }
 
-data "consul_acl_token_secret_id" "default_service_role" {
-  accessor_id = consul_acl_token.default_service_role.id
+data "consul_acl_token_secret_id" "server_dns_service_role" {
+  accessor_id = consul_acl_token.server_dns_service_role.id
 }

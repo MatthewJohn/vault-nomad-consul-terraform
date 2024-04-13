@@ -7,7 +7,7 @@ resource "vault_kv_secret_v2" "static_token" {
     {
       server_token         = ""
       server_service_token = ""
-      default_token        = ""
+      dns_token            = ""
     }
   )
 

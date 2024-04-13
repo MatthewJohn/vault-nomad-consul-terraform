@@ -7,7 +7,7 @@ resource "vault_kv_secret_v2" "static_token" {
     {
       server_token         = data.consul_acl_token_secret_id.consul_server_token.secret_id
       server_service_token = data.consul_acl_token_secret_id.agent_service_role.secret_id
-      default_token        = data.consul_acl_token_secret_id.default_service_role.secret_id
+      dns_token            = data.consul_acl_token_secret_id.server_dns_service_role.secret_id
     }
   )
 }
