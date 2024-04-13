@@ -19,6 +19,14 @@ service_prefix "" {
   policy = "write"
 }
 
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
 agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
