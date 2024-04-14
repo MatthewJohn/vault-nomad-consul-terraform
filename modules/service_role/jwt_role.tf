@@ -1,8 +1,8 @@
-resource "vault_jwt_auth_backend_role" "example" {
+resource "vault_jwt_auth_backend_role" "gitlab" {
   count = var.vault_cluster.gitlab_jwt_auth_backend_path != null ? 1 : 0
 
   backend         = var.vault_cluster.gitlab_jwt_auth_backend_path
-  role_name       = var.service_name
+  role_name       = "${var.nomad_datacenter.name}-${var.service_name}"
   token_policies  = [vault_policy.terraform_policy.name]
 
   bound_claims = {

@@ -48,7 +48,7 @@ RULE
 
 
 resource "vault_consul_secret_backend_role" "this" {
-  name    = "nomad-deployment-job-${var.nomad_region.name}-${var.service_name}"
+  name    = "nomad-deployment-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
   backend = var.consul_datacenter.consul_engine_mount_path
 
   consul_policies = [
