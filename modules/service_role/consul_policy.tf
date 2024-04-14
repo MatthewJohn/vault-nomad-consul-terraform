@@ -5,7 +5,7 @@ locals {
 }
 
 resource "consul_acl_policy" "this" {
-  name = "nomad-job-${var.nomad_region.name}-${var.service_name}"
+  name = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
 
   rules = <<-RULE
 key_prefix "" {
