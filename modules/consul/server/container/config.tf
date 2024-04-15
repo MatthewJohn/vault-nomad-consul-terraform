@@ -258,6 +258,12 @@ ui_config {
   metrics_provider = "prometheus"
   metrics_proxy {
     base_url = "http://nomad-job-mon-victoriametrics.service.${var.datacenter.name}.${var.app_cert.common_name}"
+    add_headers = [
+      {
+        name  = "Host"
+        value = "nomad-job-mon-victoriametrics.service.${var.datacenter.name}.${var.app_cert.common_name}"
+      }
+    ]
   }
 }
 
