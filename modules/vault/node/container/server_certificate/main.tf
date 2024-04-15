@@ -12,7 +12,7 @@ resource "vault_pki_secret_backend_cert" "server_cert" {
   ]
   revoke = true
 
-  format = "pem"
+  format             = "pem"
   private_key_format = "der"
 
   # 10 years

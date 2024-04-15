@@ -101,7 +101,7 @@ variable "container_data_directory" {
 
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = object({
+  type = object({
     hostname     = string
     username     = string
     ip           = string

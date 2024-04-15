@@ -25,6 +25,6 @@ resource "vault_kv_secret_v2" "terraform_aws_credentials" {
   )
 
   lifecycle {
-    ignore_changes = [ data_json ]
+    ignore_changes = [data_json]
   }
 }

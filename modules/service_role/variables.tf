@@ -1,4 +1,4 @@
-variable "service_name"{
+variable "service_name" {
   description = "Name of service"
   type        = string
 }
@@ -21,9 +21,9 @@ variable "nomad_namespace" {
 variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({
-    name = string
+    name        = string
     common_name = string
-    client_dns = string
+    client_dns  = string
   })
 }
 

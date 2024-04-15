@@ -63,7 +63,7 @@ variable "gitlab_url" {
 
 variable "ldap" {
   description = "LDAP authentication details"
-  type        = object({
+  type = object({
     url         = string
     userdn      = string
     userattr    = string
@@ -73,5 +73,5 @@ variable "ldap" {
     certificate = optional(string, null)
     admin_group = optional(string, "vault-admins")
   })
-  default     = null
+  default = null
 }

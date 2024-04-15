@@ -21,7 +21,7 @@ module "vault_container" {
   vault_adm_pki_backend = var.vault_adm_pki_backend
   vault_adm_pki_role    = var.vault_adm_pki_role
 
-  docker_host     = var.docker_host
+  docker_host = var.docker_host
 
   providers = {
     docker          = docker.vault

@@ -5,7 +5,7 @@ resource "consul_config_entry" "global_proxy" {
   kind = "proxy-defaults"
 
   config_json = jsonencode({
-    Mode = "direct"
+    Mode             = "direct"
     AccessLogs       = {}
     Expose           = {}
     MeshGateway      = {}

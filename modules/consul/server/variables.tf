@@ -59,7 +59,7 @@ variable "root_cert" {
 variable "app_cert" {
   description = "App certificate object"
   type = object({
-    common_name            = string
+    common_name = string
   })
 }
 

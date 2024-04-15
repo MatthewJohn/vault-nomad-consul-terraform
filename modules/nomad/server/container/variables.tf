@@ -80,7 +80,7 @@ variable "initial_run" {
 
 variable "docker_host" {
   description = "Docker host to connect to"
-  type           = object({
+  type = object({
     ip           = string
     username     = string
     hostname     = string

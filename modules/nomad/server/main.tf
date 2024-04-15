@@ -42,7 +42,7 @@ module "consul_template_vault_agent" {
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
   app_role_mount_path = var.region.approle_mount_path
 
-  docker_host     = var.docker_host
+  docker_host = var.docker_host
 }
 
 module "container" {

@@ -20,7 +20,7 @@ resource "docker_image" "this" {
     build_args = {
       VAULT_VERSION = var.vault_version
 
-      http_proxy  = var.http_proxy
+      http_proxy = var.http_proxy
     }
 
     label = {

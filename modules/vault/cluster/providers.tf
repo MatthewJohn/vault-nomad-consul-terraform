@@ -5,7 +5,7 @@ terraform {
       source  = "terraform-cache.dockstudios.co.uk/rework-space-com/freeipa"
     }
     vault = {
-      configuration_aliases = [ vault.vault-adm ]
+      configuration_aliases = [vault.vault-adm]
     }
   }
 }

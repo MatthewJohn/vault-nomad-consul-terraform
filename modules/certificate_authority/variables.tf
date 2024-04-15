@@ -25,7 +25,7 @@ variable "organisation" {
 variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
-    address = string
+    address        = string
     pki_mount_path = string
   })
 }

@@ -1,7 +1,7 @@
 
 # Create bucket for unseal tokens
 locals {
-  bucket_name = "${var.cluster_name}-consul-bootstrap"
+  bucket_name           = "${var.cluster_name}-consul-bootstrap"
   consul_bootstrap_path = "${var.cluster_name}/consul/bootstrap"
 }
 
@@ -30,15 +30,15 @@ resource "vault_kv_secret_v2" "root_token_init" {
   )
 
   lifecycle {
-    ignore_changes = [ data_json ]
+    ignore_changes = [data_json]
   }
 
   provider = vault.vault-adm
 }
 
 data "vault_kv_secret_v2" "root_token" {
-  mount               = "admin-terraform"
-  name                = local.consul_bootstrap_path
+  mount = "admin-terraform"
+  name  = local.consul_bootstrap_path
 
   depends_on = [
     vault_kv_secret_v2.root_token_init

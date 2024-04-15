@@ -143,6 +143,6 @@ EOH
 }
 EOHCL
 
-  vault_token = vault_token.role_token.client_token
+  vault_token  = vault_token.role_token.client_token
   consul_token = data.vault_generic_secret.consul_token.data["token"]
 }

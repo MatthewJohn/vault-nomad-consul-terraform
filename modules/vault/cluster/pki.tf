@@ -16,7 +16,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "root_ca" {
 }
 
 resource "vault_pki_secret_backend_root_sign_intermediate" "root_ca" {
-  backend              = "pki"
+  backend = "pki"
 
   csr                  = vault_pki_secret_backend_intermediate_cert_request.root_ca.csr
   common_name          = "DockStudios SVC Intermediate CA"
@@ -61,6 +61,6 @@ resource "vault_pki_secret_backend_config_issuers" "config" {
   default_follows_latest_issuer = true
 
   lifecycle {
-    ignore_changes = [ default ]
+    ignore_changes = [default]
   }
 }

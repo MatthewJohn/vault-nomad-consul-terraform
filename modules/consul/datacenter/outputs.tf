@@ -31,7 +31,7 @@ output "client_ca_role_name" {
 
 output "pki_mount_path" {
   description = "PKI path"
-  value       = var.root_cert.pki_mount_path  # vault_mount.this.path
+  value       = var.root_cert.pki_mount_path # vault_mount.this.path
 }
 
 output "root_cert_public_key" {

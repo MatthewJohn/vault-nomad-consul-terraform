@@ -1,11 +1,11 @@
 
 locals {
-  vault_terraform_policy_role  = "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_nomad_policy_role      = "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_job_policy_role        = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_secret_path            = "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
-  vault_secret_base_path       = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
-  vault_secret_base_data_path  = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
+  vault_terraform_policy_role = "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
+  vault_nomad_policy_role     = "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
+  vault_job_policy_role       = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
+  vault_secret_path           = "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+  vault_secret_base_path      = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
+  vault_secret_base_data_path = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
 }
 
 # Policy that will be attached to the application
@@ -61,16 +61,16 @@ EOF
 # Create vault auth role to allow the token
 # to pass the role to nomad for the application
 resource "vault_token_auth_backend_role" "nomad" {
-  role_name              = local.vault_nomad_policy_role
+  role_name = local.vault_nomad_policy_role
 
-  allowed_policies       = [
+  allowed_policies = [
     vault_policy.nomad_policy.name,
     vault_policy.application_policy.name,
   ]
-  orphan                 = true
-  token_period           = "86400"
-  renewable              = true
-  path_suffix            = local.vault_nomad_policy_role
+  orphan       = true
+  token_period = "86400"
+  renewable    = true
+  path_suffix  = local.vault_nomad_policy_role
 }
 
 # Create vault policy for deployment
@@ -154,8 +154,8 @@ EOF
 }
 
 resource "vault_approle_auth_backend_role" "terraform" {
-  backend        = var.nomad_region.approle_mount_path
-  role_name      = local.vault_terraform_policy_role
+  backend   = var.nomad_region.approle_mount_path
+  role_name = local.vault_terraform_policy_role
   token_policies = [
     # Policies provided to deployment role
     # to perform actions in terraform to perform deployment

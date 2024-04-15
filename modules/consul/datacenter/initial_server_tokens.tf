@@ -12,6 +12,6 @@ resource "vault_kv_secret_v2" "static_token" {
   )
 
   lifecycle {
-    ignore_changes = [ data_json ]
+    ignore_changes = [data_json]
   }
 }

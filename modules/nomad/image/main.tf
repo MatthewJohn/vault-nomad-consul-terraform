@@ -23,7 +23,7 @@ resource "docker_image" "this" {
       CONSUL_VERSION = var.consul_version
       VAULT_VERSION  = var.vault_version
 
-      http_proxy  = var.http_proxy
+      http_proxy = var.http_proxy
     }
 
     label = {

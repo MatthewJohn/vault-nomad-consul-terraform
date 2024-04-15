@@ -18,8 +18,8 @@ EOF
 
 resource "consul_acl_token" "agent_service_role" {
   description = "consul-server-service-${var.datacenter.name}"
-  policies = ["${consul_acl_policy.agent_service_role.name}"]
-  local = true
+  policies    = ["${consul_acl_policy.agent_service_role.name}"]
+  local       = true
 }
 
 data "consul_acl_token_secret_id" "agent_service_role" {

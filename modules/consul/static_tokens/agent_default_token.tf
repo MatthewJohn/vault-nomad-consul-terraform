@@ -22,8 +22,8 @@ EOF
 
 resource "consul_acl_token" "server_dns_service_role" {
   description = "consul-server-dns-${var.datacenter.name}"
-  policies = ["${consul_acl_policy.server_dns_service_role.name}"]
-  local = true
+  policies    = ["${consul_acl_policy.server_dns_service_role.name}"]
+  local       = true
 }
 
 data "consul_acl_token_secret_id" "server_dns_service_role" {

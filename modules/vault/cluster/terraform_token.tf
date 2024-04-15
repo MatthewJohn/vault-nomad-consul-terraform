@@ -441,9 +441,9 @@ EOF
 }
 
 resource "vault_approle_auth_backend_role" "terraform" {
-  backend         = vault_auth_backend.approle.path
-  role_name       = var.terraform_policy_name
-  token_policies  = [vault_policy.terraform.name]
+  backend        = vault_auth_backend.approle.path
+  role_name      = var.terraform_policy_name
+  token_policies = [vault_policy.terraform.name]
 }
 
 resource "vault_approle_auth_backend_role_secret_id" "terraform" {

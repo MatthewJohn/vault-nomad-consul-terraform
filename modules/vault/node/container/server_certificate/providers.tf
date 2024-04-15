@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     vault = {
-      configuration_aliases = [ vault.vault-adm ]
+      configuration_aliases = [vault.vault-adm]
     }
   }
 }

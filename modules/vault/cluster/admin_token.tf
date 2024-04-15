@@ -107,7 +107,7 @@ path "sys/health"
 EOF
 }
 
-resource freeipa_group "vault_admins" {
+resource "freeipa_group" "vault_admins" {
   count = var.ldap != null ? 1 : 0
 
   name        = var.ldap.admin_group

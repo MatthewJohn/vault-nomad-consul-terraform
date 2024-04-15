@@ -2,8 +2,8 @@
 variable "nomad_host" {
   description = "Nomad hot to perform bootstrapping on"
   type = object({
-    fqdn      = string
-    username  = string
+    fqdn     = string
+    username = string
   })
 }
 

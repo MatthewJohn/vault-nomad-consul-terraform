@@ -3,7 +3,7 @@
 #echo "h+F4ULyo3X1AA9LI1L6txDVRE6NwityriJhRwizcnIQ=" | ssh -tt docker-connect@vault-1.dock.local docker exec -ti -e VAULT_CACERT=/vault/ssl/root-ca.pem vault vault operator unseal
 
 locals {
-  bucket_name = "${var.cluster_name}-vault-init"
+  bucket_name          = "${var.cluster_name}-vault-init"
   vault_bootstrap_path = "${var.cluster_name}/vault/bootstrap"
 }
 
@@ -34,15 +34,15 @@ resource "vault_kv_secret_v2" "root_token_init" {
   )
 
   lifecycle {
-    ignore_changes = [ data_json ]
+    ignore_changes = [data_json]
   }
 
   provider = vault.vault-adm
 }
 
 data "vault_kv_secret_v2" "root_token" {
-  mount               = "admin-terraform"
-  name                = local.vault_bootstrap_path
+  mount = "admin-terraform"
+  name  = local.vault_bootstrap_path
 
   depends_on = [
     vault_kv_secret_v2.root_token_init
