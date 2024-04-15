@@ -255,10 +255,10 @@ telemetry {
 ui_config {
   enabled = true
 
-  # metrics_provider = "prometheus"
-  # metrics_proxy {
-  #   base_url = "https://"
-  # }
+  metrics_provider = "prometheus"
+  metrics_proxy {
+    base_url = "http://nomad-job-mon-victoriametrics.service.${var.datacenter.name}.${var.app_cert.common_name}"
+  }
 }
 
 retry_join = ["${var.datacenter.common_name}"]
