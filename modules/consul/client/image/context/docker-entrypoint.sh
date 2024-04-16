@@ -115,7 +115,7 @@ else
     cat > /tmp/start_consul.sh <<EOF
 #!/bin/bash
 
-$@
+exec $@
 EOF
     chmod +x /tmp/start_consul.sh
 

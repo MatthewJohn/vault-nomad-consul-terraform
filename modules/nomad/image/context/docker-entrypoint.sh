@@ -69,7 +69,7 @@ then
     cat > /tmp/start_nomad.sh <<EOF
 #!/bin/bash
 
-$@
+exec $@
 EOF
     chmod +x /tmp/start_nomad.sh
 
