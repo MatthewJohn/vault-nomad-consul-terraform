@@ -115,22 +115,6 @@ else
     cat > /tmp/start_consul.sh <<EOF
 #!/bin/bash
 
-# _term() {
-#   echo "Caught SIGTERM signal!"
-#   kill -TERM "$child" 2>/dev/null
-# }
-# trap _term SIGTERM
-
-# _hup() {
-#   echo "Caught SIGHUP signal!"
-#   kill -HUP "$child" 2>/dev/null
-# }
-# trap _hup SIGHUP
-
-# $@ &
-# child=$!
-# wait "$child"
-
 exec $@
 
 EOF
