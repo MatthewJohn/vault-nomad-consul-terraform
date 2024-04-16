@@ -444,9 +444,17 @@ resource "vault_approle_auth_backend_role" "terraform" {
   backend        = vault_auth_backend.approle.path
   role_name      = var.terraform_policy_name
   token_policies = [vault_policy.terraform.name]
+
+  token_bound_cidrs      = ["172.16.94.0/24"]
+  token_ttl              = 300
+  token_max_ttl          = 300
+  token_explicit_max_ttl = 300
 }
 
 resource "vault_approle_auth_backend_role_secret_id" "terraform" {
   backend   = vault_auth_backend.approle.path
   role_name = vault_approle_auth_backend_role.terraform.role_name
+
+  # Admin VPN
+  cidr_list = ["172.16.94.0/24"]
 }
