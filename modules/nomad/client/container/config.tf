@@ -220,6 +220,11 @@ client {
     read_only = false
   }
   %{endif}
+
+  reserved {
+    memory = 600
+    cpu    = 300
+  }
 }
 
 telemetry {
