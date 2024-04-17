@@ -77,5 +77,6 @@ EOF
     # @TODO Get nomad-template to trigger nomad reload
     consul-template \
       -config /nomad/config/templates/consul_template.hcl \
+      -exec-reload-signal=SIGHUP \
       -exec /tmp/start_nomad.sh
 fi
