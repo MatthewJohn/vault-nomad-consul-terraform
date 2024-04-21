@@ -14,10 +14,6 @@ node_prefix "consul-client-${var.consul_datacenter.name}-" {
   policy = "write"
 }
 
-service "node_exporter" {
-  policy = "write"
-}
-
 # As per https://developer.hashicorp.com/nomad/docs/integrations/consul-integration
 key_prefix "" {
   policy = "read"
@@ -38,19 +34,6 @@ node_prefix "" {
 agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
-
-# Hopefully not required as servers have this permission
-#acl = "write"
-
-
-service "nomad-${var.region.name}-${var.datacenter.name}-client" {
-  policy = "write"
-}
-
-service "nomad-${var.region.name}-client" {
-  policy = "write"
-}
-
 RULE
 }
 
