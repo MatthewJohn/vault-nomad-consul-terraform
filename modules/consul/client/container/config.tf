@@ -136,7 +136,11 @@ ports {
 
 acl {
   enabled = true
+  %{if var.use_token_as_default}
+  default_policy = "allow"
+  %{else}
   default_policy = "deny"
+  %{endif}
   enable_token_persistence = false
   enable_token_replication = false
   tokens {
