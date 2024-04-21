@@ -20,7 +20,6 @@ resource "docker_image" "this" {
 
     build_args = {
       CONSUL_VERSION = var.consul_version
-      VAULT_VERSION  = var.vault_version
 
       http_proxy = var.http_proxy
     }
