@@ -13,6 +13,21 @@ variable "listen_host" {
   type        = string
 }
 
+variable "app_role_id" {
+  description = "App role ID for authentication"
+  type        = string
+}
+
+variable "app_role_secret" {
+  description = "App role secret for authentication"
+  type        = string
+}
+
+variable "app_role_mount_path" {
+  description = "Mount path for approle backend"
+  type        = string
+}
+
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({
@@ -48,15 +63,6 @@ variable "root_cert" {
     organisation           = string
     ou                     = string
     pki_connect_mount_path = string
-  })
-}
-
-variable "consul_template_vault_agent" {
-  description = "Vault agent instance for consul template"
-  type = object({
-    container_id    = string
-    token_directory = string
-    token_path      = string
   })
 }
 

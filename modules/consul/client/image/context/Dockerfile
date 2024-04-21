@@ -17,6 +17,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 # This is the release of Consul to pull in.
 ARG CONSUL_VERSION
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
+ARG VAULT_VERSION
 ARG http_proxy
 ENV http_proxy=$http_proxy
 ENV https_proxy=$http_proxy
@@ -64,21 +65,35 @@ RUN set -eux && \
 # tiny smoke test to ensure the binary we downloaded runs
     consul version
 
-# Download consul-template
-RUN set -eux && \
+# Install vault, as this is needed for nomad jobs that have vault integration
+RUN set -eux; \
+    microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
+    VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
+    found=''; \
+    for server in \
+        hkps://keys.openpgp.org \
+        hkps://keyserver.ubuntu.com \
+        hkps://pgp.mit.edu \
+    ; do \
+        echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
+        gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+    done; \
+    test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
-    consulArch=amd64 && \
-    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip && \
-    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
-    wget ${HASHICORP_RELEASES}/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig && \
-    gpg --batch --verify consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS && \
-    grep consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS | sha256sum -c && \
-    unzip -d /tmp/build consul-template_${CONSUL_TEMPLATE_VERSION}_linux_${consulArch}.zip && \
-    cp /tmp/build/consul-template /bin/consul-template && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_SHA256SUMS && \
+    wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_SHA256SUMS.sig && \
+    gpg --batch --verify vault_${VAULT_VERSION}_SHA256SUMS.sig vault_${VAULT_VERSION}_SHA256SUMS && \
+    grep vault_${VAULT_VERSION}_linux_amd64.zip vault_${VAULT_VERSION}_SHA256SUMS | sha256sum -c && \
+    unzip -d /tmp/build vault_${VAULT_VERSION}_linux_amd64.zip && \
+    cp /tmp/build/vault /bin/vault && \
+    if [ -f /tmp/build/EULA.txt ]; then mkdir -p /usr/share/doc/vault; mv /tmp/build/EULA.txt /usr/share/doc/vault/EULA.txt; fi && \
+    if [ -f /tmp/build/TermsOfEvaluation.txt ]; then mkdir -p /usr/share/doc/vault; mv /tmp/build/TermsOfEvaluation.txt /usr/share/doc/vault/TermsOfEvaluation.txt; fi && \
     cd /tmp && \
     rm -rf /tmp/build && \
-    gpgconf --kill all && \
+    gpgconf --kill dirmngr && \
+    gpgconf --kill gpg-agent && \
     rm -rf /root/.gnupg
 
 # Create a non-root user to run the software. On OpenShift, this
