@@ -6,6 +6,14 @@ resource "consul_acl_policy" "terraform" {
   rules = <<EOF
 policy = "write"
 acl = "write"
+
+node_prefix "" {
+  policy = "write"
+}
+
+service_prefix "" {
+  policy = "write"
+}
 EOF
 }
 
