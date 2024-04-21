@@ -24,7 +24,9 @@ module "consul_client" {
 
   custom_role = {
     approle_name      = vault_approle_auth_backend_role.consul_client_consul_template.role_name
-    vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
+    # Use fake ternary to force waiting for role ID to exist before passing in the state name
+    # as this is used in a data lookup, which will fail is immediately able to run during plan
+    vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.id != "" ? vault_consul_secret_backend_role.nomad_client_vault_consul_role.name : ""
   }
 
   use_token_as_default = true
