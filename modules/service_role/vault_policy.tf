@@ -48,6 +48,10 @@ path "auth/token/lookup-self"
 }
 
 # Allow reading
+path "${local.vault_secret_base_path}/*"
+{
+  capabilities = [ "read", "list" ]
+}
 path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list" ]
