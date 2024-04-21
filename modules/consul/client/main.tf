@@ -37,6 +37,10 @@ module "container" {
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert
 
+  vault_consul_role = var.custom_role != null ? var.custom_role.vault_consul_role : "consul-client-role"
+
+  use_token_as_default = var.use_token_as_default
+
   listen_host = var.listen_host
   listen_port = var.listen_port
 

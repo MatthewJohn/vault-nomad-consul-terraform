@@ -13,6 +13,16 @@ variable "listen_host" {
   type        = string
 }
 
+variable vault_consul_role {
+  description = "Vault consul role"
+  type        = string
+}
+
+variable use_token_as_default {
+  description = "Whether to use token for inbound connections, authenticating anonymous clients as this consul client's role"
+  type        = bool
+}
+
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({

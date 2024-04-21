@@ -140,7 +140,10 @@ acl {
   enable_token_persistence = false
   enable_token_replication = false
   tokens {
-{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role" }}
+{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/${var.vault_consul_role}" }}
+%{if var.use_token_as_default}
+    default = "{{ .Data.token }}"
+%{endif}
     agent  = "{{ .Data.token }}"
     # @TODO Create dedicated token for this
     config_file_service_registration = "{{ .Data.token }}"

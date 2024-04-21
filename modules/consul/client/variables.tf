@@ -26,6 +26,20 @@ variable "vault_version" {
   type        = string
 }
 
+variable custom_role {
+  type = object({
+    approle_name      = string
+    vault_consul_role = string
+  })
+  default = null
+}
+
+variable use_token_as_default {
+  description = "Whether to use token for inbound connections, authenticating anonymous clients as this consul client's role"
+  type        = bool
+  default     = false
+}
+
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({

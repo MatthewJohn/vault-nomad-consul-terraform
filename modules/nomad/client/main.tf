@@ -22,6 +22,13 @@ module "consul_client" {
   root_cert     = var.consul_root_cert
   http_proxy    = var.http_proxy
 
+  custom_role = {
+    approle_name      = vault_approle_auth_backend_role.consul_client_consul_template.role_name
+    vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
+  }
+
+  use_token_as_default = true
+
   consul_version = var.consul_version
   vault_version  = var.vault_version
 
