@@ -23,10 +23,10 @@ module "consul_client" {
   http_proxy    = var.http_proxy
 
   custom_role = {
-    approle_name      = vault_approle_auth_backend_role.consul_client_consul_template.role_name
     # Use fake ternary to force waiting for role ID to exist before passing in the state name
     # as this is used in a data lookup, which will fail is immediately able to run during plan
-    vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.id != "" ? vault_consul_secret_backend_role.nomad_client_vault_consul_role.name : ""
+    approle_name      = vault_approle_auth_backend_role.consul_client_consul_template.id != "" ? vault_approle_auth_backend_role.consul_client_consul_template.role_name : ""
+    vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
   }
 
   use_token_as_default = true
