@@ -106,5 +106,8 @@ resource "docker_container" "this" {
     replace_triggered_by = [
       null_resource.nomad_config
     ]
+    ignore_changes = [
+      log_opts
+    ]
   }
 }

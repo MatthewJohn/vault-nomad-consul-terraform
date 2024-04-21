@@ -48,5 +48,8 @@ resource "docker_container" "this" {
     replace_triggered_by = [
       null_resource.config_files
     ]
+    ignore_changes = [
+      log_opts
+    ]
   }
 }

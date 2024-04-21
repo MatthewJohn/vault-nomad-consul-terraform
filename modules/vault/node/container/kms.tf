@@ -55,7 +55,8 @@ resource "docker_container" "kms" {
 
   lifecycle {
     ignore_changes = [
-      image
+      image,
+      log_opts
     ]
 
     replace_triggered_by = [

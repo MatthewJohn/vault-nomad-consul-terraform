@@ -74,7 +74,8 @@ resource "docker_container" "this" {
 
   lifecycle {
     ignore_changes = [
-      image
+      image,
+      log_opts
     ]
 
     replace_triggered_by = [
