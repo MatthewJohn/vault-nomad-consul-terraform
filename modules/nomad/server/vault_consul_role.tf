@@ -26,12 +26,16 @@ service_prefix "" {
   policy = "write"
 }
 
+node_prefix "consul-client-${var.consul_datacenter.name}-" {
+  policy = "write"
+}
+
 agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
 
 acl = "write"
-
+mesh = "write"
 RULE
 }
 
@@ -42,4 +46,54 @@ resource "vault_consul_secret_backend_role" "nomad_server_vault_consul_role" {
   consul_policies = [
     consul_acl_policy.nomad_server.name
   ]
+}
+
+# Consul template for consul agent
+resource "vault_policy" "consul_client_consul_template" {
+  name = "consul-client-${var.consul_datacenter.name}-nomad-server-${var.region.name}-consul-template-${var.docker_host.hostname}"
+
+  policy = <<EOF
+# Access CA certs
+path "${var.root_cert.pki_mount_path}/issue/${var.consul_datacenter.client_ca_role_name}" {
+  capabilities = [ "read", "update" ]
+}
+
+# Access to consul agent consul role to generate token
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.nomad_server_vault_consul_role.name}"
+{
+  capabilities = ["read"]
+}
+
+# Access to gossip token
+path "${var.vault_cluster.consul_static_mount_path}/data/${var.consul_datacenter.name}/gossip"
+{
+  capabilities = [ "read" ]
+}
+path "${var.vault_cluster.consul_static_mount_path}/${var.consul_datacenter.name}/gossip"
+{
+  capabilities = [ "read" ]
+}
+
+# Renew leases
+path "sys/leases/renew" {
+  capabilities = [ "update" ]
+}
+
+path "auth/token/renew-self" {
+  capabilities = [ "update" ]
+}
+
+# @TODO What is this for?
+path "${var.consul_datacenter.approle_mount_path}/login"
+{
+  capabilities = ["update"]
+}
+
+EOF
+}
+
+resource "vault_approle_auth_backend_role" "consul_client_consul_template" {
+  backend        = var.consul_datacenter.approle_mount_path
+  role_name      = "consul-client-${var.consul_datacenter.name}-nomad-server-${var.region.name}-consul-template-${var.docker_host.hostname}"
+  token_policies = [vault_policy.consul_client_consul_template.name]
 }

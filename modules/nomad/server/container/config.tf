@@ -179,10 +179,6 @@ consul {
   client_service_name    = "nomad-${var.region.name}-client"
   #client_http_check_name = ""
 
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
-  token = "{{ .Data.token }}"
-{{ end }}
-
   #namespace = "nomad-${var.region.name}"
 
   ssl = true

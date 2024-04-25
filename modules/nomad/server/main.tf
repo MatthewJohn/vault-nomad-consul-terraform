@@ -20,6 +20,15 @@ module "consul_client" {
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
 
+  custom_role = {
+    # Use fake ternary to force waiting for role ID to exist before passing in the state name
+    # as this is used in a data lookup, which will fail is immediately able to run during plan
+    approle_name      = vault_approle_auth_backend_role.consul_client_consul_template.id != "" ? vault_approle_auth_backend_role.consul_client_consul_template.role_name : ""
+    vault_consul_role = vault_consul_secret_backend_role.nomad_server_vault_consul_role.name
+  }
+
+  use_token_as_default = true
+
   consul_version = var.consul_version
   http_proxy     = var.http_proxy
   vault_version  = var.vault_version
