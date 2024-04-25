@@ -8,4 +8,9 @@ resource "vault_jwt_auth_backend" "this" {
   # @TODO Can this be set?
   #bound_issuer       = local.server_address
   jwt_supported_algs = ["RS256", "EdDSA"]
+
+  jwks_ca_pem = var.root_cert.public_key
+
+  # @TODO To configure, if necessary
+  #default_role = ""
 }
