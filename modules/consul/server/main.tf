@@ -16,7 +16,7 @@ module "consul_template_vault_agent" {
   vault_cluster  = var.vault_cluster
   domain_name    = var.datacenter.common_name
   container_name = "vault-agent-consul-template"
-  vault_version  = "1.16.1"
+  vault_version  = "1.16.2"
 
   base_directory = "/vault-agent-consul-template"
 
