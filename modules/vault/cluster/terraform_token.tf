@@ -176,6 +176,12 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Create JWT for nomad
+path "sys/auth/jwt_nomad_${nomad_region}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+
 path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
 {
   capabilities = ["create", "read", "delete", "update"]

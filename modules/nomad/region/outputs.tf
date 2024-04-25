@@ -68,3 +68,8 @@ output "server_vault_role" {
   description = "Vault role for nomad server vault integration"
   value       = vault_token_auth_backend_role.server_role.role_name
 }
+
+output "vault_jwt_path" {
+  description = "Workload identity JWT engine path"
+  value       = vault_jwt_auth_backend.this.path
+}
