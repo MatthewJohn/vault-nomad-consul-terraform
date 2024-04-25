@@ -127,7 +127,7 @@ domain             = "${var.root_cert.common_name}"
 
 ports {
   # Listener ports
-  dns = 53
+  dns = -1
   http = -1
   https = ${var.listen_port}
   grpc = -1
