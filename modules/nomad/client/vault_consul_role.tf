@@ -10,10 +10,6 @@ resource "consul_acl_policy" "nomad_client" {
     var.consul_datacenter.name
   ]
   rules = <<-RULE
-node_prefix "consul-client-${var.consul_datacenter.name}-" {
-  policy = "write"
-}
-
 # As per https://developer.hashicorp.com/nomad/docs/integrations/consul-integration
 key_prefix "" {
   policy = "read"
@@ -29,6 +25,10 @@ agent_prefix "" {
 
 node_prefix "" {
   policy = "read"
+}
+
+node_prefix "consul-client-${var.consul_datacenter.name}-" {
+  policy = "write"
 }
 
 agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
