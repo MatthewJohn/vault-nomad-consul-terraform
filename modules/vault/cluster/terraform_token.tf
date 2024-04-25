@@ -181,6 +181,14 @@ path "sys/auth/jwt_nomad_${nomad_region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
 }
+path "auth/jwt_nomad_${nomad_region}/config"
+{
+  capabilities = ["read", "update"]
+}
+path "sys/mounts/auth/jwt_nomad_${nomad_region}"
+{
+  capabilities = ["read"]
+}
 
 path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
 {
