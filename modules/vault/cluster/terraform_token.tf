@@ -186,17 +186,19 @@ path "consul-${datacenter}/roles/nomad-deployment-job-${nomad_region}-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Nomad server policies for consul agent
+path "sys/policies/acl/consul-client-${datacenter}-nomad-server-${nomad_region}-consul-template-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {
   capabilities = ["create", "read", "delete", "update"]
 }
 
-# Nomad client/server policies for consul agent
-path "sys/policies/acl/consul-client-${datacenter}-nomad-server-${nomad_region}-${nomad_dc}-consul-template-*"
-{
-  capabilities = ["update", "read", "create", "delete"]
-}
+# Nomad client policies for consul agent
 path "sys/policies/acl/consul-client-${datacenter}-nomad-client-${nomad_region}-${nomad_dc}-consul-template-*"
 {
   capabilities = ["update", "read", "create", "delete"]
