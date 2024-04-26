@@ -27,11 +27,7 @@ node_prefix "" {
   policy = "read"
 }
 
-node_prefix "consul-client-${var.consul_datacenter.name}-" {
-  policy = "write"
-}
-# @TODO Work out node name
-node_prefix "" {
+node "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
 
