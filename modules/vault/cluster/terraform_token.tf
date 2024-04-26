@@ -189,6 +189,10 @@ path "sys/mounts/auth/jwt_nomad_${nomad_region}"
 {
   capabilities = ["read"]
 }
+path "sys/mounts/auth/jwt_nomad_${nomad_region}/tune"
+{
+  capabilities = ["read", "update"]
+}
 
 path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
 {
