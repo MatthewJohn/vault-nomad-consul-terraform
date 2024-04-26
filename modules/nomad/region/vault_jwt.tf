@@ -7,7 +7,7 @@ resource "vault_jwt_auth_backend" "this" {
   #oidc_discovery_url = "${local.server_address}/.well-known/jwks.json"
   # @TODO Can this be set?
   #bound_issuer       = local.server_address
-  jwt_supported_algs = ["RS256", "EdDSA"]
+  jwt_supported_algs = ["EdDSA"]
 
   jwks_ca_pem = var.root_cert.public_key
 
