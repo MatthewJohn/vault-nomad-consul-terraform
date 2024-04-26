@@ -123,6 +123,6 @@ EOF
     # @TODO Get consul-template to trigger consul reload
     consul-template \
       -config /consul/config/templates/consul_template.hcl \
-      -exec-reload-signal=SIGHUP \
+      -exec-kill-timeout=30s \
       -exec /tmp/start_consul.sh
 fi
