@@ -30,6 +30,10 @@ node_prefix "" {
 node_prefix "consul-client-${var.consul_datacenter.name}-" {
   policy = "write"
 }
+# @TODO Work out node name
+node_prefix "" {
+  policy = "write"
+}
 
 agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
