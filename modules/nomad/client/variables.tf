@@ -27,6 +27,7 @@ variable "datacenter" {
     client_consul_template_approle_role_name = string
     client_dns                               = string
     client_pki_role_name                     = string
+    vault_jwt_path                           = string
   })
 }
 

@@ -176,24 +176,6 @@ path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
-# Create JWT for nomad
-path "sys/auth/jwt_nomad_${nomad_region}"
-{
-  capabilities = ["create", "update", "delete", "read", "sudo"]
-}
-path "auth/jwt_nomad_${nomad_region}/config"
-{
-  capabilities = ["read", "update"]
-}
-path "sys/mounts/auth/jwt_nomad_${nomad_region}"
-{
-  capabilities = ["read"]
-}
-path "sys/mounts/auth/jwt_nomad_${nomad_region}/tune"
-{
-  capabilities = ["read", "update"]
-}
-
 path "consul-${datacenter}/roles/nomad-job-${nomad_region}-*"
 {
   capabilities = ["create", "read", "delete", "update"]
@@ -221,6 +203,25 @@ path "sys/policies/acl/consul-client-${datacenter}-nomad-client-${nomad_region}-
 {
   capabilities = ["update", "read", "create", "delete"]
 }
+
+# Create JWT for nomad
+path "sys/auth/jwt_nomad_${nomad_region}_${nomad_dc}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+path "auth/jwt_nomad_${nomad_region}_${nomad_dc}/config"
+{
+  capabilities = ["read", "update"]
+}
+path "sys/mounts/auth/jwt_nomad_${nomad_region}_${nomad_dc}"
+{
+  capabilities = ["read"]
+}
+path "sys/mounts/auth/jwt_nomad_${nomad_region}_${nomad_dc}/tune"
+{
+  capabilities = ["read", "update"]
+}
+
 %{endfor}
 
 %{endfor}
@@ -437,6 +438,12 @@ path "pki_int_nomad_${region}_${nomad_dc}/roles/*"
 }
 
 path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Policy for default workload identity
+path "sys/policies/acl/default-identity-${region}-${nomad_dc}"
 {
   capabilities = ["update", "read", "create", "delete"]
 }

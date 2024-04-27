@@ -37,6 +37,7 @@ variable "datacenter" {
     client_dns                               = string
     pki_mount_path                           = string
     client_pki_role_name                     = string
+    vault_jwt_path                           = string
   })
 }
 

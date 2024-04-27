@@ -33,3 +33,7 @@ output "client_consul_template_approle_role_name" {
   value       = vault_approle_auth_backend_role.client_consul_template.role_name
 }
 
+output "vault_jwt_path" {
+  description = "Workload identity JWT engine path"
+  value       = vault_jwt_auth_backend.workload_identity.path
+}

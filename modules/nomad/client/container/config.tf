@@ -188,7 +188,7 @@ vault {
 
   ca_file = "/nomad/vault/ca_cert.pem"
 
-  #create_from_role = "$${var.region.server_vault_role}"
+  jwt_auth_backend_path = "${var.datacenter.vault_jwt_path}"
 
   allow_unauthenticated = false
 }

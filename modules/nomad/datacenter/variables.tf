@@ -23,6 +23,7 @@ variable "region" {
   type = object({
     name               = string
     common_name        = string
+    address            = string
     role_name          = string
     pki_mount_path     = string
     approle_mount_path = string
@@ -35,6 +36,13 @@ variable "consul_datacenter" {
     name                     = string
     common_name              = string
     consul_engine_mount_path = string
+  })
+}
+
+variable "vault_cluster" {
+  description = "Vault cluster"
+  type = object({
+    service_secrets_mount_path = string
   })
 }
 

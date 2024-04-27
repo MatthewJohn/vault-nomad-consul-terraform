@@ -196,6 +196,12 @@ vault {
 
   create_from_role = "${var.region.server_vault_role}"
 
+  # To be enabled when completely switched to identity
+  # default_identity {
+  #   aud = ["vault.io"]
+  #   ttl = "1h"
+  # }
+
   allow_unauthenticated = false
 }
 
