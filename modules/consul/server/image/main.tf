@@ -8,7 +8,7 @@ resource "null_resource" "image_trigger" {
 }
 
 resource "docker_image" "this" {
-  name = "consul-ds:${var.consul_version}"
+  name = "consul-server-ds:${var.consul_version}"
 
   keep_locally = true
 
