@@ -33,12 +33,13 @@ ENV HASHICORP_RELEASES=https://releases.hashicorp.com
 # Its shasum is hardcoded. If you upgrade the dumb-init verion you'll need to
 # also update the shasum.
 RUN set -eux && \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates curl gnupg libcap openssl iputils jq iptables wget unzip tar && \
     wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 $proxy_config" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     nomadArch=amd64 && \
@@ -75,12 +76,13 @@ RUN set -eux && \
 
 # Install consul
 RUN set -eux && \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates curl gnupg libcap openssl iputils jq iptables wget unzip tar && \
     wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 $proxy_config" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     consulArch=amd64 && \
@@ -101,6 +103,7 @@ RUN set -eux && \
 
 # Install vault, as this is needed for nomad jobs that have vault integration
 RUN set -eux; \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
     VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
     found=''; \
@@ -110,7 +113,7 @@ RUN set -eux; \
         hkps://pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-        gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+        gpg --keyserver-options "timeout=40 $proxy_config" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \

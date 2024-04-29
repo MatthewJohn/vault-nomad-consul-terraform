@@ -11,13 +11,14 @@ RUN set -eux; \
     microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
     VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
     found=''; \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     for server in \
         hkps://keys.openpgp.org \
         hkps://keyserver.ubuntu.com \
         hkps://pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-        gpg --keyserver-options "timeout=40 http-proxy=$http_proxy" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+        gpg --keyserver-options "timeout=40 $proxy_config" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
