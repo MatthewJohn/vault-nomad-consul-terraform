@@ -189,8 +189,6 @@ vault {
   ca_file = "/nomad/vault/ca_cert.pem"
 
   jwt_auth_backend_path = "${var.datacenter.vault_jwt_path}"
-
-  allow_unauthenticated = false
 }
 
 plugin "docker" {

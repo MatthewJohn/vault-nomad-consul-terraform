@@ -186,23 +186,15 @@ consul {
 }
 
 vault {
-  {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}" "period=72h"}}
-  token = "{{.Auth.ClientToken}}"
-  {{ end }}
   enabled = true
-  address = "${var.vault_cluster.address}"
-
-  ca_file = "/nomad/vault/ca_cert.pem"
-
-  create_from_role = "${var.region.server_vault_role}"
 
   # To be enabled when completely switched to identity
-  # default_identity {
-  #   aud = ["vault.io"]
-  #   ttl = "1h"
-  # }
-
-  allow_unauthenticated = false
+  default_identity {
+    aud  = ["vault.io"]
+    ttl  = "1h"
+    env  = false
+    file = false
+  }
 }
 
 telemetry {
