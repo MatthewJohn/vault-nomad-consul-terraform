@@ -1,18 +1,7 @@
-module "vault_image" {
-  source = "./image"
-
-  vault_version = var.vault_version
-  http_proxy    = var.http_proxy
-
-  providers = {
-    docker = docker.vault
-  }
-}
-
 module "vault_container" {
   source = "./container"
 
-  image                 = module.vault_image.image_id
+  image                 = var.docker_images.vault_node_image
   vault_subdomain       = var.vault_subdomain
   all_vault_hosts       = var.all_vault_hosts
   kms_key_id            = var.kms_key_id
@@ -27,8 +16,4 @@ module "vault_container" {
     docker          = docker.vault
     vault.vault-adm = vault.vault-adm
   }
-
-  depends_on = [
-    module.vault_image
-  ]
 }

@@ -4,11 +4,6 @@ variable "vault_subdomain" {
   default     = "vault"
 }
 
-variable "vault_version" {
-  description = "Vault version"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host"
   type = object({
@@ -48,7 +43,9 @@ variable "vault_adm_pki_backend" {
   type        = string
 }
 
-variable "http_proxy" {
-  description = "HTTP proxy"
-  type        = string
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_node_image = string
+  })
 }

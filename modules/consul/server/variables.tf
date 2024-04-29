@@ -69,12 +69,10 @@ variable "initial_run" {
   default     = false
 }
 
-variable "http_proxy" {
-  description = "HTTP proxy URL"
-  type        = string
-}
-
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image = string
+    consul_server_image = string
+  })
 }

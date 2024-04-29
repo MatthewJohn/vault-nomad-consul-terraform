@@ -66,16 +66,6 @@ variable "consul_datacenter" {
   })
 }
 
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
-}
-
-variable "nomad_version" {
-  description = "Version of nomad"
-  type        = string
-}
-
 variable "nomad_https_port" {
   description = "Nomad HTTPS listen port"
   type        = number
@@ -101,12 +91,11 @@ variable "docker_host" {
   })
 }
 
-variable "vault_version" {
-  description = "Vault version"
-  type        = string
-}
-
-variable "http_proxy" {
-  description = "HTTP proxy URL"
-  type        = string
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image   = string
+    consul_client_image = string
+    nomad_image         = string
+  })
 }

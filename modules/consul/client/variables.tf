@@ -1,9 +1,3 @@
-
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
-}
-
 variable "listen_port" {
   description = "Port for consul client to listen on"
   type        = number
@@ -14,16 +8,6 @@ variable "listen_host" {
   description = "Host for consul client to listen on"
   type        = string
   default     = "127.0.0.1"
-}
-
-variable "http_proxy" {
-  description = "HTTP proxy URL"
-  type        = string
-}
-
-variable "vault_version" {
-  description = "Vault version"
-  type        = string
 }
 
 variable custom_role {
@@ -89,5 +73,13 @@ variable "docker_host" {
     domain       = string
     bastion_host = optional(string, null)
     bastion_user = optional(string, null)
+  })
+}
+
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image   = string
+    consul_client_image = string
   })
 }

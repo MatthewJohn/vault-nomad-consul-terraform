@@ -1,15 +1,3 @@
-
-module "consul_image" {
-  source = "./image"
-
-  consul_version = var.consul_version
-  http_proxy     = var.http_proxy
-
-  providers = {
-    docker = docker.consul
-  }
-}
-
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
@@ -25,14 +13,14 @@ module "consul_template_vault_agent" {
   docker_host = var.docker_host
 
   vault_cluster = var.vault_cluster
-  http_proxy    = var.http_proxy
-  vault_version = var.vault_version
+
+  docker_images = var.docker_images
 }
 
 module "container" {
   source = "./container"
 
-  image         = module.consul_image.image_id
+  image         = var.docker_images.consul_client_image
   datacenter    = var.datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert

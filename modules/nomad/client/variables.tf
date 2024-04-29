@@ -74,24 +74,13 @@ variable "consul_datacenter" {
   })
 }
 
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
-}
-
-variable "nomad_version" {
-  description = "Version of nomad"
-  type        = string
-}
-
-variable "vault_version" {
-  description = "Version of Vault"
-  type        = string
-}
-
-variable "http_proxy" {
-  description = "HTTP Proxy URL"
-  type        = string
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image   = string
+    consul_client_image = string
+    nomad_image         = string
+  })
 }
 
 variable "container_data_directory" {

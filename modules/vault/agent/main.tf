@@ -1,20 +1,7 @@
-module "image" {
-  source = "./image"
-
-  vault_version = var.vault_version
-  image_name    = var.container_name
-
-  http_proxy = var.http_proxy
-
-  providers = {
-    docker = docker.vault
-  }
-}
-
 module "container" {
   source = "./container"
 
-  image          = module.image.image_id
+  image          = var.docker_images.vault_agent_image
   base_directory = var.base_directory
   vault_cluster  = var.vault_cluster
   container_name = var.container_name
@@ -29,8 +16,4 @@ module "container" {
   providers = {
     docker = docker.vault
   }
-
-  depends_on = [
-    module.image
-  ]
 }

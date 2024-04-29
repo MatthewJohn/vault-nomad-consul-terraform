@@ -25,11 +25,6 @@ variable "base_directory" {
   default     = "/vault-agent"
 }
 
-variable "http_proxy" {
-  description = "HTTP proxy URL"
-  type        = string
-}
-
 variable "app_role_id" {
   description = "App role ID for authentication"
   type        = string
@@ -45,11 +40,6 @@ variable "app_role_mount_path" {
   type        = string
 }
 
-variable "vault_version" {
-  description = "Vault version"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host"
   type = object({
@@ -60,5 +50,12 @@ variable "docker_host" {
     domain       = string
     bastion_host = optional(string, null)
     bastion_user = optional(string, null)
+  })
+}
+
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image = string
   })
 }

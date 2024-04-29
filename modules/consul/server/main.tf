@@ -1,26 +1,13 @@
-
-module "consul_image" {
-  source = "./image"
-
-  consul_version = var.consul_version
-  http_proxy     = var.http_proxy
-
-  providers = {
-    docker = docker.consul
-  }
-}
-
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
   vault_cluster  = var.vault_cluster
   domain_name    = var.datacenter.common_name
   container_name = "vault-agent-consul-template"
-  vault_version  = "1.16.2"
 
   base_directory = "/vault-agent-consul-template"
 
-  http_proxy = var.http_proxy
+  docker_images = var.docker_images
 
   app_role_id         = data.vault_approle_auth_backend_role_id.consul_template.role_id
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
@@ -32,7 +19,7 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image         = module.consul_image.image_id
+  image         = var.docker_images.consul_server_image
   datacenter    = var.datacenter
   app_cert      = var.app_cert
   vault_cluster = var.vault_cluster

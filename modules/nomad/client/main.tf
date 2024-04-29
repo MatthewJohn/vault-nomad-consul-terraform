@@ -1,18 +1,3 @@
-
-module "image" {
-  source = "../image"
-
-  nomad_version  = var.nomad_version
-  consul_version = var.consul_version
-  vault_version  = var.vault_version
-  http_proxy     = var.http_proxy
-
-
-  providers = {
-    docker = docker.consul
-  }
-}
-
 module "consul_client" {
   source = "../../consul/client"
 
@@ -20,7 +5,6 @@ module "consul_client" {
   datacenter    = var.consul_datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
-  http_proxy    = var.http_proxy
 
   custom_role = {
     # Use fake ternary to force waiting for role ID to exist before passing in the state name
@@ -31,8 +15,7 @@ module "consul_client" {
 
   use_token_as_default = true
 
-  consul_version = var.consul_version
-  vault_version  = var.vault_version
+  docker_images = var.docker_images
 
   docker_host = var.docker_host
 }
@@ -43,10 +26,10 @@ module "consul_template_vault_agent" {
   domain_name    = var.region.common_name
   vault_cluster  = var.vault_cluster
   container_name = "vault-agent-consul-template"
-  vault_version  = var.vault_version
-  http_proxy     = var.http_proxy
 
   base_directory = "/vault-agent-consul-template"
+
+  docker_images = var.docker_images
 
   app_role_id         = data.vault_approle_auth_backend_role_id.consul_template.role_id
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
@@ -58,7 +41,7 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image                          = module.image.image_id
+  image                          = var.docker_images.nomad_image
   root_cert                      = var.root_cert
   region                         = var.region
   datacenter                     = var.datacenter
