@@ -7,6 +7,14 @@ ENV https_proxy=$http_proxy
 ENV HTTP_PROXY=$http_proxy
 ENV HTTPS_PROXY=$http_proxy
 
+# Perform package updates
+RUN microdnf upgrade \
+  --refresh \
+  --best \
+  --nodocs \
+  --noplugins \
+  --setopt=install_weak_deps=0
+
 RUN set -eux; \
     microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
     VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
