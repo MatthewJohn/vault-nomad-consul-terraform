@@ -1,3 +1,8 @@
+resource "null_resource" "container_image" {
+  triggers = {
+    image = var.image
+  }
+}
 
 resource "docker_container" "this" {
   image = var.image
@@ -68,11 +73,14 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
-    replace_triggered_by = [
-      null_resource.noamd_config
-    ]
     ignore_changes = [
-      log_opts
+      log_opts,
+      image,
+    ]
+
+    replace_triggered_by = [
+      null_resource.nomad_config,
+      null_resource.container_image,
     ]
   }
 }
