@@ -1,9 +1,10 @@
 
 resource "null_resource" "image_trigger" {
   triggers = {
-    entrypoint = filesha512("${path.module}/context/docker-entrypoint.sh")
-    Dockerfile = filesha512("${path.module}/context/Dockerfile")
-    http_proxy = var.http_proxy
+    entrypoint     = filesha512("${path.module}/context/docker-entrypoint.sh")
+    Dockerfile     = filesha512("${path.module}/context/Dockerfile")
+    http_proxy     = var.http_proxy
+    CONSUL_VERSION = var.consul_version
   }
 }
 
