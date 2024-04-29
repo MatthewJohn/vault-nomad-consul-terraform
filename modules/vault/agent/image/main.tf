@@ -54,4 +54,8 @@ resource "docker_registry_image" "this" {
   keep_remotely = true
 
   triggers = null_resource.image_trigger.triggers
+
+  lifecycle {
+    ignore_changes = [ name ]
+  }
 }
