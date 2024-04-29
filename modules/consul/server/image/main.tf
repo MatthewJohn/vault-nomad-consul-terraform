@@ -35,3 +35,25 @@ resource "docker_image" "this" {
     ]
   }
 }
+
+resource "docker_tag" "this" {
+  count = var.remote_image_name != null ? 1 : 0
+
+  source_image = docker_image.this.image_id
+  target_image = "${var.remote_image_name}:${var.consul_version}${var.remote_image_build_number != null ? "-${var.remote_image_build_number}" : ""}"
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.image_trigger
+    ]
+  }
+}
+
+resource "docker_registry_image" "this" {
+  count = var.remote_image_name != null ? 1 : 0
+
+  name          = docker_tag.this[count.index].target_image
+  keep_remotely = true
+
+  triggers = null_resource.image_trigger.triggers
+}
