@@ -40,5 +40,8 @@ output "vault_jwt_path" {
 
 output "harbor_account" {
   description = "Harbor account"
-  value       = module.harbor_account
+  value       = {
+    secret_mount = vault_kv_secret_v2.harbor.mount
+    secret_name  = vault_kv_secret_v2.harbor.name
+  }
 }

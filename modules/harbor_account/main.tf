@@ -1,13 +1,8 @@
-resource "random_password" "password" {
-  length  = 49
-  special = false
-}
-
 resource "harbor_robot_account" "system" {
-  name        = var.name
-  description = "Robot account for ${var.name}"
+  name        = data.vault_kv_secret_v2.this.data.username
+  description = "Robot account for ${data.vault_kv_secret_v2.this.data.username}"
   level       = "system"
-  secret      = resource.random_password.password.result
+  secret      = data.vault_kv_secret_v2.this.data.password
   dynamic "permissions" {
     for_each = toset(var.harbor_projects)
 

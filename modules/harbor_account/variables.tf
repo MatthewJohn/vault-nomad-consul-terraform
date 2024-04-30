@@ -1,21 +1,12 @@
-variable "name" {
-  description = "Name of robot account"
-  type        = string
-}
-
-variable "vault_cluster" {
-  description = "Vault cluster config"
+variable "harbor_account" {
+  description = "Harbor account secret"
   type = object({
-    consul_static_mount_path = string
+    secret_mount = string
+    secret_name  = string
   })
 }
 
 variable "harbor_projects" {
   description = "List of required harbor project access"
   type        = list(string)
-}
-
-variable "harbor_hostname" {
-  description = "Harbor hostname"
-  type        = string
 }

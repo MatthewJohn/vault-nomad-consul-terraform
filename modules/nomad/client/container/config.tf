@@ -32,7 +32,7 @@ EOF
 
     "config/templates/docker-login.sh.tpl" = <<EOF
 {{ with secret "${var.datacenter.harbor_account.secret_mount}/${var.datacenter.harbor_account.secret_name}" }}
-echo '{{ .Data.data.password }}' | docker login --password-stdin --username='{{ .Data.data.username }}' '{{ .Data.data.hostname }}'
+echo '{{ .Data.data.password }}' | docker login --password-stdin --username='harbor@{{ .Data.data.username }}' '{{ .Data.data.hostname }}'
 {{ end }}
 EOF
 

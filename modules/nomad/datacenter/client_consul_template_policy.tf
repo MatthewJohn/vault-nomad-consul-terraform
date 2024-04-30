@@ -40,11 +40,11 @@ path "${var.region.pki_mount_path}/cert/ca"
 }
 
 # Access to harbor account
-path "${module.harbor_account.secret_mount}/${module.harbor_account.secret_name}"
+path "${vault_kv_secret_v2.harbor.mount}/${vault_kv_secret_v2.harbor.name}"
 {
   capabilities = ["read"]
 }
-path "${module.harbor_account.secret_mount}/data/${module.harbor_account.secret_name}"
+path "${vault_kv_secret_v2.harbor.mount}/data/${vault_kv_secret_v2.harbor.name}"
 {
   capabilities = ["read"]
 }
