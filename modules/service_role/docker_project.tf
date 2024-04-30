@@ -28,3 +28,28 @@ resource "harbor_immutable_tag_rule" "this" {
   tag_matching  = "*"
   tag_excluding = "latest"
 }
+
+resource "random_password" "harbor" {
+  length  = 38
+  special = false
+}
+
+resource "harbor_robot_account" "system" {
+  name        = "deployment-${var.nomad_datacenter.name}-${var.service_name}"
+  description = "Robot deployment account for ${var.service_name}"
+  level       = "system"
+  secret      = random_password.harbor.result
+
+  dynamic "permissions" {
+    for_each = harbor_project.this
+
+    content {
+      access {
+        action   = "push"
+        resource = "repository"
+      }
+      kind      = "project"
+      namespace = permissions.value.name
+    }
+  }
+}

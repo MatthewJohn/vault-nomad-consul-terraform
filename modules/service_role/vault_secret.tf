@@ -55,6 +55,8 @@ resource "vault_kv_secret_v2" "secrets" {
       docker_registry = {
         project  = local.base_harbor_image_name
         registry = var.harbor_hostname
+        username = harbor_robot_account.system.full_name
+        password = random_password.harbor.result
       }
     }
   )
