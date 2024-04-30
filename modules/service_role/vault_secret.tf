@@ -52,6 +52,10 @@ resource "vault_kv_secret_v2" "secrets" {
         root_domain_name       = var.consul_root_cert.domain_name
         namespace              = var.nomad_namespace
       }
+      docker_registry = {
+        project  = local.base_harbor_image_name
+        registry = var.harbor_hostname
+      }
     }
   )
 }

@@ -127,3 +127,7 @@ variable "allow_volume_creation" {
   default     = false
 }
 
+variable "harbor_hostname" {
+  description = "Harbor hostnmae"
+  type        = string
+}
