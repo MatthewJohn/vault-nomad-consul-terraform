@@ -1,8 +1,6 @@
-variable "docker_host" {
-  description = "Docker host to connect to"
-  type = object({
-    hostname = string
-  })
+variable "name" {
+  description = "Name of robot account"
+  type        = string
 }
 
 variable "vault_cluster" {

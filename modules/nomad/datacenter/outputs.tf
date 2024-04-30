@@ -37,3 +37,8 @@ output "vault_jwt_path" {
   description = "Workload identity JWT engine path"
   value       = vault_jwt_auth_backend.workload_identity.path
 }
+
+output "harbor_account" {
+  description = "Harbor account"
+  value       = module.harbor_account
+}

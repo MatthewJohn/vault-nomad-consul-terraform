@@ -43,6 +43,7 @@ variable "vault_cluster" {
   description = "Vault cluster"
   type = object({
     service_secrets_mount_path = string
+    consul_static_mount_path   = string
   })
 }
 
@@ -50,4 +51,14 @@ variable "nomad_client_ips" {
   description = "List of all client IP addresses"
   type        = list(string)
   default     = []
+}
+
+variable "harbor_projects" {
+  description = "List of required harbor project access"
+  type        = list(string)
+}
+
+variable "harbor_hostname" {
+  description = "Harbor hostname"
+  type        = string
 }

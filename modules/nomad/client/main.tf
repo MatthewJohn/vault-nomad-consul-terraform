@@ -1,12 +1,3 @@
-module "harbor_account" {
-  source = "../../harbor_account"
-
-  docker_host     = var.docker_host
-  vault_cluster   = var.vault_cluster
-  harbor_projects = var.harbor_projects
-  harbor_hostname = var.harbor_hostname
-}
-
 module "consul_client" {
   source = "../../consul/client"
 
@@ -60,7 +51,6 @@ module "container" {
   consul_datacenter              = var.consul_datacenter
   container_data_directory       = var.container_data_directory
   nomad_client_vault_consul_role = vault_consul_secret_backend_role.nomad_client_vault_consul_role.name
-  harbor_account                 = module.harbor_account
 
   docker_host = var.docker_host
 

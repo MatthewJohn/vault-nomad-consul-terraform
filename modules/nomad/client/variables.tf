@@ -28,6 +28,10 @@ variable "datacenter" {
     client_dns                               = string
     client_pki_role_name                     = string
     vault_jwt_path                           = string
+    harbor_account = object({
+      secret_mount = string
+      secret_name  = string
+    })
   })
 }
 
@@ -100,14 +104,4 @@ variable "docker_host" {
     bastion_host = optional(string, null)
     bastion_user = optional(string, null)
   })
-}
-
-variable "harbor_projects" {
-  description = "List of required harbor project access"
-  type        = list(string)
-}
-
-variable "harbor_hostname" {
-  description = "Harbor hostname"
-  type        = string
 }

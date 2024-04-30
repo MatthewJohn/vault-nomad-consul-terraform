@@ -4,8 +4,8 @@ resource "random_password" "password" {
 }
 
 resource "harbor_robot_account" "system" {
-  name        = var.docker_host.hostname
-  description = "Robot account for ${var.docker_host.hostname}"
+  name        = var.name
+  description = "Robot account for ${var.name}"
   level       = "system"
   secret      = resource.random_password.password.result
   dynamic "permissions" {

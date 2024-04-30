@@ -39,6 +39,16 @@ path "${var.region.pki_mount_path}/cert/ca"
   capabilities = ["read"]
 }
 
+# Access to harbor account
+path "${module.harbor_account.secret_mount}/${module.harbor_account.secret_name}"
+{
+  capabilities = ["read"]
+}
+path "${module.harbor_account.secret_mount}/data/${module.harbor_account.secret_name}"
+{
+  capabilities = ["read"]
+}
+
 EOF
 }
 
