@@ -100,3 +100,11 @@ variable "docker_host" {
     bastion_user = optional(string, null)
   })
 }
+
+variable "harbor_account" {
+  description = "Harbor account"
+  type = object({
+    secret_mount = string
+    secret_name  = string
+  })
+}

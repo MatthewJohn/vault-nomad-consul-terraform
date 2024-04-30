@@ -102,3 +102,12 @@ variable "docker_host" {
   })
 }
 
+variable "harbor_projects" {
+  description = "List of required harbor project access"
+  type        = list(string)
+}
+
+variable "harbor_hostname" {
+  description = "Harbor hostname"
+  type        = string
+}

@@ -81,6 +81,16 @@ path "sys/mounts/pki_connect"
   capabilities = ["create", "update", "read"]
 }
 
+# Access to create harbor tokens
+path "consul_static/data/harbor/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/harbor/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
 %{for datacenter in var.consul_datacenters}
 path "sys/mounts/pki_int_consul_${datacenter}"
 {

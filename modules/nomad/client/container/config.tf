@@ -30,6 +30,12 @@ EOF
 
 EOF
 
+    "config/templates/docker-login.sh.tpl" = <<EOF
+{{ with secret "${var.harbor_account.secret_mount}/${var.harbor_account.secret_name}" }}
+echo '{{ .Data.data.password }}' | docker login --password-stdin --username='{{ .Data.data.username }}' '{{ .Data.data.hostname }}'
+{{ end }}
+EOF
+
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
 
     "config/templates/consul_template.hcl" = <<EOF
@@ -70,6 +76,16 @@ template {
   perms       = 0700
 
   error_on_missing_key = false
+}
+
+template {
+  source      = "/nomad/config/templates/docker-login.sh.tpl"
+  destination = "/nomad/config/docker-login.sh"
+  perms       = 0700
+
+  exec {
+    command = "bash /nomad/config/docker-login.sh"
+  }
 }
 
 # This is the signal to listen for to trigger a reload event. The default
