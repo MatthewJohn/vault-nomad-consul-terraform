@@ -447,7 +447,7 @@ path "pki_int_nomad_${region}_${nomad_dc}/roles/*"
   capabilities = ["update", "read", "delete"]
 }
 
-path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template-*"
+path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
 {
   capabilities = ["update", "read", "create", "delete"]
 }
