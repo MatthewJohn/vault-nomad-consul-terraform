@@ -21,13 +21,12 @@ variable "region" {
 variable "datacenter" {
   description = "Nomad datacenter"
   type = object({
-    name                                     = string
-    common_name                              = string
-    pki_mount_path                           = string
-    client_consul_template_approle_role_name = string
-    client_dns                               = string
-    client_pki_role_name                     = string
-    vault_jwt_path                           = string
+    name                 = string
+    common_name          = string
+    pki_mount_path       = string
+    client_dns           = string
+    client_pki_role_name = string
+    vault_jwt_path       = string
   })
 }
 
