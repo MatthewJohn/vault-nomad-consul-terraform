@@ -279,6 +279,13 @@ path "consul_static/metadata/${datacenter}/gossip"
 {
   capabilities = ["read", "delete"]
 }
+
+# Create vault policies for each consul agent
+path "sys/policies/acl/consul-client-consul-template-${datacenter}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 %{endfor}
 
 #########################
