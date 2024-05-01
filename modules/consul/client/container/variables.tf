@@ -82,3 +82,11 @@ variable "docker_host" {
     bastion_user = optional(string, null)
   })
 }
+
+variable "consul_token" {
+  description = "Consul token object"
+  type = object({
+    secret_name  = string
+    secret_mount = string
+  })
+}

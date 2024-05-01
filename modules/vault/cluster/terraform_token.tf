@@ -286,6 +286,15 @@ path "sys/policies/acl/consul-client-consul-template-${datacenter}-*"
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Create static tokens for agents
+path "consul_static/data/${datacenter}/agent/*"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/agent/*"
+{
+  capabilities = ["read", "delete"]
+}
 %{endfor}
 
 #########################

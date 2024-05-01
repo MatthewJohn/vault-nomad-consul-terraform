@@ -1,3 +1,11 @@
+module "consul_token" {
+  source = "./token"
+
+  docker_host   = var.docker_host
+  vault_cluster = var.vault_cluster
+  datacenter    = var.datacenter
+}
+
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
@@ -26,6 +34,8 @@ module "container" {
   root_cert     = var.root_cert
 
   vault_consul_role = var.custom_role != null ? var.custom_role.vault_consul_role : "consul-client-role"
+
+  consul_token = module.consul_token
 
   use_token_as_default = var.use_token_as_default
 

@@ -8,10 +8,14 @@ path "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_nam
   capabilities = [ "read", "update" ]
 }
 
-# Access to consul agent consul role to generate token
-path "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role"
+# Access to static agent token
+path "${module.consul_token.secret_mount}/${module.consul_token.secret_name}"
 {
-  capabilities = ["read"]
+  capabilities = [ "read" ]
+}
+path "${module.consul_token.secret_mount}/data/${module.consul_token.secret_name}"
+{
+  capabilities = [ "read" ]
 }
 
 # Access to gossip token

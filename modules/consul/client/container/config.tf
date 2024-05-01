@@ -24,29 +24,6 @@ EOF
 {{- end -}}
 EOF
 
-    "config/reload_tokens.sh" = <<EOF
-#!/bin/bash
-
-export CONSUL_HTTP_TOKEN_FILE=/consul/config/consul-token.txt
-export CONSUL_CACERT=/consul/config/client-certs/ca.crt
-export CONSUL_HTTP_ADDR=https://127.0.0.1:${var.listen_port}
-export CONSUL_HTTP_SSL=true
-NEW_TOKEN=$(cat $CONSUL_HTTP_TOKEN_FILE)
-
-consul acl set-agent-token agent $NEW_TOKEN || true
-consul acl set-agent-token config_file_service_registration $NEW_TOKEN || true
-%{if var.use_token_as_default}
-consul acl set-agent-token default $NEW_TOKEN || true
-%{endif}
-consul reload || true
-EOF
-
-    "config/templates/consul-token.txt.tmpl" = <<EOF
-{{- with secret "${var.datacenter.consul_engine_mount_path}/creds/${var.vault_consul_role}" -}}
-{{ .Data.token }}
-{{- end -}}
-EOF
-
     "config/templates/consul_template.hcl" = <<EOF
 vault {
   address                = "${var.vault_cluster.address}"
@@ -85,17 +62,6 @@ template {
   perms       = 0700
 
   error_on_missing_key = false
-}
-
-template {
-  source      = "/consul/config/templates/consul-token.txt.tmpl"
-  destination = "/consul/config/consul-token.txt"
-  perms       = 0600
-
-  # Reset consul tokens
-  exec {
-    command = "bash /consul/config/reload_tokens.sh"
-  }
 }
 
 # This is the signal to listen for to trigger a reload event. The default
@@ -178,13 +144,13 @@ acl {
   enable_token_persistence = false
   enable_token_replication = false
   tokens {
-{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/${var.vault_consul_role}" }}
+{{ with secret "${var.consul_token.secret_mount}/${var.consul_token.secret_name}" }}
 %{if var.use_token_as_default}
-    default = "{{ .Data.token }}"
+    default = "{{ .Data.data.token }}"
 %{endif}
-    agent  = "{{ .Data.token }}"
+    agent  = "{{ .Data.data.token }}"
     # @TODO Create dedicated token for this
-    config_file_service_registration = "{{ .Data.token }}"
+    config_file_service_registration = "{{ .Data.data.token }}"
 {{ end }}
   }
 }
