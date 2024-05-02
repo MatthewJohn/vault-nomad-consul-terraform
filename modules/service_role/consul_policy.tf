@@ -17,7 +17,7 @@ key_prefix "" {
 
 # Allow writing the services that the service will provide
 # and modify intentions
-%{for consul_service_suffix in concat([""], var.additional_consul_services)}
+%{for consul_service_suffix in concat([""], var.additional_consul_services, var.additional_tasks)}
 service "${local.consul_service_name}${consul_service_suffix != "" ? "-${consul_service_suffix}" : ""}"
 {
   policy = "write"

@@ -110,7 +110,13 @@ variable "additional_nomad_policy" {
 }
 
 variable "additional_consul_services" {
-  description = "List of additional consul services to assign to service"
+  description = "List of additional consul services to assign to service. Specify only the suffix from the main service name, e.g. metrics"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_tasks" {
+  description = "List of additional tasks, which have seperate deployment entities. Specify only the suffix from the main service name, e.g. postgres"
   type        = list(string)
   default     = []
 }

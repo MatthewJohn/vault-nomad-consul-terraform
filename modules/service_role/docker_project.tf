@@ -3,7 +3,7 @@ locals {
 }
 
 resource "harbor_project" "this" {
-  for_each = toset(concat([""], var.additional_consul_services))
+  for_each = toset(concat([""], var.additional_tasks))
 
   name   = "${local.base_harbor_image_name}${each.value == "" ? "" : "-${each.value}"}"
   public = false
