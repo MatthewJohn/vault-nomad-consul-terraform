@@ -3,9 +3,9 @@ locals {
 }
 
 resource "harbor_project" "this" {
-  for_each = toset(concat([""], var.additional_tasks))
+  for_each = toset([""])
 
-  name   = "${local.base_harbor_image_name}${each.value == "" ? "" : "-${each.value}"}"
+  name   = local.base_harbor_image_name
   public = false
 
   vulnerability_scanning = true
