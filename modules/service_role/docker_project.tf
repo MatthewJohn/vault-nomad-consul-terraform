@@ -48,6 +48,10 @@ resource "harbor_robot_account" "system" {
         action   = "push"
         resource = "repository"
       }
+      access {
+        action   = "pull"
+        resource = "repository"
+      }
       kind      = "project"
       namespace = permissions.value.name
     }
