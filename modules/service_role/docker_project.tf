@@ -24,8 +24,7 @@ resource "harbor_immutable_tag_rule" "this" {
 
   disabled      = false
   project_id    = each.value.id
-  # repo_matching = "**"
-  tag_matching  = "*"
+  repo_matching = "**"
   tag_excluding = "latest"
 }
 
