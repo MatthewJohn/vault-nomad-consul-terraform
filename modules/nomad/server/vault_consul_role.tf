@@ -30,7 +30,12 @@ agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" 
   policy = "write"
 }
 
+node "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
+  policy = "write"
+}
+
 acl = "write"
+mesh = "write"
 
 RULE
 }
