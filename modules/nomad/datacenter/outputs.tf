@@ -38,6 +38,11 @@ output "vault_jwt_path" {
   value       = vault_jwt_auth_backend.workload_identity.path
 }
 
+output "consul_auth_method" {
+  description = "Workload identity JWT auth method for consul"
+  value       = consul_acl_auth_method.jwt.name
+}
+
 output "harbor_account" {
   description = "Harbor account"
   value       = {

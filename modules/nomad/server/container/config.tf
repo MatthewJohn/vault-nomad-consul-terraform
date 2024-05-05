@@ -174,7 +174,7 @@ consul {
 
   server_auto_join    = true
 
-  server_service_name     = "nomad-${var.region.name}-server"
+  server_service_name = "nomad-${var.region.name}-server"
 
 {{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
   token = "{{ .Data.token }}"
@@ -187,6 +187,18 @@ consul {
 
   grpc_ca_file = "/nomad/config/consul-certs/ca.crt"
   ca_file      = "/nomad/config/consul-certs/ca.crt"
+
+  service_identity {
+    aud = ["consul.io"]
+    ttl = "1h"
+  }
+
+  task_identity {
+    aud  = ["consul.io"]
+    ttl  = "1h"
+    env  = false
+    file = false
+  }
 }
 
 vault {

@@ -28,6 +28,7 @@ variable "datacenter" {
     client_dns                               = string
     client_pki_role_name                     = string
     vault_jwt_path                           = string
+    consul_auth_method                       = string
     harbor_account = object({
       secret_mount = string
       secret_name  = string

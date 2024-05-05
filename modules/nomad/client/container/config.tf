@@ -195,6 +195,9 @@ consul {
 
   #namespace = "nomad-${var.region.name}"
 
+  service_auth_method = "${var.datacenter.consul_auth_method}"
+  task_auth_method    = "${var.datacenter.consul_auth_method}"
+
   ssl = true
   verify_ssl = true
 
