@@ -9,6 +9,8 @@ locals {
 }
 
 resource "nomad_acl_policy" "this" {
+  count = local.enable_nomad_integration ? 1 : 0
+
   name = "nomad-deployment-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
 
   rules_hcl = <<EOT
@@ -28,12 +30,14 @@ EOT
 }
 
 resource "vault_nomad_secret_role" "this" {
+  count = local.enable_nomad_integration ? 1 : 0
+
   backend = var.nomad_static_tokens.nomad_engine_mount_path
   role    = "nomad-deployment-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
   type    = "client"
   global  = false
 
   policies = [
-    nomad_acl_policy.this.name
+    nomad_acl_policy.this[count.index].name
   ]
 }

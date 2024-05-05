@@ -137,3 +137,10 @@ variable "harbor_hostname" {
   description = "Harbor hostnmae"
   type        = string
 }
+
+locals {
+  name_with_dc = var.nomad_datacenter != null ? "${var.nomad_datacenter.name}-${var.service_name}" : var.service_name
+  consul_service_name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.service_name}" : null
+  enable_consul_integration = var.nomad_region != null && var.nomad_datacenter != null
+  enable_nomad_integration = local.enable_consul_integration
+}

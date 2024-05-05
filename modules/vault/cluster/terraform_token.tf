@@ -180,6 +180,12 @@ path "consul-${datacenter}/creds/terraform"
   capabilities = ["read"]
 }
 
+# Create vault policies for terraform pipelines
+path "sys/policies/acl/terraform-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 %{for nomad_region in keys(var.nomad_regions)}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
 {

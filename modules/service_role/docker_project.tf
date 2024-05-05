@@ -1,5 +1,5 @@
 locals {
-  base_harbor_image_name = "${var.nomad_datacenter.name}-${var.service_name}"
+  base_harbor_image_name = local.name_with_dc
 }
 
 resource "harbor_project" "this" {
@@ -34,7 +34,7 @@ resource "random_password" "harbor" {
 }
 
 resource "harbor_robot_account" "system" {
-  name        = "deployment-${var.nomad_datacenter.name}-${var.service_name}"
+  name        = "deployment-${local.base_harbor_image_name}"
   description = "Robot deployment account for ${var.service_name}"
   level       = "system"
   secret      = random_password.harbor.result

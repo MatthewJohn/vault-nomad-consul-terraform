@@ -1,15 +1,18 @@
 
 locals {
-  vault_terraform_policy_role = "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_nomad_policy_role     = "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_job_policy_role       = "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}"
-  vault_secret_path           = "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+  vault_terraform_policy_role = local.enable_nomad_integration ? "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : "terraform-${var.service_name}"
+  vault_nomad_policy_role     = local.enable_nomad_integration ? "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : null
+  vault_job_policy_role       = local.enable_nomad_integration ? "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : null
+  vault_secret_path           = local.enable_nomad_integration ? "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}" : "pipelines/${var.gitlab_project_path}"
   vault_secret_base_path      = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
   vault_secret_base_data_path = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
+  deployment_secret_path      = local.enable_nomad_integration ? "konvad/services/${local.vault_secret_path}" : local.vault_secret_path
 }
 
 # Policy that will be attached to the application
 resource "vault_policy" "application_policy" {
+  count = local.enable_nomad_integration ? 1 : 0
+
   name = local.vault_job_policy_role
 
   policy = <<EOF
@@ -18,7 +21,7 @@ path "auth/token/lookup-self" {
 }
 
 # Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this[0].name}"
 {
   capabilities = ["read"]
 }
@@ -39,6 +42,8 @@ EOF
 
 # Policy for token that will be provided to nomad to perform deployment
 resource "vault_policy" "nomad_policy" {
+  count = local.enable_nomad_integration ? 1 : 0
+
   name = local.vault_nomad_policy_role
 
   policy = <<EOF
@@ -65,11 +70,13 @@ EOF
 # Create vault auth role to allow the token
 # to pass the role to nomad for the application
 resource "vault_token_auth_backend_role" "nomad" {
+  count = local.enable_nomad_integration ? 1 : 0
+
   role_name = local.vault_nomad_policy_role
 
   allowed_policies = [
-    vault_policy.nomad_policy.name,
-    vault_policy.application_policy.name,
+    vault_policy.nomad_policy[count.index].name,
+    vault_policy.application_policy[count.index].name,
   ]
   orphan       = true
   token_period = "86400"
@@ -110,21 +117,21 @@ path "auth/token/lookup-accessor" {
 path "auth/token/revoke-accessor" {
   capabilities = ["update"]
 }
-
+%{if local.enable_nomad_integration}
 # Allow creation of token using role
-path "auth/token/create/${vault_token_auth_backend_role.nomad.role_name}"
+path "auth/token/create/${vault_token_auth_backend_role.nomad[0].role_name}"
 {
   capabilities = [ "update" ]
 }
 
 # Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this.name}"
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this[0].name}"
 {
   capabilities = ["read"]
 }
 
 # Allow generation of nomad token using assigned consul policy
-path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this.role}"
+path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this[0].role}"
 {
   capabilities = ["read"]
 }
@@ -134,19 +141,19 @@ path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list", "create", "update", "delete" ]
 }
-
+%{endif}
 # Allow reading config secret
-path "${var.vault_cluster.service_deployment_mount_path}/data/konvad/services/${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}"
+path "${var.vault_cluster.service_deployment_mount_path}/data/${local.deployment_secret_path}"
 {
   capabilities = [ "read", "list" ]
 }
-
+%{if local.enable_nomad_integration}
 # Allow managing secret meta
 path "${var.vault_cluster.service_secrets_mount_path}/metadata/${local.vault_secret_path}/*"
 {
   capabilities = [ "read", "update", "create" ]
 }
-
+%{endif}
 # Allow reading AWS Secrets
 path "${var.vault_cluster.service_deployment_mount_path}/data/${var.vault_cluster.terraform_aws_credential_secret_path}"
 {
@@ -155,19 +162,4 @@ path "${var.vault_cluster.service_deployment_mount_path}/data/${var.vault_cluste
 
 ${var.additional_vault_deployment_policy}
 EOF
-}
-
-resource "vault_approle_auth_backend_role" "terraform" {
-  backend   = var.nomad_region.approle_mount_path
-  role_name = local.vault_terraform_policy_role
-  token_policies = [
-    # Policies provided to deployment role
-    # to perform actions in terraform to perform deployment
-    vault_policy.terraform_policy.name,
-  ]
-}
-
-resource "vault_approle_auth_backend_role_secret_id" "terraform" {
-  backend   = var.nomad_region.approle_mount_path
-  role_name = vault_approle_auth_backend_role.terraform.role_name
 }
