@@ -6,7 +6,7 @@ resource "harbor_project" "this" {
   for_each = toset([""])
 
   name   = local.base_harbor_image_name
-  public = false
+  public = var.public_repo
 
   vulnerability_scanning = true
   deployment_security    = "critical"

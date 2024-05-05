@@ -133,6 +133,12 @@ variable "allow_volume_creation" {
   default     = false
 }
 
+variable "public_repo" {
+  description = "Whether harbor repo is public"
+  type        = bool
+  default     = false
+}
+
 variable "harbor_hostname" {
   description = "Harbor hostnmae"
   type        = string
