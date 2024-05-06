@@ -40,7 +40,7 @@ key_prefix "" {
   policy = "read"
 }
 
-service_prefix "" {
+service_prefix "nomad-job-${var.datacenter}-" {
   policy = "read"
 }
 RULE
