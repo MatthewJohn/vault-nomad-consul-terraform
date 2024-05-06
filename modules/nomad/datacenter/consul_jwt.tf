@@ -2,7 +2,7 @@ resource "consul_acl_auth_method" "jwt" {
   name          = "jwt_nomad_${var.region.name}_${var.datacenter}"
   type          = "jwt"
   description   = "JWT Auth token for nomad"
-  max_token_ttl = "5m"
+  max_token_ttl = "1h"
 
   config_json = jsonencode({
     BoundAudiences = [
