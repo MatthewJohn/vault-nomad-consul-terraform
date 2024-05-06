@@ -27,6 +27,8 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "root_ca" {
   locality             = "United Kingdom"
   province             = "Hampshire"
   revoke               = true
+  # 10 year TTL
+  ttl = 10 * 365 * 24 * 60 * 60
 
   provider = vault.vault-adm
 }
