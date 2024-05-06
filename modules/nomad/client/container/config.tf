@@ -7,27 +7,16 @@ locals {
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
-{{ .Data.certificate }}
-{{ .Data.issuing_ca }}
-{{ end }}
-{{ with secret "${var.region.pki_mount_path}/cert/ca" }}
-{{ .Data.certificate }}
-{{ end }}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate }}{{ end }}
+{{ with secret "${var.region.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end }}
 EOF
 
     "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
-{{ .Data.private_key }}
-{{ end }}
-
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.private_key }}{{ end }}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.root_cert.pki_mount_path}/cert/ca" }}
-{{ .Data.certificate }}
-{{ end }}
-
+${var.vault_cluster.ca_cert}
 EOF
 
     "config/templates/docker-login.sh.tpl" = <<EOF

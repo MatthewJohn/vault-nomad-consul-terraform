@@ -32,6 +32,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
+    ca_cert                  = string
   })
 }
 

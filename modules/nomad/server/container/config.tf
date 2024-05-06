@@ -7,26 +7,16 @@ locals {
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
-{{ .Data.certificate }}
-{{ end }}
-{{ with secret "${var.root_cert.pki_mount_path}/cert/ca_chain" }}
-{{ .Data.ca_chain }}
-{{ end }}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate }}{{ end }}
+{{ with secret "${var.root_cert.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}
-{{ .Data.private_key }}
-{{ end }}
-
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.private_key }}{{ end }}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.root_cert.pki_mount_path}/cert/ca_chain" }}
-{{ .Data.ca_chain }}
-{{ end }}
-
+${var.vault_cluster.ca_cert}
 EOF
 
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
