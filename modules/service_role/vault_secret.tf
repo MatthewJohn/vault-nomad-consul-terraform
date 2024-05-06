@@ -14,15 +14,9 @@ resource "vault_kv_secret_v2" "secrets" {
       vault_nomad_role_name               = try(vault_nomad_secret_role.deployment[0].role, null)
       vault_nomad_engine_path             = try(var.nomad_static_tokens.nomad_engine_mount_path, null)
       # Secret engine
-      vault_deployment_secret_engine_path = var.vault_cluster.service_deployment_mount_path
-      vault_secret_engine_path            = var.vault_cluster.service_secrets_mount_path
-      # Secret Path within secret mount
-      vault_secret_path = local.vault_secret_path
-      # Secret Path with mount
-      vault_secret_base_path = local.vault_secret_base_path
-      # Secret path with mount and 'data'
-      vault_secret_base_data_path = local.vault_secret_base_data_path
-      vault_deploy_policy         = vault_policy.terraform_policy.name
+      common_secrets                      = module.common_service_secret_path
+      deployment_secrets                  = module.deployment_secret_path
+      vault_deploy_policy                 = vault_policy.terraform_policy.name
       vault = {
         ca_cert = var.vault_cluster.ca_cert
         address = var.vault_cluster.address
@@ -35,6 +29,7 @@ resource "vault_kv_secret_v2" "secrets" {
           vault_policies = try(vault_jwt_auth_backend_role.default_workload_identity[task].token_policies, [var.nomad_datacenter.default_workload_vault_policy])
           consul_aud     = var.nomad_datacenter.workload_identity_consul_aud
           consul_role    = try(consul_acl_role.task[task].name, var.nomad_datacenter.default_workload_consul_task_role)
+          secrets        = module.task_service_secret_path[task]
         }
       }
       consul = {

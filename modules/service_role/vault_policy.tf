@@ -2,9 +2,34 @@
 locals {
   vault_terraform_policy_role = local.enable_nomad_integration ? "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}" : "terraform-${var.job_name}"
   vault_secret_path           = local.enable_nomad_integration ? "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.job_name}" : "pipelines/${var.gitlab_project_path}"
-  vault_secret_base_path      = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
-  vault_secret_base_data_path = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
   deployment_secret_path      = local.enable_nomad_integration ? "konvad/services/${local.vault_secret_path}" : local.vault_secret_path
+}
+
+module "deployment_secret_path" {
+  source = "../helpers/vault_paths"
+
+  mount = var.vault_cluster.service_deployment_mount_path
+  path  = local.deployment_secret_path
+}
+module "base_secret_path" {
+  source = "../helpers/vault_paths"
+
+  mount = var.vault_cluster.service_secrets_mount_path
+  path  = local.vault_secret_path
+}
+module "common_service_secret_path" {
+  source = "../helpers/vault_paths"
+
+  mount = var.vault_cluster.service_secrets_mount_path
+  path  = "${local.vault_secret_path}/common"
+}
+module "task_service_secret_path" {
+  for_each = var.tasks
+
+  source = "../helpers/vault_paths"
+
+  mount = var.vault_cluster.service_secrets_mount_path
+  path  = "${local.vault_secret_path}/${each.key}"
 }
 
 # Custom policy that will be attached to the application
@@ -100,22 +125,22 @@ path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_sec
 }
 
 # Allow writing to secrets
-path "${local.vault_secret_base_data_path}/*"
+path "${module.base_secret_path.data}/*"
 {
   capabilities = [ "read", "list", "create", "update", "delete" ]
 }
 # Allow managing service secrets
-path "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}/*"
+path "${module.base_secret_path.mount_path}/*"
 {
   capabilities = [ "read", "update", "create" ]
 }
-path "${var.vault_cluster.service_secrets_mount_path}/metadata/${local.vault_secret_path}/*"
+path "${module.base_secret_path.metadata}/*"
 {
   capabilities = [ "read", "update", "create" ]
 }
 %{endif}
 # Allow reading config secret
-path "${var.vault_cluster.service_deployment_mount_path}/data/${local.deployment_secret_path}"
+path "${module.deployment_secret_path.data}"
 {
   capabilities = [ "read", "list" ]
 }
