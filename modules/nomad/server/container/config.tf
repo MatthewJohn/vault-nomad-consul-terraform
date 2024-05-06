@@ -169,11 +169,9 @@ consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
   grpc_address = "${var.consul_client.listen_host}:8503"
 
-  allow_unauthenticated = false
   auto_advertise        = true
 
   server_auto_join    = true
-
   server_service_name = "nomad-${var.region.name}-server"
 
 {{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}

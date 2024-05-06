@@ -1,87 +1,56 @@
 
 locals {
-  vault_terraform_policy_role = local.enable_nomad_integration ? "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : "terraform-${var.service_name}"
-  vault_nomad_policy_role     = local.enable_nomad_integration ? "nomad-submit-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : null
-  vault_job_policy_role       = local.enable_nomad_integration ? "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.service_name}" : null
-  vault_secret_path           = local.enable_nomad_integration ? "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.service_name}" : "pipelines/${var.gitlab_project_path}"
+  vault_terraform_policy_role = local.enable_nomad_integration ? "nomad-terraform-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}" : "terraform-${var.job_name}"
+  vault_secret_path           = local.enable_nomad_integration ? "${var.nomad_region.name}/${var.nomad_datacenter.name}/${var.job_name}" : "pipelines/${var.gitlab_project_path}"
   vault_secret_base_path      = "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}"
   vault_secret_base_data_path = "${var.vault_cluster.service_secrets_mount_path}/data/${local.vault_secret_path}"
   deployment_secret_path      = local.enable_nomad_integration ? "konvad/services/${local.vault_secret_path}" : local.vault_secret_path
 }
 
-# Policy that will be attached to the application
-resource "vault_policy" "application_policy" {
-  count = local.enable_nomad_integration ? 1 : 0
+# Custom policy that will be attached to the application
+resource "vault_policy" "custom_application_policy" {
+  for_each = {
+    for task, task_config in var.tasks :
+    task => task_config
+    if task_config.custom_vault_policy != null
+  }
 
-  name = local.vault_job_policy_role
+  name = "${local.base_full_name}-${each.key}"
 
-  policy = <<EOF
-path "auth/token/lookup-self" {
-    capabilities = ["read"]
+  policy = each.value.custom_vault_policy
 }
 
-# Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this[0].name}"
-{
-  capabilities = ["read"]
-}
+resource "vault_jwt_auth_backend_role" "default_workload_identity" {
+  for_each = {
+    for task, task_config in var.tasks :
+    task => task_config
+    if task_config.custom_vault_policy != null
+  }
 
-# Allow reading secrets
-path "${local.vault_secret_base_path}/*"
-{
-  capabilities = [ "read", "list" ]
-}
-path "${local.vault_secret_base_data_path}/*"
-{
-  capabilities = [ "read", "list" ]
-}
-
-${var.additional_vault_application_policy}
-EOF
-}
-
-# Policy for token that will be provided to nomad to perform deployment
-resource "vault_policy" "nomad_policy" {
-  count = local.enable_nomad_integration ? 1 : 0
-
-  name = local.vault_nomad_policy_role
-
-  policy = <<EOF
-path "auth/token/lookup-self"
-{
-  capabilities = [ "read" ]
-}
-
-# Allow reading
-path "${local.vault_secret_base_path}/*"
-{
-  capabilities = [ "read", "list" ]
-}
-path "${local.vault_secret_base_data_path}/*"
-{
-  capabilities = [ "read", "list" ]
-}
-
-${var.additional_nomad_vault_policy}
-
-EOF
-}
-
-# Create vault auth role to allow the token
-# to pass the role to nomad for the application
-resource "vault_token_auth_backend_role" "nomad" {
-  count = local.enable_nomad_integration ? 1 : 0
-
-  role_name = local.vault_nomad_policy_role
-
-  allowed_policies = [
-    vault_policy.nomad_policy[count.index].name,
-    vault_policy.application_policy[count.index].name,
+  backend   = var.nomad_datacenter.vault_jwt_path
+  role_name = vault_policy.custom_application_policy[each.key].name
+  token_policies = [
+    var.nomad_datacenter.default_workload_vault_policy,
+    vault_policy.custom_application_policy[each.key].name,
   ]
-  orphan       = true
-  token_period = "86400"
-  renewable    = true
-  path_suffix  = local.vault_nomad_policy_role
+
+  bound_claims = {
+    nomad_job_id    = var.job_name
+    nomad_task      = each.key
+    nomad_namespace = var.nomad_namespace
+  }
+
+  claim_mappings = {
+    nomad_namespace = "nomad_namespace"
+    nomad_job_id    = "nomad_job_id"
+    nomad_task      = "nomad_task"
+  }
+  user_claim              = "/nomad_job_id"
+  user_claim_json_pointer = true
+  role_type               = "jwt"
+  token_type              = "service"
+  bound_audiences         = ["vault.io"]
+  token_period            = 30 * 60 # 30 minutes
 }
 
 # Create vault policy for deployment
@@ -118,20 +87,14 @@ path "auth/token/revoke-accessor" {
   capabilities = ["update"]
 }
 %{if local.enable_nomad_integration}
-# Allow creation of token using role
-path "auth/token/create/${vault_token_auth_backend_role.nomad[0].role_name}"
-{
-  capabilities = [ "update" ]
-}
-
 # Allow generation of consul token using assigned consul policy
-path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.this[0].name}"
+path "${var.consul_datacenter.consul_engine_mount_path}/creds/${vault_consul_secret_backend_role.deployment[0].name}"
 {
   capabilities = ["read"]
 }
 
 # Allow generation of nomad token using assigned consul policy
-path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.this[0].role}"
+path "${var.nomad_static_tokens.nomad_engine_mount_path}/creds/${vault_nomad_secret_role.deployment[0].role}"
 {
   capabilities = ["read"]
 }
@@ -141,25 +104,27 @@ path "${local.vault_secret_base_data_path}/*"
 {
   capabilities = [ "read", "list", "create", "update", "delete" ]
 }
+# Allow managing service secrets
+path "${var.vault_cluster.service_secrets_mount_path}/${local.vault_secret_path}/*"
+{
+  capabilities = [ "read", "update", "create" ]
+}
+path "${var.vault_cluster.service_secrets_mount_path}/metadata/${local.vault_secret_path}/*"
+{
+  capabilities = [ "read", "update", "create" ]
+}
 %{endif}
 # Allow reading config secret
 path "${var.vault_cluster.service_deployment_mount_path}/data/${local.deployment_secret_path}"
 {
   capabilities = [ "read", "list" ]
 }
-%{if local.enable_nomad_integration}
-# Allow managing secret meta
-path "${var.vault_cluster.service_secrets_mount_path}/metadata/${local.vault_secret_path}/*"
-{
-  capabilities = [ "read", "update", "create" ]
-}
-%{endif}
 # Allow reading AWS Secrets
 path "${var.vault_cluster.service_deployment_mount_path}/data/${var.vault_cluster.terraform_aws_credential_secret_path}"
 {
   capabilities = [ "read", "list" ]
 }
 
-${var.additional_vault_deployment_policy}
+${var.additional_vault_deployment_policy != null ? var.additional_vault_deployment_policy : ""}
 EOF
 }

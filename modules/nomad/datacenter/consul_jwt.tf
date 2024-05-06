@@ -18,13 +18,16 @@ resource "consul_acl_auth_method" "jwt" {
     JWTSupportedAlgs = [
         "RS256"
     ]
+    JWKSCACert = var.root_cert.public_key
   })
 }
 
 resource "consul_acl_binding_rule" "service" {
   auth_method = consul_acl_auth_method.jwt.name
   description = "Binding rule for services registered from Nomad"
-  selector    = "\"nomad_service\" in value and \"${var.datacenter}\" in value.nomad_service"
+  # @TODO Fix this selector
+  #selector    = "\"nomad_service\" in value and \"nomad-job-${var.datacenter}-$${value.nomad_job_id}\" in value.nomad_service"
+  selector    = "\"nomad_service\" in value"
   bind_type   = "service"
   bind_name   = "$${value.nomad_service}"
 }
@@ -37,7 +40,7 @@ key_prefix "" {
   policy = "read"
 }
 
-service_prefix "" {
+service_prefix "nomad-job-${var.datacenter}-" {
   policy = "read"
 }
 RULE

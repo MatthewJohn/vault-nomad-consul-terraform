@@ -1,12 +1,8 @@
-variable "service_name" {
-  description = "Name of service"
+variable "job_name" {
+  description = "Name of job"
   type        = string
 }
 
-# variable "gitlab_project_id" {
-#   description = "Name of gitlab project to setup JWT role"
-#   type        = string
-# }
 variable "gitlab_project_path" {
   description = "Gitlab project path"
   type        = string
@@ -21,9 +17,17 @@ variable "nomad_namespace" {
 variable "nomad_datacenter" {
   description = "Nomad datacenter"
   type = object({
-    name        = string
-    common_name = string
-    client_dns  = string
+    name                              = string
+    common_name                       = string
+    client_dns                        = string
+    vault_jwt_path                    = string
+    default_workload_vault_policy     = string
+    default_workload_vault_role       = string
+    workload_identity_vault_aud       = list(string)
+    consul_auth_method                = string
+    default_workload_consul_policy    = string
+    default_workload_consul_task_role = string
+    workload_identity_consul_aud      = list(string)
   })
 }
 
@@ -79,46 +83,24 @@ variable "consul_datacenter" {
   })
 }
 
-variable "additional_consul_policy" {
-  description = "Additional statements for consul policy"
-  type        = string
-  default     = ""
-}
-
-variable "additional_vault_application_policy" {
-  description = "Additional statements for vault application policy"
-  type        = string
-  default     = ""
+variable "tasks" {
+  description = "List of tasks with overrides, if required"
+  type = map(object({
+    custom_vault_policy = optional(string, null)
+    custom_consul_policy = optional(string, null)
+  }))
 }
 
 variable "additional_vault_deployment_policy" {
   description = "Additional statements for vault deployment policy"
   type        = string
-  default     = ""
-}
-
-variable "additional_nomad_vault_policy" {
-  description = "Additioanl statements for vault nomad policy"
-  type        = string
-  default     = ""
+  default     = null
 }
 
 variable "additional_nomad_policy" {
   description = "Additional statements for the nomad policy"
   type        = string
   default     = ""
-}
-
-variable "additional_consul_services" {
-  description = "List of additional consul services to assign to service. Specify only the suffix from the main service name, e.g. metrics"
-  type        = list(string)
-  default     = []
-}
-
-variable "additional_tasks" {
-  description = "List of additional tasks, which have seperate deployment entities. Specify only the suffix from the main service name, e.g. postgres"
-  type        = list(string)
-  default     = []
 }
 
 variable "additional_nomad_namespace_capabilities" {
@@ -145,8 +127,8 @@ variable "harbor_hostname" {
 }
 
 locals {
-  name_with_dc = var.nomad_datacenter != null ? "${var.nomad_datacenter.name}-${var.service_name}" : var.service_name
-  consul_service_name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.service_name}" : null
-  enable_consul_integration = var.nomad_region != null && var.nomad_datacenter != null
-  enable_nomad_integration = local.enable_consul_integration
+  base_full_name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
+  base_consul_service = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
+  name_with_dc = var.nomad_datacenter != null ? "${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
+  enable_nomad_integration = var.nomad_datacenter != null
 }

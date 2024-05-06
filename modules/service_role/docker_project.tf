@@ -35,7 +35,7 @@ resource "random_password" "harbor" {
 
 resource "harbor_robot_account" "system" {
   name        = "deployment-${local.base_harbor_image_name}"
-  description = "Robot deployment account for ${var.service_name}"
+  description = "Robot deployment account for ${var.job_name}"
   level       = "system"
   secret      = random_password.harbor.result
 

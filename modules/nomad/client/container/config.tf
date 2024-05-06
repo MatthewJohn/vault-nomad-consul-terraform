@@ -181,7 +181,6 @@ consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
   grpc_address = "${var.consul_client.listen_host}:8503"
 
-  allow_unauthenticated = false
   auto_advertise        = true
 
   client_auto_join    = true

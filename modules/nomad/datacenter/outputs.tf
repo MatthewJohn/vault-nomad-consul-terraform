@@ -38,9 +38,39 @@ output "vault_jwt_path" {
   value       = vault_jwt_auth_backend.workload_identity.path
 }
 
+output "default_workload_vault_policy" {
+  description = "Default workload vault policy"
+  value       = vault_policy.default_workload_identity.name
+}
+
+output "default_workload_vault_role" {
+  description = "Default role for workload identity for vault"
+  value       = vault_jwt_auth_backend_role.default_workload_identity.role_name
+}
+
+output "workload_identity_vault_aud" {
+  description = "Vault workload identity AUD"
+  value       = vault_jwt_auth_backend_role.default_workload_identity.bound_audiences
+}
+
 output "consul_auth_method" {
   description = "Workload identity JWT auth method for consul"
   value       = consul_acl_auth_method.jwt.name
+}
+
+output "default_workload_consul_policy" {
+  description = "Default workload consul policy"
+  value       = consul_acl_policy.workload_identity_task.name
+}
+
+output "default_workload_consul_task_role" {
+  description = "Default task role for workload identity for consul"
+  value       = consul_acl_role.task.name
+}
+
+output "workload_identity_consul_aud" {
+  description = "Consul workload identity AUD"
+  value       = jsondecode(consul_acl_auth_method.jwt.config_json)["BoundAudiences"]
 }
 
 output "harbor_account" {
