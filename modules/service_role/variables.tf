@@ -86,9 +86,15 @@ variable "consul_datacenter" {
 variable "tasks" {
   description = "List of tasks with overrides, if required"
   type = map(object({
-    custom_vault_policy = optional(string, null)
+    custom_vault_policy  = optional(string, null)
     custom_consul_policy = optional(string, null)
   }))
+}
+
+variable "services" {
+  description = "List of additional consul services"
+  type        = list(string)
+  default     = []
 }
 
 variable "additional_vault_deployment_policy" {
@@ -128,7 +134,17 @@ variable "harbor_hostname" {
 
 locals {
   base_full_name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
-  base_consul_service = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
   name_with_dc = var.nomad_datacenter != null ? "${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
   enable_nomad_integration = var.nomad_datacenter != null
+
+  consul_services = merge({
+    default = {
+      name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
+    }
+  }, {
+    for service in var.services :
+    service => {
+      name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_datacenter.name}-${var.job_name}-${service}" : "${var.job_name}-${service}"
+    }
+  })
 }

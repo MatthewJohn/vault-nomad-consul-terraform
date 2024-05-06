@@ -7,16 +7,13 @@ resource "consul_acl_policy" "deployment" {
   rules = <<-RULE
 # Allow writing the services that the service will provide
 # and modify intentions
-service "${local.base_consul_service}"
+%{for service, service_config in values(local.consul_services)}
+service "${service_config.name}"
 {
   policy = "write"
   intentions = "write"
 }
-service "${local.base_consul_service}-*"
-{
-  policy = "write"
-  intentions = "write"
-}
+%{endfor}
 RULE
 }
 

@@ -7,7 +7,6 @@ resource "vault_kv_secret_v2" "secrets" {
   data_json = jsonencode(
     {
       name                                = var.job_name
-      base_consul_service                 = local.base_consul_service
       consul_policy_name                  = try(consul_acl_policy.deployment[0].name, null)
       vault_consul_role_name              = try(vault_consul_secret_backend_role.deployment[0].name, null)
       vault_consul_engine_path            = var.consul_datacenter.consul_engine_mount_path
@@ -32,6 +31,7 @@ resource "vault_kv_secret_v2" "secrets" {
           secrets        = module.task_service_secret_path[task]
         }
       }
+      services = local.consul_services
       consul = {
         datacenter               = var.consul_datacenter.name
         address                  = var.consul_datacenter.address
