@@ -11,5 +11,5 @@ resource "vault_jwt_auth_backend_role" "gitlab" {
   }
   user_claim             = "user_email"
   role_type              = "jwt"
-  token_explicit_max_ttl = 300
+  token_explicit_max_ttl = 900
 }
