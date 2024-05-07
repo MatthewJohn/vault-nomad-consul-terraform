@@ -74,6 +74,14 @@ variable "consul_datacenter" {
   })
 }
 
+variable "consul_token" {
+  description = "Details for consul token"
+  type = object({
+    mount = string
+    name  = string
+  })
+}
+
 variable "consul_client" {
   description = "Configuration of consul client"
   type = object({
@@ -87,11 +95,6 @@ variable "consul_root_cert" {
   type = object({
     public_key = string
   })
-}
-
-variable "nomad_client_vault_consul_role" {
-  description = "Name of vault consul engine role for nomad client"
-  type        = string
 }
 
 variable "docker_host" {

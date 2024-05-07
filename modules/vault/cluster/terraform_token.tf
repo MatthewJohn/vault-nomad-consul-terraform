@@ -235,6 +235,20 @@ path "sys/policies/acl/consul-client-${datacenter}-nomad-client-${nomad_region}-
 {
   capabilities = ["update", "read", "create", "delete"]
 }
+# Nomad client policies
+path "sys/policies/acl/nomad-client-consul-template-${nomad_region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Nomad client consul token
+path "consul_static/data/${datacenter}/nomad/client/${nomad_region}/${nomad_dc}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/${datacenter}/nomad/client/${nomad_region}/${nomad_dc}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
 
 # Create JWT for nomad
 path "sys/auth/jwt_nomad_${nomad_region}_${nomad_dc}"
