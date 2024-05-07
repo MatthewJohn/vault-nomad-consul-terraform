@@ -2,7 +2,10 @@ resource "consul_acl_auth_method" "jwt" {
   name          = "jwt_nomad_${var.region.name}_${var.datacenter}"
   type          = "jwt"
   description   = "JWT Auth token for nomad"
-  max_token_ttl = "1h"
+
+  # Disable max token TTL, as the token must live the lifetime
+  # of the allocation.
+  max_token_ttl = null
 
   config_json = jsonencode({
     BoundAudiences = [

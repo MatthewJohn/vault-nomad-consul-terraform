@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     docker = {
-      source  = "terraform-cache.dockstudios.co.uk/kreuzwerker/docker"
+      source  = "kreuzwerker/docker"
       version = "3.0.2"
     }
   }
