@@ -164,8 +164,8 @@ consul {
   server_auto_join    = true
   server_service_name = "nomad-${var.region.name}-server"
 
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
-  token = "{{ .Data.token }}"
+{{ with secret "${var.consul_token.mount}/${var.consul_token.name}" }}
+  token = "{{ .Data.data.token }}"
 {{ end }}
 
   #namespace = "nomad-${var.region.name}"

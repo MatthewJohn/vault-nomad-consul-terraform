@@ -31,15 +31,19 @@ module "consul_template_vault_agent" {
 module "container" {
   source = "./container"
 
-  image                          = var.docker_images.nomad_image
-  root_cert                      = var.root_cert
-  region                         = var.region
-  vault_cluster                  = var.vault_cluster
-  consul_client                  = module.consul_client
-  consul_datacenter              = var.consul_datacenter
-  initial_run                    = var.initial_run
-  nomad_server_vault_consul_role = vault_consul_secret_backend_role.nomad_server_vault_consul_role.name
-  nomad_https_port               = var.nomad_https_port
+  image             = var.docker_images.nomad_image
+  root_cert         = var.root_cert
+  region            = var.region
+  vault_cluster     = var.vault_cluster
+  consul_client     = module.consul_client
+  consul_datacenter = var.consul_datacenter
+  initial_run       = var.initial_run
+  nomad_https_port  = var.nomad_https_port
+
+  consul_token = {
+    mount = vault_kv_secret_v2.consul_token.mount
+    name  = vault_kv_secret_v2.consul_token.name
+  }
 
   docker_host = var.docker_host
 

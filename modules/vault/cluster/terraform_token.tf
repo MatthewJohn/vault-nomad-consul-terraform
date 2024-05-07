@@ -208,6 +208,22 @@ path "sys/policies/acl/consul-client-${datacenter}-nomad-server-${nomad_region}-
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Nomad server policies for nomad consul template
+path "sys/policies/acl/nomad-server-consul-template-${nomad_region}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Static consul tokens for servers
+path "consul_static/data/${datacenter}/nomad/server/${nomad_region}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/${datacenter}/nomad/server/${nomad_region}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {

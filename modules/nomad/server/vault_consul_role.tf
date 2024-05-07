@@ -40,11 +40,12 @@ mesh = "write"
 RULE
 }
 
-resource "vault_consul_secret_backend_role" "nomad_server_vault_consul_role" {
-  name    = "nomad-${var.region.name}-server-${var.docker_host.hostname}"
-  backend = var.consul_datacenter.consul_engine_mount_path
+resource "consul_acl_token" "nomad_server" {
+  description = "Consul token for nomad server ${var.docker_host.hostname}"
+  policies    = [consul_acl_policy.nomad_server.name]
+  local       = true
+}
 
-  consul_policies = [
-    consul_acl_policy.nomad_server.name
-  ]
+data "consul_acl_token_secret_id" "nomad_server" {
+  accessor_id = consul_acl_token.nomad_server.id
 }
