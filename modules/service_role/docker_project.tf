@@ -56,3 +56,28 @@ resource "harbor_robot_account" "system" {
     }
   }
 }
+
+resource "random_password" "nomad_harbor" {
+  length  = 38
+  special = false
+}
+
+resource "harbor_robot_account" "nomad" {
+  name        = "nomad-${local.base_harbor_image_name}"
+  description = "Robot deployment account for ${var.job_name}"
+  level       = "system"
+  secret      = random_password.nomad_harbor.result
+
+  dynamic "permissions" {
+    for_each = harbor_project.this
+
+    content {
+      access {
+        action   = "pull"
+        resource = "repository"
+      }
+      kind      = "project"
+      namespace = permissions.value.name
+    }
+  }
+}
