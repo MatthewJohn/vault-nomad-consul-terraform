@@ -173,6 +173,7 @@ acl {
 
 consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
+  grpc_address = "${var.consul_client.listen_host}:8503"
 
   auto_advertise        = true
 
