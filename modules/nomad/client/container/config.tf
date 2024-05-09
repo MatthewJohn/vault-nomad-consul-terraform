@@ -7,12 +7,10 @@ locals {
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate }}{{ end }}
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate -}}
+{{ .Data.private_key | writeToFile "/nomad/config/client-certs/client.key" "root" "root" "0600" }}
+{{- end }}
 {{ with secret "${var.region.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end }}
-EOF
-
-    "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.private_key }}{{ end }}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
@@ -44,12 +42,6 @@ vault {
 template {
   source      = "/nomad/config/templates/client.crt.tpl"
   destination = "/nomad/config/client-certs/client.crt"
-  perms       = 0700
-}
-
-template {
-  source      = "/nomad/config/templates/client.key.tpl"
-  destination = "/nomad/config/client-certs/client.key"
   perms       = 0700
 }
 
