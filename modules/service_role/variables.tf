@@ -132,6 +132,12 @@ variable "harbor_hostname" {
   type        = string
 }
 
+variable "allowed_cves" {
+  description = "List of allowed CVEs in harbor"
+  type        = list(string)
+  default     = []
+}
+
 locals {
   base_full_name = var.nomad_datacenter != null ? "nomad-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}" : var.job_name
   name_with_dc = var.nomad_datacenter != null ? "${var.nomad_datacenter.name}-${var.job_name}" : var.job_name

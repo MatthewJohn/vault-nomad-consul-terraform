@@ -10,7 +10,7 @@ resource "harbor_project" "this" {
 
   vulnerability_scanning = true
   deployment_security    = "critical"
-  cve_allowlist          = []
+  cve_allowlist          = var.allowed_cves
 
   force_destroy = false
   storage_quota = 10
