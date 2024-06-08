@@ -2,6 +2,8 @@
 
 A self-learning exercise for learning how to setup vault/consul/nomad from scratch and setting up/managing non-cloud resources using Terraform.
 
+See tags for working versions
+
 ## Overview
 
 This project attempts to provide an entire vault/consul/nomad stack.
