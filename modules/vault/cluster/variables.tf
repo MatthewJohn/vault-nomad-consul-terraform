@@ -55,9 +55,15 @@ variable "nomad_regions" {
   default     = {}
 }
 
+variable "gitlab_url" {
+  description = "Gitlab URL for JWT authentication"
+  type        = string
+  default     = null
+}
+
 variable "ldap" {
   description = "LDAP authentication details"
-  type        = object({
+  type = object({
     url         = string
     userdn      = string
     userattr    = string
@@ -65,6 +71,7 @@ variable "ldap" {
     groupdn     = string
     groupfilter = optional(string, null)
     certificate = optional(string, null)
+    admin_group = optional(string, "vault-admins")
   })
-  default     = null
+  default = null
 }

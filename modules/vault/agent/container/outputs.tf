@@ -5,10 +5,10 @@ output "container_id" {
 
 output "token_directory" {
   description = "Directory containing token"
-  value       = "${var.base_directory}/auth"
+  value       = docker_container.this.id != "" ? "${var.base_directory}/auth" : ""
 }
 
 output "token_path" {
   description = "Host path of generated token"
-  value       = "${var.base_directory}/auth/token"
+  value       = docker_container.this.id != "" ? "${var.base_directory}/auth/token" : ""
 }

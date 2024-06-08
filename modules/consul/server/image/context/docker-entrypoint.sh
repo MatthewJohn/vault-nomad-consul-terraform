@@ -115,13 +115,15 @@ else
     cat > /tmp/start_consul.sh <<EOF
 #!/bin/bash
 
-$@
+exec $@
+
 EOF
     chmod +x /tmp/start_consul.sh
 
-    # run consul-template in the backgroundn to update certs
+    # run consul-template in the background to update certs
     # @TODO Get consul-template to trigger consul reload
     consul-template \
       -config /consul/config/templates/consul_template.hcl \
+      -exec-reload-signal=SIGHUP \
       -exec /tmp/start_consul.sh
 fi

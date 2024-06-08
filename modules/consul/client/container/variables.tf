@@ -1,8 +1,3 @@
-variable "hostname" {
-  description = "Hostname for consul"
-  type        = string
-}
-
 variable "image" {
   description = "Image to be used"
   type        = string
@@ -18,6 +13,16 @@ variable "listen_host" {
   type        = string
 }
 
+variable vault_consul_role {
+  description = "Vault consul role"
+  type        = string
+}
+
+variable use_token_as_default {
+  description = "Whether to use token for inbound connections, authenticating anonymous clients as this consul client's role"
+  type        = bool
+}
+
 variable "datacenter" {
   description = "Consul datacenter"
   type = object({
@@ -29,6 +34,10 @@ variable "datacenter" {
     approle_mount_path       = string
     pki_connect_mount_path   = string
     client_ca_role_name      = string
+    gossip_encryption = object({
+      mount = string
+      name  = string
+    })
   })
 }
 
@@ -38,7 +47,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
+    ca_cert                  = string
   })
 }
 
@@ -62,22 +71,23 @@ variable "consul_template_vault_agent" {
   })
 }
 
-variable "gossip_key" {
-  description = "Gossip secret"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = string
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
 
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+variable "consul_token" {
+  description = "Consul token object"
+  type = object({
+    secret_name  = string
+    secret_mount = string
+  })
 }

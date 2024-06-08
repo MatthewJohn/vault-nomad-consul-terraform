@@ -25,8 +25,25 @@ path "/sys/mounts/${vault_mount.connect_intermediate.path}/tune" {
   capabilities = [ "update" ]
 }
 
-path "/${var.root_cert.pki_connect_mount_path}/" {
+path "${vault_mount.connect_intermediate.path}/sign/leaf-cert" {
+  capabilities = ["update"]
+}
+
+# @TODO Investigate how to minimise this
+path "${vault_mount.connect_intermediate.path}/*" {
+  capabilities = ["create", "read", "update", "delete"]
+}
+
+path "/${var.root_cert.pki_connect_mount_path}/*" {
   capabilities = [ "read" ]
+}
+
+path "/${var.root_cert.pki_connect_mount_path}/root/sign-self-issued" {
+  capabilities = ["update"]
+}
+
+path "/${var.root_cert.pki_connect_mount_path}/root/generate/internal" {
+  capabilities = [ "create", "update" ]
 }
 
 path "/${var.root_cert.pki_connect_mount_path}/root/sign-intermediate" {
@@ -52,4 +69,3 @@ resource "vault_approle_auth_backend_role" "connect_ca" {
   role_name      = "consul-connect-ca-${var.datacenter}"
   token_policies = [vault_policy.connect_ca.name]
 }
-

@@ -1,20 +1,15 @@
+module "consul_token" {
+  source = "./token"
 
-module "consul_image" {
-  source = "./image"
-
-  consul_version = var.consul_version
-
-  providers = {
-    docker = docker.consul
-  }
+  docker_host   = var.docker_host
+  vault_cluster = var.vault_cluster
+  datacenter    = var.datacenter
 }
 
 module "consul_template_vault_agent" {
   source = "../../vault/agent"
 
-  hostname       = var.hostname
   domain_name    = var.datacenter.common_name
-  vault_cluster  = var.vault_cluster
   container_name = "consul-agent-vault-agent-consul-template"
 
   base_directory = "/consul-agent-vault-agent-consul-template"
@@ -23,27 +18,31 @@ module "consul_template_vault_agent" {
   app_role_secret     = vault_approle_auth_backend_role_secret_id.consul_template.secret_id
   app_role_mount_path = var.datacenter.approle_mount_path
 
-  docker_username = var.docker_username
-  docker_host     = var.docker_host
-  docker_ip       = var.docker_ip
+  docker_host = var.docker_host
+
+  vault_cluster = var.vault_cluster
+
+  docker_images = var.docker_images
 }
 
 module "container" {
   source = "./container"
 
-  image         = module.consul_image.image_id
-  hostname      = var.hostname
+  image         = var.docker_images.consul_client_image
   datacenter    = var.datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.root_cert
-  gossip_key    = var.gossip_key
+
+  vault_consul_role = var.custom_role != null ? var.custom_role.vault_consul_role : "consul-client-role"
+
+  consul_token = module.consul_token
+
+  use_token_as_default = var.use_token_as_default
 
   listen_host = var.listen_host
   listen_port = var.listen_port
 
-  docker_host     = var.docker_host
-  docker_username = var.docker_username
-  docker_ip       = var.docker_ip
+  docker_host = var.docker_host
 
   consul_template_vault_agent = module.consul_template_vault_agent
 

@@ -1,39 +1,20 @@
-
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
-}
-
-variable "domain_name" {
-  description = "DNS domain name for instances"
-  type        = string
-}
-
 variable "vault_subdomain" {
   description = "Subdomain of primary domain for vault"
   type        = string
   default     = "vault"
 }
 
-variable "vault_version" {
-  description = "Vault version"
-  type        = string
-  default     = "1.13.2"
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
 
 variable "kms_key_id" {
@@ -50,4 +31,21 @@ variable "all_vault_hosts" {
   description = "List of all vault hostnames"
   type        = list(string)
   default     = []
+}
+
+variable "vault_adm_pki_role" {
+  description = "Vault adm PKI role"
+  type        = string
+}
+
+variable "vault_adm_pki_backend" {
+  description = "Vault ADM PKI mount"
+  type        = string
+}
+
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_node_image = string
+  })
 }

@@ -16,8 +16,8 @@ EOF
 
 # Use vault provider with approle authentication
 provider "vault" {
-  address      = var.service_role.vault.address
-  ca_cert_file = data.external.temp_vault_cert.result.cert_file
+  address          = var.service_role.vault.address
+  ca_cert_file     = data.external.temp_vault_cert.result.cert_file
   skip_child_token = true
 
   auth_login {
@@ -45,8 +45,8 @@ data "vault_generic_secret" "consul_token" {
 provider "consul" {
   address    = var.service_role.consul.address
   datacenter = var.service_role.consul.datacenter
-  token  = data.vault_generic_secret.consul_token.data["token"]
-  ca_pem = var.service_role.consul.root_cert_public_key
+  token      = data.vault_generic_secret.consul_token.data["token"]
+  ca_pem     = var.service_role.consul.root_cert_public_key
 }
 
 # Obtain nomad token from vault nomad engine
@@ -65,7 +65,7 @@ terraform {
   required_providers {
     freeipa = {
       version = "3.0.0"
-      source  = "terraform-cache.dockstudios.co.uk/rework-space-com/freeipa"
+      source  = "rework-space-com/freeipa"
     }
   }
 }

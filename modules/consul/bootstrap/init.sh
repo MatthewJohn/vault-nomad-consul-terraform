@@ -11,7 +11,8 @@ bucket_name=$6
 bucket_key=$7
 initial_run=$8
 
-ca_cert_file="`pwd`/root_ca.pem"
+ca_cert_file="`pwd`/root_cert.pem"
+export AWS_CA_BUNDLE=$ca_cert_file
 bootstrap_tokens_json_file="`pwd`/consul_bootstrap.json"
 consul_unseal_debug_file="`pwd`/bootstrap-debug.log"
 root_token=""

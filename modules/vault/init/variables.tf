@@ -24,7 +24,7 @@ variable "aws_region" {
   type        = string
 }
 
-variable "bucket_name" {
+variable "cluster_name" {
   description = "Bucket name to store unseal and root credentials"
   type        = string
 }

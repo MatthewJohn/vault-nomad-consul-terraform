@@ -12,7 +12,8 @@ bucket_name=$7
 bucket_key=$8
 initial_run=$9
 
-ca_cert_file="`pwd`/root_ca.pem"
+ca_cert_file="`pwd`/root_cert.pem"
+export AWS_CA_BUNDLE=$ca_cert_file
 bootstrap_tokens_json_file="`pwd`/nomad_bootstrap.json"
 nomad_unseal_debug_file="`pwd`/nomad-bootstrap-debug.log"
 root_token=""

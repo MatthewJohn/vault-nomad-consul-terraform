@@ -1,3 +1,8 @@
+resource "null_resource" "container_image" {
+  triggers = {
+    image = var.image
+  }
+}
 
 resource "docker_container" "this" {
   image = var.image
@@ -6,7 +11,7 @@ resource "docker_container" "this" {
   rm      = false
   restart = "always"
 
-  hostname   = "${var.hostname}.${var.region.common_name}"
+  hostname   = "${var.docker_host.hostname}.${var.region.common_name}"
   domainname = ""
 
   command = concat(
@@ -43,9 +48,13 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
-  volumes {
-    container_path = "/vault-agent-consul-template/auth"
-    host_path      = var.consul_template_vault_agent.token_directory
+  mounts {
+    target = "/vault-agent-consul-template/auth"
+    type   = "bind"
+    source = var.consul_template_vault_agent.token_directory
+    bind_options {
+      propagation = "shared"
+    }
   }
 
   # Mount cgroup due to errors when running client
@@ -64,8 +73,14 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
+    ignore_changes = [
+      log_opts,
+      image,
+    ]
+
     replace_triggered_by = [
-      null_resource.noamd_config
+      null_resource.noamd_config,
+      null_resource.container_image,
     ]
   }
 }

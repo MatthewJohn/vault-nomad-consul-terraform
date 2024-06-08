@@ -6,7 +6,7 @@ resource "docker_container" "this" {
   rm      = false
   restart = "always"
 
-  hostname   = "${var.hostname}.${var.domain_name}"
+  hostname   = var.docker_host.fqdn
   domainname = ""
 
   network_mode = "host"
@@ -25,7 +25,8 @@ resource "docker_container" "this" {
 
   lifecycle {
     ignore_changes = [
-      image
+      image,
+      log_opts
     ]
   }
 }

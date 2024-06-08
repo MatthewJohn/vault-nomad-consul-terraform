@@ -20,8 +20,11 @@ resource "null_resource" "kms_seed_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {
@@ -52,11 +55,16 @@ resource "docker_container" "kms" {
 
   lifecycle {
     ignore_changes = [
-      image
+      image,
+      log_opts
     ]
 
     replace_triggered_by = [
       null_resource.kms_seed_config
     ]
   }
+
+  depends_on = [
+    null_resource.kms_seed_config
+  ]
 }

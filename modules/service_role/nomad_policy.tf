@@ -8,10 +8,12 @@ locals {
   )
 }
 
-resource "nomad_acl_policy" "this" {
-  name        = "nomad-deployment-job-${var.nomad_region.name}-${var.name}"
+resource "nomad_acl_policy" "deployment" {
+  count = local.enable_nomad_integration ? 1 : 0
 
-  rules_hcl   = <<EOT
+  name = "nomad-deployment-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}"
+
+  rules_hcl = <<EOT
 namespace "${var.nomad_namespace}" {
   policy       = "read"
   capabilities = ${jsonencode(local.nomad_namespace_capabilities)}
@@ -23,17 +25,19 @@ plugin {
 }
 %{endif}
 
-${var.additional_nomad_policy}
+${var.additional_nomad_policy != null ? var.additional_nomad_policy : ""}
 EOT
 }
 
-resource "vault_nomad_secret_role" "this" {
-  backend   = var.nomad_static_tokens.nomad_engine_mount_path
-  role      = "nomad-deployment-job-${var.nomad_region.name}-${var.name}"
-  type      = "client"
-  global    = false
+resource "vault_nomad_secret_role" "deployment" {
+  count = local.enable_nomad_integration ? 1 : 0
 
-  policies  = [
-    nomad_acl_policy.this.name
+  backend = var.nomad_static_tokens.nomad_engine_mount_path
+  role    = "nomad-deployment-job-${var.nomad_region.name}-${var.nomad_datacenter.name}-${var.job_name}"
+  type    = "client"
+  global  = false
+
+  policies = [
+    nomad_acl_policy.deployment[count.index].name
   ]
 }

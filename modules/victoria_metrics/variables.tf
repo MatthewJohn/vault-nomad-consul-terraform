@@ -72,11 +72,6 @@ variable "consul_bootstrap" {
   })
 }
 
-variable "consul_gossip_key" {
-  description = "Gossip secret"
-  type        = string
-}
-
 variable "consul_version" {
   description = "Version of consul"
   type        = string

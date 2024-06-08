@@ -5,7 +5,7 @@
 # during startup
 
 resource "consul_acl_policy" "nomad_client" {
-  name = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
+  name = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.docker_host.hostname}"
   datacenters = [
     var.consul_datacenter.name
   ]
@@ -19,36 +19,30 @@ service_prefix "" {
   policy = "write"
 }
 
-agent "consul-client-${var.consul_datacenter.name}-${var.hostname}" {
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+node "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
 
-# Hopefully not required as servers have this permission
-#acl = "write"
-
-
-service "nomad-${var.region.name}-${var.datacenter.name}-client" {
+agent "consul-client-${var.consul_datacenter.name}-${var.docker_host.hostname}" {
   policy = "write"
 }
-
-service "nomad-${var.region.name}-client" {
-  policy = "write"
-}
-
 RULE
 }
 
-resource "vault_consul_secret_backend_role" "nomad_client_vault_consul_role" {
-  name    = "nomad-${var.region.name}-${var.datacenter.name}-client-${var.hostname}"
-  backend = var.consul_datacenter.consul_engine_mount_path
+resource "consul_acl_token" "nomad_client" {
+  description = "Consul token for nomad client ${var.docker_host.hostname}"
+  policies    = [consul_acl_policy.nomad_client.name]
+  local       = true
+}
 
-  local = true
-
-  # Max 1 day TTL
-  ttl     = 60 * 60 * 24
-  max_ttl = 60 * 60 * 24
-
-  consul_policies = [
-    consul_acl_policy.nomad_client.name
-  ]
+data "consul_acl_token_secret_id" "nomad_client" {
+  accessor_id = consul_acl_token.nomad_client.id
 }

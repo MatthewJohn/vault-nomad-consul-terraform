@@ -4,7 +4,7 @@ resource "vault_policy" "client_consul_template" {
 
   policy = <<EOF
 # Access CA certs
-path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.client.name}" {
+path "${var.region.pki_mount_path}/issue/${vault_pki_secret_backend_role.client.name}" {
   capabilities = [ "read", "update" ]
 }
 
@@ -35,6 +35,16 @@ path "${var.root_cert.pki_mount_path}/cert/ca"
 
 # Allow access to read region CA
 path "${var.region.pki_mount_path}/cert/ca"
+{
+  capabilities = ["read"]
+}
+
+# Access to harbor account
+path "${vault_kv_secret_v2.harbor.mount}/${vault_kv_secret_v2.harbor.name}"
+{
+  capabilities = ["read"]
+}
+path "${vault_kv_secret_v2.harbor.mount}/data/${vault_kv_secret_v2.harbor.name}"
 {
   capabilities = ["read"]
 }

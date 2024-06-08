@@ -9,6 +9,16 @@ output "common_name" {
   value       = local.common_name
 }
 
+output "app_domain" {
+  description = "App domain for DC"
+  value       = "${var.datacenter}.${var.app_cert.common_name}"
+}
+
+output "app_service_domain" {
+  description = "App service domain for DC"
+  value       = "service.${var.datacenter}.${var.app_cert.common_name}"
+}
+
 output "role_name" {
   description = "Role name for certificate"
   value       = vault_pki_secret_backend_role.this.name
@@ -21,7 +31,7 @@ output "client_ca_role_name" {
 
 output "pki_mount_path" {
   description = "PKI path"
-  value       = vault_mount.this.path
+  value       = var.root_cert.pki_mount_path # vault_mount.this.path
 }
 
 output "root_cert_public_key" {
@@ -31,7 +41,7 @@ output "root_cert_public_key" {
 
 output "ca_chain" {
   description = "Intermediate certificate CA chain"
-  value       = join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
+  value       = var.root_cert.public_key # join("\n", vault_pki_secret_backend_root_sign_intermediate.this.ca_chain)
 }
 
 output "address" {
@@ -103,15 +113,15 @@ output "connect_ca_approle_role_name" {
 output "consul_server_token" {
   description = "S3 details for consul server token"
   value = {
-    bucket = aws_s3_object.consul_server_token.bucket
-    key    = aws_s3_object.consul_server_token.key
+    mount = vault_kv_secret_v2.static_token.mount
+    name  = vault_kv_secret_v2.static_token.name
   }
 }
 
-output "consul_server_service_token" {
-  description = "S3 details for consul server service token"
+output "gossip_encryption" {
+  description = "Vault details for consul gossip token"
   value = {
-    bucket = aws_s3_object.consul_server_service_token.bucket
-    key    = aws_s3_object.consul_server_service_token.key
+    mount = vault_kv_secret_v2.gossip.mount
+    name  = vault_kv_secret_v2.gossip.name
   }
 }

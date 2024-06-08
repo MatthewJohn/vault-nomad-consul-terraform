@@ -23,6 +23,7 @@ variable "region" {
   type = object({
     name               = string
     common_name        = string
+    address            = string
     role_name          = string
     pki_mount_path     = string
     approle_mount_path = string
@@ -39,12 +40,10 @@ variable "consul_datacenter" {
 }
 
 variable "vault_cluster" {
-  description = "Vault cluster config"
+  description = "Vault cluster"
   type = object({
-    ca_cert_file             = string
-    address                  = string
-    token                    = string
-    consul_static_mount_path = string
+    service_secrets_mount_path = string
+    consul_static_mount_path   = string
   })
 }
 
@@ -52,4 +51,9 @@ variable "nomad_client_ips" {
   description = "List of all client IP addresses"
   type        = list(string)
   default     = []
+}
+
+variable "harbor_hostname" {
+  description = "Harbor hostname"
+  type        = string
 }

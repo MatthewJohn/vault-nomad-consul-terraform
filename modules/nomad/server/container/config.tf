@@ -1,30 +1,24 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.region.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.region.common_name}"
   server_fqdn = "server.${var.region.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
   verify_domain = "server.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/server.crt.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.certificate }}
-{{ .Data.issuing_ca }}
-{{ end }}
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}" }}{{ .Data.certificate -}}
+{{- .Data.private_key | writeToFile "/nomad/config/server-certs/server.key" "root" "root" "0600" -}}
+{{- end }}
+{{ with secret "${var.root_cert.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end }}
 EOF
 
     "config/templates/server.key.tpl" = <<EOF
-{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.private_key }}
-{{ end }}
-
+{{ with secret "${var.region.pki_mount_path}/issue/${var.region.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.private_key }}{{ end }}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.root_cert.pki_mount_path}/cert/ca" }}
-{{ .Data.certificate }}
-{{ end }}
-
+${var.vault_cluster.ca_cert}
 EOF
 
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
@@ -34,7 +28,7 @@ vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "${var.consul_template_vault_agent.token_path}"
 
   ssl {
     enabled = true
@@ -46,12 +40,6 @@ vault {
 template {
   source      = "/nomad/config/templates/server.crt.tpl"
   destination = "/nomad/config/server-certs/server.crt"
-  perms       = 0700
-}
-
-template {
-  source      = "/nomad/config/templates/server.key.tpl"
-  destination = "/nomad/config/server-certs/server.key"
   perms       = 0700
 }
 
@@ -121,7 +109,7 @@ EOF
 
     "config/templates/server.hcl.tmpl" = <<EOF
 
-name = "${var.hostname}"
+name = "${var.docker_host.hostname}"
 
 region = "${var.region.name}"
 
@@ -167,18 +155,13 @@ consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
   grpc_address = "${var.consul_client.listen_host}:8503"
 
-  allow_unauthenticated = false
   auto_advertise        = true
 
   server_auto_join    = true
-  client_auto_join    = true
+  server_service_name = "nomad-${var.region.name}-server"
 
-  server_service_name     = "nomad-${var.region.name}-server"
-  client_service_name    = "nomad-${var.region.name}-client"
-  #client_http_check_name = ""
-
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_server_vault_consul_role}" }}
-  token = "{{ .Data.token }}"
+{{ with secret "${var.consul_token.mount}/${var.consul_token.name}" }}
+  token = "{{ .Data.data.token }}"
 {{ end }}
 
   #namespace = "nomad-${var.region.name}"
@@ -188,20 +171,30 @@ consul {
 
   grpc_ca_file = "/nomad/config/consul-certs/ca.crt"
   ca_file      = "/nomad/config/consul-certs/ca.crt"
+
+  service_identity {
+    aud = ["consul.io"]
+    ttl = "1h"
+  }
+
+  task_identity {
+    aud  = ["consul.io"]
+    ttl  = "1h"
+    env  = false
+    file = false
+  }
 }
 
 vault {
-  {{with secret "/auth/token/create/${var.region.server_consul_template_consul_server_role}" "policies=${var.region.server_vault_policy}" "period=72h"}}
-  token = "{{.Auth.ClientToken}}"
-  {{ end }}
   enabled = true
-  address = "${var.vault_cluster.address}"
 
-  ca_file = "/nomad/vault/ca_cert.pem"
-
-  create_from_role = "${var.region.server_vault_role}"
-
-  allow_unauthenticated = false
+  # To be enabled when completely switched to identity
+  default_identity {
+    aud  = ["vault.io"]
+    ttl  = "1h"
+    env  = false
+    file = false
+  }
 }
 
 telemetry {
@@ -228,8 +221,11 @@ resource "null_resource" "noamd_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_user = var.docker_host.bastion_user
+    bastion_host = var.docker_host.bastion_host
   }
 
   provisioner "file" {

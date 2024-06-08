@@ -15,25 +15,39 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 # This is the release of nomad to pull in.
-ARG NOMAD_VERSION=1.5.6
+ARG NOMAD_VERSION
 ARG CONSUL_TEMPLATE_VERSION=0.32.0
-ARG CONSUL_VERSION=1.15.3
-ARG VAULT_VERSION=1.13.2
+ARG CONSUL_VERSION
+ARG VAULT_VERSION
+ARG http_proxy
+ENV http_proxy=$http_proxy
+ENV https_proxy=$http_proxy
+ENV HTTP_PROXY=$http_proxy
+ENV HTTPS_PROXY=$http_proxy
 
 # This is the location of the releases.
 ENV HASHICORP_RELEASES=https://releases.hashicorp.com
+
+# Perform package updates
+RUN microdnf upgrade \
+  --refresh \
+  --best \
+  --nodocs \
+  --noplugins \
+  --setopt=install_weak_deps=0
 
 # Set up certificates, base tools, and Consul.
 # dumb-init is downloaded directly from GitHub because there's no RPM package.
 # Its shasum is hardcoded. If you upgrade the dumb-init verion you'll need to
 # also update the shasum.
 RUN set -eux && \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates curl gnupg libcap openssl iputils jq iptables wget unzip tar && \
     wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 $proxy_config" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     nomadArch=amd64 && \
@@ -70,12 +84,13 @@ RUN set -eux && \
 
 # Install consul
 RUN set -eux && \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates curl gnupg libcap openssl iputils jq iptables wget unzip tar && \
     wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     echo 'e874b55f3279ca41415d290c512a7ba9d08f98041b28ae7c2acb19a545f1c4df /usr/bin/dumb-init' > dumb-init-shasum && \
     sha256sum --check dumb-init-shasum && \
     chmod +x /usr/bin/dumb-init && \
-    gpg --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
+    gpg --keyserver-options "timeout=40 $proxy_config" --keyserver keyserver.ubuntu.com --recv-keys C874011F0AB405110D02105534365D9472D7468F && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     consulArch=amd64 && \
@@ -96,6 +111,7 @@ RUN set -eux && \
 
 # Install vault, as this is needed for nomad jobs that have vault integration
 RUN set -eux; \
+    proxy_config=''; if [ "$http_proxy" != "" ]; then proxy_config="http-proxy=${http_proxy}"; fi; \
     microdnf install -y ca-certificates gnupg openssl libcap tzdata wget unzip procps shadow-utils util-linux && \
     VAULT_GPGKEY=C874011F0AB405110D02105534365D9472D7468F; \
     found=''; \
@@ -105,7 +121,7 @@ RUN set -eux; \
         hkps://pgp.mit.edu \
     ; do \
         echo "Fetching GPG key $VAULT_GPGKEY from $server"; \
-        gpg --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
+        gpg --keyserver-options "timeout=40 $proxy_config" --batch --keyserver "$server" --recv-keys "$VAULT_GPGKEY" && found=yes && break; \
     done; \
     test -z "$found" && echo >&2 "error: failed to fetch GPG key $VAULT_GPGKEY" && exit 1; \
     mkdir -p /tmp/build && \
@@ -162,6 +178,13 @@ RUN mkdir -p /nomad/data && \
 # set up nsswitch.conf for Go's "netgo" implementation which is used by Consul,
 # otherwise DNS supercedes the container's hosts file, which we don't want.
 RUN test -e /etc/nsswitch.conf || echo 'hosts: files dns' > /etc/nsswitch.conf
+
+ENV http_proxy=
+ENV https_proxy=
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
+
+ENV HOME=/nomad
 
 # Expose the nomad data directory as a volume since there's mutable state in there.
 VOLUME /nomad/data

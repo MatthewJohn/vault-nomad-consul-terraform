@@ -1,5 +1,4 @@
-**/*.tfstate
-**/*.tfstate.backup
-**/*.tfstate.*.backup
-**/.terraform.lock.hcl
-**/.terraform
+**/*.terraform
+**/*.log
+**/root_cert.pem
+**/root_tokens.json

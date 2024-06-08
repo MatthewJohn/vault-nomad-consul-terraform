@@ -1,27 +1,18 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.datacenter.common_name}"
   server_fqdn = "server.${var.datacenter.common_name}"
 
   config_files = {
     "config/templates/agent.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.certificate }}
-{{ .Data.issuing_ca }}
-{{ end }}
-EOF
-
-    "config/templates/agent.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.private_key }}
-{{ end }}
-
+{{- with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.role_name}" "common_name=${local.server_fqdn}" "ttl=24h" "alt_names=${local.fqdn},${var.datacenter.common_name},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}" }}{{ .Data.certificate -}}
+{{- .Data.private_key | writeToFile "/consul/config/agent-certs/agent.key" "" "" "0600" -}}
+{{- end }}
+{{ with secret "${var.datacenter.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end -}}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{- with secret "${var.datacenter.pki_mount_path}/cert/ca_chain" -}}
-{{ .Data.ca_chain }}
-{{- end -}}
+${var.vault_cluster.ca_cert}
 EOF
 
     "config/templates/consul_template.hcl" = <<EOF
@@ -41,12 +32,6 @@ vault {
 template {
   source      = "/consul/config/templates/agent.crt.tpl"
   destination = "/consul/config/agent-certs/agent.crt"
-  perms       = 0700
-}
-
-template {
-  source      = "/consul/config/templates/agent.key.tpl"
-  destination = "/consul/config/agent-certs/agent.key"
   perms       = 0700
 }
 
@@ -124,12 +109,13 @@ bootstrap_expect = ${local.bootstrap_count}
 server = true
 
 client_addr        = "0.0.0.0"
-bind_addr          = "${var.docker_ip}"
-advertise_addr     = "${var.docker_ip}"
-advertise_addr_wan = "${var.docker_ip}"
-node_name          = "consul-server-${var.datacenter.name}-${var.hostname}"
+bind_addr          = "${var.docker_host.ip}"
+advertise_addr     = "${var.docker_host.ip}"
+advertise_addr_wan = "${var.docker_host.ip}"
+node_name          = "consul-server-${var.datacenter.name}-${var.docker_host.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
+alt_domain         = "${var.app_cert.common_name}"
 
 ports {
   # Listener ports
@@ -142,23 +128,28 @@ ports {
 acl {
   enabled = true
   default_policy = "deny"
-  enable_token_persistence = false
+  enable_token_persistence = true
   # @TODO Determine after testing multiple consul DCs
   enable_token_replication = false
   tokens {
-%{if data.aws_s3_object.consul_server_token.body != ""}
-    agent                            = "${data.aws_s3_object.consul_server_token.body}"
-%{endif}
-%{if data.aws_s3_object.consul_server_service_token.body != ""}
-    config_file_service_registration = "${data.aws_s3_object.consul_server_service_token.body}"
-%{endif}
+{{ with secret "${var.datacenter.consul_server_token.mount}/${var.datacenter.consul_server_token.name}" }}
+{{ if ne .Data.data.server_token "" }}
+    agent                            = "{{ .Data.data.server_token }}"
+{{ end }}
+{{ if ne .Data.data.server_service_token "" }}
+    config_file_service_registration = "{{ .Data.data.server_service_token }}"
+{{ end }}
+{{ if ne .Data.data.dns_token "" }}
+    dns                              = "{{ .Data.data.dns_token }}"
+{{ end }}
+{{ end }}
   }
 }
 
 data_dir = "/consul/data"
 
 verify_incoming        = false
-verify_incoming_rpc    = true
+#verify_incoming_rpc    = true
 verify_outgoing        = true
 verify_server_hostname = true
 
@@ -180,6 +171,10 @@ tls {
      # to allow UI access, terraform and services lik traefik
      verify_incoming = false
    }
+
+  grpc {
+    verify_incoming = false
+  }
 
    internal_rpc {
       verify_server_hostname = true
@@ -243,10 +238,16 @@ telemetry {
 ui_config {
   enabled = true
 
-  # metrics_provider = "prometheus"
-  # metrics_proxy {
-  #   base_url = "https://"
-  # }
+  metrics_provider = "prometheus"
+  metrics_proxy {
+    base_url = "http://nomad-job-mon-victoriametrics.service.${var.datacenter.name}.${var.app_cert.common_name}"
+    add_headers = [
+      {
+        name  = "Host"
+        value = "nomad-job-mon-victoriametrics.service.${var.datacenter.name}.${var.app_cert.common_name}"
+      }
+    ]
+  }
 }
 
 retry_join = ["${var.datacenter.common_name}"]
@@ -255,7 +256,9 @@ auto_encrypt {
   allow_tls = true
 }
 
-encrypt = "${var.gossip_key}"
+{{ with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" }}
+encrypt = "{{ .Data.data.value }}"
+{{ end }}
 
 disable_update_check = true
 
@@ -273,8 +276,11 @@ resource "null_resource" "consul_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {

@@ -1,9 +1,3 @@
-
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
-}
-
 variable "root_cert" {
   description = "Nomad root certificate authority"
   type = object({
@@ -33,6 +27,12 @@ variable "datacenter" {
     client_consul_template_approle_role_name = string
     client_dns                               = string
     client_pki_role_name                     = string
+    vault_jwt_path                           = string
+    consul_auth_method                       = string
+    harbor_account = object({
+      secret_mount = string
+      secret_name  = string
+    })
   })
 }
 
@@ -42,7 +42,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
+    ca_cert                  = string
   })
 }
 
@@ -73,42 +73,37 @@ variable "consul_datacenter" {
     ca_chain                                 = string
     root_cert_public_key                     = string
     address                                  = string
+    gossip_encryption = object({
+      mount = string
+      name  = string
+    })
   })
 }
 
-variable "consul_bootstrap" {
-  description = "Value of consul bootstrap"
+variable "docker_images" {
+  description = "Docker images"
   type = object({
-    token = string
+    vault_agent_image   = string
+    consul_client_image = string
+    nomad_image         = string
   })
 }
 
-variable "consul_gossip_key" {
-  description = "Gossip secret"
+variable "container_data_directory" {
+  description = "Container data directory"
   type        = string
-}
-
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
-}
-
-variable "nomad_version" {
-  description = "Version of nomad"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
+  default     = null
 }
 
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }

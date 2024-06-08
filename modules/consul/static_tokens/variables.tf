@@ -10,12 +10,8 @@ variable "datacenter" {
     address_wo_protocol      = string
     consul_engine_mount_path = string
     consul_server_token = object({
-      bucket = string
-      key    = string
-    })
-    consul_server_service_token = object({
-      bucket = string
-      key    = string
+      mount = string
+      name  = string
     })
   })
 }
@@ -24,16 +20,6 @@ variable "bootstrap" {
   description = "Value of consul bootstrap"
   type = object({
     token = string
-  })
-}
-
-variable "vault_cluster" {
-  description = "Vault cluster config"
-  type = object({
-    ca_cert_file             = string
-    address                  = string
-    token                    = string
-    consul_static_mount_path = string
   })
 }
 

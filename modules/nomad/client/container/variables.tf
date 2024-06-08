@@ -1,10 +1,10 @@
-variable "hostname" {
-  description = "Hostname for noamd"
+variable "image" {
+  description = "Image to be used"
   type        = string
 }
 
-variable "image" {
-  description = "Image to be used"
+variable "container_data_directory" {
+  description = "Container data directory"
   type        = string
 }
 
@@ -37,6 +37,12 @@ variable "datacenter" {
     client_dns                               = string
     pki_mount_path                           = string
     client_pki_role_name                     = string
+    vault_jwt_path                           = string
+    consul_auth_method                       = string
+    harbor_account = object({
+      secret_mount = string
+      secret_name  = string
+    })
   })
 }
 
@@ -46,7 +52,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
+    ca_cert                  = string
   })
 }
 
@@ -68,6 +74,14 @@ variable "consul_datacenter" {
   })
 }
 
+variable "consul_token" {
+  description = "Details for consul token"
+  type = object({
+    mount = string
+    name  = string
+  })
+}
+
 variable "consul_client" {
   description = "Configuration of consul client"
   type = object({
@@ -83,22 +97,15 @@ variable "consul_root_cert" {
   })
 }
 
-variable "nomad_client_vault_consul_role" {
-  description = "Name of vault consul engine role for nomad client"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }

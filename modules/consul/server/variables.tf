@@ -1,6 +1,14 @@
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
+variable "docker_host" {
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }
 
 variable "datacenter" {
@@ -18,12 +26,12 @@ variable "datacenter" {
     pki_connect_mount_path                   = string
     connect_ca_approle_role_name             = string
     consul_server_token = object({
-      bucket = string
-      key    = string
+      mount = string
+      name  = string
     })
-    consul_server_service_token = object({
-      bucket = string
-      key    = string
+    gossip_encryption = object({
+      mount = string
+      name  = string
     })
   })
 }
@@ -32,9 +40,9 @@ variable "vault_cluster" {
   description = "Vault cluster config"
   type = object({
     ca_cert_file             = string
+    ca_cert                  = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
   })
 }
 
@@ -49,9 +57,11 @@ variable "root_cert" {
   })
 }
 
-variable "gossip_key" {
-  description = "Gossip secret"
-  type        = string
+variable "app_cert" {
+  description = "App certificate object"
+  type = object({
+    common_name = string
+  })
 }
 
 variable "initial_run" {
@@ -60,22 +70,10 @@ variable "initial_run" {
   default     = false
 }
 
-variable "consul_version" {
-  description = "Version of consul"
-  type        = string
-}
-
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
-variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+variable "docker_images" {
+  description = "Docker images"
+  type = object({
+    vault_agent_image = string
+    consul_server_image = string
+  })
 }

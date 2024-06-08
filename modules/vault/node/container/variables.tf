@@ -1,27 +1,3 @@
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
-variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
-}
-
-variable "hostname" {
-  description = "Hostname for docker"
-  type        = string
-}
-
-variable "domain_name" {
-  description = "Domain name"
-  type        = string
-}
 
 variable "image" {
   description = "Image to be used"
@@ -55,6 +31,29 @@ variable "vault_subdomain" {
   }
 }
 
+variable "vault_adm_pki_role" {
+  description = "Vault adm PKI role"
+  type        = string
+}
+
+variable "vault_adm_pki_backend" {
+  description = "Vault ADM PKI mount"
+  type        = string
+}
+
+variable "docker_host" {
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
+}
+
 locals {
-  vault_domain = "${var.vault_subdomain}.${var.domain_name}"
+  vault_domain = "${var.vault_subdomain}.${var.docker_host.domain}"
 }

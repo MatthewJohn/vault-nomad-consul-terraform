@@ -1,7 +1,5 @@
-module "terraform_token" {
-  source = "../policy_token"
-
-  policy_name = var.terraform_policy_name
+resource "vault_policy" "terraform" {
+  name = var.terraform_policy_name
 
   policy = <<EOF
 # List auth methods
@@ -20,6 +18,12 @@ path "sys/policies/acl"
 path "auth/*"
 {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+# Update vault deployment secrets
+path "${vault_mount.deployment_secrets.path}/*"
+{
+  capabilities = ["list", "read", "create", "update", "delete"]
 }
 
 # List enabled secrets engines
@@ -48,51 +52,24 @@ path "sys/policies/acl/victoria-metrics"
 
 #########################
 # Permissions for Consul CA
-path "sys/mounts/pki_consul"
+path "sys/mounts/pki"
 {
-  capabilities = ["read", "list", "create"]
+  capabilities = ["read", "list"]
 }
 # Revoke certificates
-path "pki_consul/revoke"
-{
-  capabilities = ["update"]
-}
-# Generate root CA
-path "pki_consul/root/generate/internal"
-{
-  capabilities = ["update"]
-}
-
-# upload certificate
-path "pki_consul/config/ca"
+path "pki/revoke"
 {
   capabilities = ["update"]
 }
 
 # Add roles for root cert
-path "pki_consul/roles/*"
+path "pki/roles/*"
 {
   capabilities = ["read", "create", "update"]
 }
 
-# Read PKI issues and update config
-path "pki_consul/issues"
-{
-  capabilities = ["read"]
-}
-path "pki_consul/config/issuers"
-{
-  capabilities = ["update", "read"]
-}
-
-# Update certificate URLs
-path "pki_consul/config/urls"
-{
-  capabilities = ["update", "read"]
-}
-
 # Sign intermediate certificates
-path "pki_consul/root/sign-intermediate"
+path "pki/root/sign-intermediate"
 {
   capabilities = ["update"]
 }
@@ -104,6 +81,16 @@ path "sys/mounts/pki_connect"
   capabilities = ["create", "update", "read"]
 }
 
+# Access to create harbor tokens
+path "consul_static/data/harbor/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/harbor/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
 %{for datacenter in var.consul_datacenters}
 path "sys/mounts/pki_int_consul_${datacenter}"
 {
@@ -111,7 +98,7 @@ path "sys/mounts/pki_int_consul_${datacenter}"
 }
 
 # Generate intermediate CAs
-path "pki_int_consul_${datacenter}/intermediate/generate/internal"
+path "pki_int_consul_${datacenter}/issuers/generate/intermediate/internal"
 {
   capabilities = ["update"]
 }
@@ -183,6 +170,22 @@ path "consul-${datacenter}/roles/consul-client-role"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Create role and read token for terraform role
+path "consul-${datacenter}/roles/terraform"
+{
+  capabilities = ["create", "read", "delete", "update"]
+}
+path "consul-${datacenter}/creds/terraform"
+{
+  capabilities = ["read"]
+}
+
+# Create vault policies for terraform pipelines
+path "sys/policies/acl/terraform-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 %{for nomad_region in keys(var.nomad_regions)}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-server-*"
 {
@@ -199,11 +202,72 @@ path "consul-${datacenter}/roles/nomad-deployment-job-${nomad_region}-*"
   capabilities = ["create", "read", "delete", "update"]
 }
 
+# Nomad server policies for consul agent
+path "sys/policies/acl/consul-client-${datacenter}-nomad-server-${nomad_region}-consul-template-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Nomad server policies for nomad consul template
+path "sys/policies/acl/nomad-server-consul-template-${nomad_region}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Static consul tokens for servers
+path "consul_static/data/${datacenter}/nomad/server/${nomad_region}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/${datacenter}/nomad/server/${nomad_region}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
 %{for nomad_dc in var.nomad_regions[nomad_region]}
 path "consul-${datacenter}/roles/nomad-${nomad_region}-${nomad_dc}-client-*"
 {
   capabilities = ["create", "read", "delete", "update"]
 }
+
+# Nomad client policies for consul agent
+path "sys/policies/acl/consul-client-${datacenter}-nomad-client-${nomad_region}-${nomad_dc}-consul-template-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Nomad client policies
+path "sys/policies/acl/nomad-client-consul-template-${nomad_region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Nomad client consul token
+path "consul_static/data/${datacenter}/nomad/client/${nomad_region}/${nomad_dc}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+path "consul_static/metadata/${datacenter}/nomad/client/${nomad_region}/${nomad_dc}/*"
+{
+  capabilities = ["read", "update", "create", "delete", "list"]
+}
+
+# Create JWT for nomad
+path "sys/auth/jwt_nomad_${nomad_region}_${nomad_dc}"
+{
+  capabilities = ["create", "update", "delete", "read", "sudo"]
+}
+path "auth/jwt_nomad_${nomad_region}_${nomad_dc}/config"
+{
+  capabilities = ["read", "update"]
+}
+path "sys/mounts/auth/jwt_nomad_${nomad_region}_${nomad_dc}"
+{
+  capabilities = ["read"]
+}
+path "sys/mounts/auth/jwt_nomad_${nomad_region}_${nomad_dc}/tune"
+{
+  capabilities = ["read", "update"]
+}
+
 %{endfor}
 
 %{endfor}
@@ -213,10 +277,18 @@ path "sys/auth/approle-consul-${datacenter}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
 }
+path "sys/mounts/auth/approle-consul-${datacenter}"
+{
+  capabilities = ["read"]
+}
 
 # Consul connect
 ## Intermediate CA
 path "sys/mounts/pki_int_connect_${datacenter}"
+{
+  capabilities = ["create", "update", "read"]
+}
+path "sys/mounts/pki_int_connect_${datacenter}/tune"
 {
   capabilities = ["create", "update", "read"]
 }
@@ -226,6 +298,39 @@ path "sys/policies/acl/consul-connect-ca-${datacenter}"
   capabilities = ["create", "update", "read"]
 }
 
+# Create static token
+path "consul_static/data/${datacenter}/consul_tokens"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/consul_tokens"
+{
+  capabilities = ["read", "delete", "update" ]
+}
+path "consul_static/data/${datacenter}/gossip"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/gossip"
+{
+  capabilities = ["read", "delete"]
+}
+
+# Create vault policies for each consul agent
+path "sys/policies/acl/consul-client-consul-template-${datacenter}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Create static tokens for agents
+path "consul_static/data/${datacenter}/agent/*"
+{
+  capabilities = ["create", "update", "read", "delete"]
+}
+path "consul_static/metadata/${datacenter}/agent/*"
+{
+  capabilities = ["read", "delete"]
+}
 %{endfor}
 
 #########################
@@ -289,7 +394,7 @@ path "sys/mounts/pki_int_nomad_${region}"
 }
 
 # Generate intermediate CAs
-path "pki_int_nomad_${region}/intermediate/generate/internal"
+path "pki_int_nomad_${region}/issuers/intermediate/generate/internal"
 {
   capabilities = ["update"]
 }
@@ -334,22 +439,9 @@ path "sys/auth/approle-nomad-${region}"
 {
   capabilities = ["create", "update", "delete", "read", "sudo"]
 }
-
-# Policy for jobs
-path "sys/policies/acl/nomad-job-${region}-*"
+path "sys/mounts/auth/approle-nomad-${region}"
 {
-  capabilities = ["update", "read", "create", "delete"]
-}
-# Policy for job deployment
-path "sys/policies/acl/nomad-deployment-job-${region}-*"
-{
-  capabilities = ["update", "read", "create", "delete"]
-}
-
-# Assume roles for deploy nomad jobs
-path "auth/token/create/nomad-job-${region}-*"
-{
-  capabilities = [ "sudo" ]
+  capabilities = ["read"]
 }
 
 # Allow creation of vault secret engine for nomad
@@ -384,7 +476,7 @@ path "sys/mounts/pki_int_nomad_${region}_${nomad_dc}"
 }
 
 # Generate intermediate CAs
-path "pki_int_nomad_${region}_${nomad_dc}/intermediate/generate/internal"
+path "pki_int_nomad_${region}_${nomad_dc}/issuers/generate/intermediate/internal"
 {
   capabilities = ["update"]
 }
@@ -412,6 +504,32 @@ path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
   capabilities = ["update", "read", "create", "delete"]
 }
 
+# Policy for default workload identity
+path "sys/policies/acl/default-identity-${region}-${nomad_dc}"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
+# Policy for jobs
+path "sys/policies/acl/nomad-job-${region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+path "sys/policies/acl/nomad-submit-${region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Policy for job deployment
+path "sys/policies/acl/nomad-deployment-${region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+# Policy for Terraform auth
+path "sys/policies/acl/nomad-terraform-${region}-${nomad_dc}-*"
+{
+  capabilities = ["update", "read", "create", "delete"]
+}
+
 
 %{endfor}
 
@@ -419,4 +537,23 @@ path "sys/policies/acl/nomad-client-${region}-${nomad_dc}-consul-template"
 
 
 EOF
+}
+
+resource "vault_approle_auth_backend_role" "terraform" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = var.terraform_policy_name
+  token_policies = [vault_policy.terraform.name]
+
+  token_bound_cidrs      = ["172.16.94.0/24"]
+  token_ttl              = 300
+  token_max_ttl          = 300
+  token_explicit_max_ttl = 300
+}
+
+resource "vault_approle_auth_backend_role_secret_id" "terraform" {
+  backend   = vault_auth_backend.approle.path
+  role_name = vault_approle_auth_backend_role.terraform.role_name
+
+  # Admin VPN
+  cidr_list = ["172.16.94.0/24"]
 }

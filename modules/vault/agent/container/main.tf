@@ -1,3 +1,8 @@
+resource "null_resource" "container_image" {
+  triggers = {
+    image = var.image
+  }
+}
 
 resource "docker_container" "this" {
   image = var.image
@@ -6,7 +11,7 @@ resource "docker_container" "this" {
   rm      = false
   restart = "always"
 
-  hostname   = "${var.hostname}.${var.domain_name}"
+  hostname   = "${var.docker_host.hostname}.${var.domain_name}"
   domainname = ""
 
   command = concat(
@@ -29,6 +34,10 @@ resource "docker_container" "this" {
     read_only      = true
   }
 
+  # @TODO Convert to bind.
+  # If you modify the file on the host and then restart the container
+  # the file is not repopulated.
+  # This requires the "auth" directory to exists on machines beforehand
   volumes {
     container_path = "/vault-agent/auth"
     host_path      = "${var.base_directory}/auth"
@@ -41,8 +50,14 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
+    ignore_changes = [
+      log_opts,
+      image,
+    ]
+
     replace_triggered_by = [
-      null_resource.config_files
+      null_resource.config_files,
+      null_resource.container_image,
     ]
   }
 }

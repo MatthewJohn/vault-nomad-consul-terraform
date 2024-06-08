@@ -4,22 +4,13 @@ locals {
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.certificate }}
-{{ .Data.issuing_ca }}
-{{ end }}
-EOF
-
-    "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.private_key }}
-{{ end }}
+{{- with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_ca_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate -}}
+{{ .Data.private_key | writeToFile "/consul/config/client-certs/client.key" "100" "" "0644" }}{{- end }}
+{{ with secret "${var.datacenter.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{- end -}}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{- with secret "${var.datacenter.pki_mount_path}/cert/ca_chain" -}}
-{{ .Data.ca_chain }}
-{{- end -}}
+${var.vault_cluster.ca_cert}
 EOF
 
     "config/templates/consul_template.hcl" = <<EOF
@@ -39,12 +30,6 @@ vault {
 template {
   source      = "/consul/config/templates/client.crt.tpl"
   destination = "/consul/config/client-certs/client.crt"
-  perms       = 0700
-}
-
-template {
-  source      = "/consul/config/templates/client.key.tpl"
-  destination = "/consul/config/client-certs/client.key"
   perms       = 0700
 }
 
@@ -116,16 +101,16 @@ EOF
 server = false
 
 client_addr        = "${var.listen_host}"
-bind_addr          = "${var.docker_ip}"
-advertise_addr     = "${var.docker_ip}"
-advertise_addr_wan = "${var.docker_ip}"
-node_name          = "consul-client-${var.datacenter.name}-${var.hostname}"
+bind_addr          = "${var.docker_host.ip}"
+advertise_addr     = "${var.docker_host.ip}"
+advertise_addr_wan = "${var.docker_host.ip}"
+node_name          = "consul-client-${var.datacenter.name}-${var.docker_host.hostname}"
 datacenter         = "${var.datacenter.name}"
 domain             = "${var.root_cert.common_name}"
 
 ports {
   # Listener ports
-  dns = 53
+  dns = -1
   http = -1
   https = ${var.listen_port}
   grpc = -1
@@ -134,14 +119,21 @@ ports {
 
 acl {
   enabled = true
+  %{if var.use_token_as_default}
+  default_policy = "allow"
+  %{else}
   default_policy = "deny"
+  %{endif}
   enable_token_persistence = false
   enable_token_replication = false
   tokens {
-{{ with secret "${var.datacenter.consul_engine_mount_path}/creds/consul-client-role" }}
-    agent  = "{{ .Data.token }}"
+{{ with secret "${var.consul_token.secret_mount}/${var.consul_token.secret_name}" }}
+%{if var.use_token_as_default}
+    default = "{{ .Data.data.token }}"
+%{endif}
+    agent  = "{{ .Data.data.token }}"
     # @TODO Create dedicated token for this
-    config_file_service_registration = "{{ .Data.token }}"
+    config_file_service_registration = "{{ .Data.data.token }}"
 {{ end }}
   }
 }
@@ -157,17 +149,20 @@ cert_file = "/consul/config/client-certs/client.crt"
 key_file  = "/consul/config/client-certs/client.key"
 
 tls {
-   defaults {
-      ca_file   = "/consul/config/client-certs/ca.crt"
-      cert_file = "/consul/config/client-certs/client.crt"
-      key_file  = "/consul/config/client-certs/client.key"
+  defaults {
+    ca_file   = "/consul/config/client-certs/ca.crt"
+    cert_file = "/consul/config/client-certs/client.crt"
+    key_file  = "/consul/config/client-certs/client.key"
 
-      verify_incoming = false
-      verify_outgoing = true
-   }
-   internal_rpc {
-      verify_server_hostname = true
-   }
+    verify_incoming = false
+    verify_outgoing = true
+  }
+  grpc {
+    verify_incoming = false
+  }
+  internal_rpc {
+    verify_server_hostname = true
+  }
 }
 
 service {
@@ -188,7 +183,9 @@ connect {
 
 retry_join = ["${var.datacenter.common_name}"]
 
-encrypt = "${var.gossip_key}"
+{{ with secret "${var.datacenter.gossip_encryption.mount}/${var.datacenter.gossip_encryption.name}" }}
+encrypt = "{{ .Data.data.value }}"
+{{ end }}
 
 encrypt_verify_incoming = true
 encrypt_verify_outgoing = true
@@ -209,8 +206,11 @@ resource "null_resource" "consul_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_user = var.docker_host.bastion_user
+    bastion_host = var.docker_host.bastion_host
   }
 
   provisioner "file" {

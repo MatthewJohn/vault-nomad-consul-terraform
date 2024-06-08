@@ -4,15 +4,15 @@ locals {
 disable_mlock = true
 ui            = true
 
-cluster_addr  = "https://${var.hostname}.${local.vault_domain}:8201"
-api_addr      = "https://${var.hostname}.${local.vault_domain}:8200"
+cluster_addr  = "https://${var.docker_host.hostname}.${local.vault_domain}:8201"
+api_addr      = "https://${var.docker_host.hostname}.${local.vault_domain}:8200"
 
 storage "raft" {
    path    = "/vault/raft"
-   node_id = "${var.hostname}"
+   node_id = "${var.docker_host.hostname}"
 
    %{for neighbour in var.all_vault_hosts}
-   %{if neighbour != var.hostname}
+   %{if neighbour != var.docker_host.hostname}
     retry_join 
     {
         leader_api_addr         = "https://${neighbour}.${local.vault_domain}:8200"
@@ -57,8 +57,11 @@ resource "null_resource" "vault_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {

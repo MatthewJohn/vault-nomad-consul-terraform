@@ -1,3 +1,8 @@
+resource "null_resource" "container_image" {
+  triggers = {
+    image = var.image
+  }
+}
 
 resource "docker_container" "this" {
   image = var.image
@@ -6,7 +11,7 @@ resource "docker_container" "this" {
   rm      = false
   restart = "always"
 
-  hostname   = "${var.hostname}.${var.datacenter.common_name}"
+  hostname   = "${var.docker_host.hostname}.${var.datacenter.common_name}"
   domainname = ""
 
   command = concat(
@@ -49,8 +54,14 @@ resource "docker_container" "this" {
   }
 
   lifecycle {
+    ignore_changes = [
+      log_opts,
+      image,
+    ]
+
     replace_triggered_by = [
-      null_resource.consul_config
+      null_resource.consul_config,
+      null_resource.container_image,
     ]
   }
 }

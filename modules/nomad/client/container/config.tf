@@ -1,33 +1,26 @@
 locals {
 
-  fqdn        = "${var.hostname}.${var.datacenter.common_name}"
+  fqdn        = "${var.docker_host.hostname}.${var.datacenter.common_name}"
   client_fqdn = "client.${var.datacenter.common_name}"
   # Static domain used to verify SSL cert, see https://github.com/hashicorp/nomad/blob/9ff1d927d9f7900926b8ad6f545532415a3fcc3d/helper/tlsutil/config.go#L291
   verify_domain = "client.${var.region.name}.nomad"
 
   config_files = {
     "config/templates/client.crt.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.certificate }}
-{{ .Data.issuing_ca }}
-{{ end }}
-{{ with secret "${var.region.pki_mount_path}/cert/ca" }}
-{{ .Data.certificate }}
-{{ end }}
-EOF
-
-    "config/templates/client.key.tpl" = <<EOF
-{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_ip}"}}
-{{ .Data.private_key }}
-{{ end }}
-
+{{ with secret "${var.datacenter.pki_mount_path}/issue/${var.datacenter.client_pki_role_name}" "common_name=${local.client_fqdn}" "ttl=24h" "alt_names=${local.verify_domain},${local.fqdn},localhost" "ip_sans=127.0.0.1,${var.docker_host.ip}"}}{{ .Data.certificate -}}
+{{ .Data.private_key | writeToFile "/nomad/config/client-certs/client.key" "root" "root" "0600" }}
+{{- end }}
+{{ with secret "${var.region.pki_mount_path}/cert/ca_chain" }}{{ .Data.ca_chain }}{{ end }}
 EOF
 
     "config/templates/ca.crt.tpl" = <<EOF
-{{ with secret "${var.root_cert.pki_mount_path}/cert/ca" }}
-{{ .Data.certificate }}
-{{ end }}
+${var.vault_cluster.ca_cert}
+EOF
 
+    "config/templates/docker-login.sh.tpl" = <<EOF
+{{ with secret "${var.datacenter.harbor_account.secret_mount}/${var.datacenter.harbor_account.secret_name}" }}
+echo '{{ .Data.data.password }}' | docker login --password-stdin --username='harbor@{{ .Data.data.username }}' '{{ .Data.data.hostname }}'
+{{ end }}
 EOF
 
     "config/consul-certs/ca.crt" = var.consul_datacenter.ca_chain
@@ -37,7 +30,7 @@ vault {
   address                = "${var.vault_cluster.address}"
   # @TODO Wrap this token
   unwrap_token           = false
-  vault_agent_token_file = "/vault-agent-consul-template/auth/token"
+  vault_agent_token_file = "${var.consul_template_vault_agent.token_path}"
 
   ssl {
     enabled = true
@@ -53,12 +46,6 @@ template {
 }
 
 template {
-  source      = "/nomad/config/templates/client.key.tpl"
-  destination = "/nomad/config/client-certs/client.key"
-  perms       = 0700
-}
-
-template {
   source      = "/nomad/config/templates/ca.crt.tpl"
   destination = "/nomad/config/client-certs/ca.crt"
   perms       = 0700
@@ -70,6 +57,16 @@ template {
   perms       = 0700
 
   error_on_missing_key = false
+}
+
+template {
+  source      = "/nomad/config/templates/docker-login.sh.tpl"
+  destination = "/nomad/config/docker-login.sh"
+  perms       = 0700
+
+  exec {
+    command = "bash /nomad/config/docker-login.sh"
+  }
 }
 
 # This is the signal to listen for to trigger a reload event. The default
@@ -124,7 +121,7 @@ EOF
 
     "config/templates/client.hcl.tmpl" = <<EOF
 
-name       = "${var.hostname}"
+name       = "${var.docker_host.hostname}"
 region     = "${var.region.name}"
 datacenter = "${var.datacenter.name}"
 
@@ -141,6 +138,11 @@ client {
 
   network_interface = "ens3"
   servers = ["${var.region.server_dns}"]
+
+  template {
+    # Allow writeToFile function
+    function_denylist = ["plugin"]
+  }
 }
 
 tls {
@@ -165,21 +167,21 @@ consul {
   address = "${var.consul_client.listen_host}:${var.consul_client.port}"
   grpc_address = "${var.consul_client.listen_host}:8503"
 
-  allow_unauthenticated = false
   auto_advertise        = true
 
-  server_auto_join    = true
   client_auto_join    = true
 
-  server_service_name     = "nomad-${var.region.name}-server"
-  client_service_name    = "nomad-${var.region.name}-client"
+  client_service_name    = "nomad-${var.region.name}-${var.datacenter.name}-client"
   #client_http_check_name = ""
 
-{{ with secret "${var.consul_datacenter.consul_engine_mount_path}/creds/${var.nomad_client_vault_consul_role}" }}
-  token = "{{ .Data.token }}"
+{{ with secret "${var.consul_token.mount}/${var.consul_token.name}" }}
+  token = "{{ .Data.data.token }}"
 {{ end }}
 
   #namespace = "nomad-${var.region.name}"
+
+  service_auth_method = "${var.datacenter.consul_auth_method}"
+  task_auth_method    = "${var.datacenter.consul_auth_method}"
 
   ssl = true
   verify_ssl = true
@@ -194,15 +196,16 @@ vault {
 
   ca_file = "/nomad/vault/ca_cert.pem"
 
-  #create_from_role = "$${var.region.server_vault_role}"
-
-  allow_unauthenticated = false
+  jwt_auth_backend_path = "${var.datacenter.vault_jwt_path}"
 }
 
 plugin "docker" {
   config {
     allow_privileged = true
     extra_labels     = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+    volumes {
+      enabled = true
+    }
   }
 }
 
@@ -210,6 +213,17 @@ client {
   host_volume "docker-sock-ro" {
     path = "/var/run/docker.sock"
     read_only = true
+  }
+  %{if var.container_data_directory != null}
+  host_volume "container-data" {
+    path = "${var.container_data_directory}"
+    read_only = false
+  }
+  %{endif}
+
+  reserved {
+    memory = 600
+    cpu    = 300
   }
 }
 
@@ -237,8 +251,11 @@ resource "null_resource" "nomad_config" {
 
   connection {
     type = "ssh"
-    user = var.docker_username
-    host = var.docker_host
+    user = var.docker_host.username
+    host = var.docker_host.fqdn
+
+    bastion_host = var.docker_host.bastion_host
+    bastion_user = var.docker_host.bastion_user
   }
 
   provisioner "file" {

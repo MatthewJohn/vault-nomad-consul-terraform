@@ -1,8 +1,3 @@
-variable "hostname" {
-  description = "Hostname for noamd"
-  type        = string
-}
-
 variable "image" {
   description = "Image to be used"
   type        = string
@@ -14,13 +9,6 @@ variable "root_cert" {
     pki_mount_path = string
     common_name    = string
     public_key     = string
-  })
-}
-
-variable "vault_init" {
-  description = "Vault init"
-  type = object({
-    ca_cert = string
   })
 }
 
@@ -45,7 +33,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
+    ca_cert                  = string
   })
 }
 
@@ -67,13 +55,6 @@ variable "consul_datacenter" {
   })
 }
 
-variable "consul_root_cert" {
-  description = "Consul root certificate authority"
-  type = object({
-    public_key = string
-  })
-}
-
 variable "consul_client" {
   description = "Configuration of consul client"
   type = object({
@@ -82,14 +63,17 @@ variable "consul_client" {
   })
 }
 
+variable "consul_token" {
+  description = "Details for consul token"
+  type = object({
+    mount = string
+    name  = string
+  })
+}
+
 variable "nomad_https_port" {
   description = "Nomad HTTPS listen port"
   type        = number
-}
-
-variable "nomad_server_vault_consul_role" {
-  description = "Name of vault consul engine role for nomad server"
-  type        = string
 }
 
 variable "initial_run" {
@@ -98,17 +82,14 @@ variable "initial_run" {
   default     = false
 }
 
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
   description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  type = object({
+    ip           = string
+    username     = string
+    hostname     = string
+    fqdn         = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }

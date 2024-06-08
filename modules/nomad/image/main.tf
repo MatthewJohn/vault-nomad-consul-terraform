@@ -1,8 +1,12 @@
 
 resource "null_resource" "image_trigger" {
   triggers = {
-    "entrypoint" = filesha512("${path.module}/context/docker-entrypoint.sh")
-    "Dockerfile" = filesha512("${path.module}/context/Dockerfile")
+    entrypoint     = filesha512("${path.module}/context/docker-entrypoint.sh")
+    Dockerfile     = filesha512("${path.module}/context/Dockerfile")
+    http_proxy     = var.http_proxy
+    NOMAD_VERSION  = var.nomad_version
+    CONSUL_VERSION = var.consul_version
+    VAULT_VERSION  = var.vault_version
   }
 }
 
@@ -17,14 +21,12 @@ resource "docker_image" "this" {
     remove          = false
     suppress_output = false
 
-    build_arg = {
+    build_args = {
       NOMAD_VERSION  = var.nomad_version
       CONSUL_VERSION = var.consul_version
+      VAULT_VERSION  = var.vault_version
 
-      http_proxy  = var.http_proxy
-      https_proxy = var.http_proxy
-      HTTP_PROXY  = var.http_proxy
-      HTTPS_PROXY = var.http_proxy
+      http_proxy = var.http_proxy
     }
 
     label = {
@@ -36,5 +38,31 @@ resource "docker_image" "this" {
     replace_triggered_by = [
       null_resource.image_trigger
     ]
+  }
+}
+
+resource "docker_tag" "this" {
+  count = var.remote_image_name != null ? 1 : 0
+
+  source_image = docker_image.this.image_id
+  target_image = "${var.remote_image_name}:${var.nomad_version}${var.remote_image_build_number != null ? "-${var.remote_image_build_number}" : ""}"
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.image_trigger
+    ]
+  }
+}
+
+resource "docker_registry_image" "this" {
+  count = var.remote_image_name != null ? 1 : 0
+
+  name          = docker_tag.this[count.index].target_image
+  keep_remotely = true
+
+  triggers = null_resource.image_trigger.triggers
+
+  lifecycle {
+    ignore_changes = [ name ]
   }
 }

@@ -23,20 +23,20 @@ variable "service_role" {
       address = string
     })
     consul = object({
-      datacenter           = string
-      address              = string
-      address_wo_protocol  = string
-      root_cert_public_key = string
+      datacenter               = string
+      address                  = string
+      address_wo_protocol      = string
+      root_cert_public_key     = string
       root_cert_pki_mount_path = string
     })
     nomad = object({
-      address              = string
-      root_cert_public_key = string
-      region               = string
-      datacenter           = string
+      address                = string
+      root_cert_public_key   = string
+      region                 = string
+      datacenter             = string
       datacenter_common_name = string
-      datacenter_client_dns = string
-      root_domain_name     = string
+      datacenter_client_dns  = string
+      root_domain_name       = string
     })
   })
 }

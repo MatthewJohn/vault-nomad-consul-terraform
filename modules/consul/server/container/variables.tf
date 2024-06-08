@@ -1,8 +1,3 @@
-variable "hostname" {
-  description = "Hostname for consul"
-  type        = string
-}
-
 variable "image" {
   description = "Image to be used"
   type        = string
@@ -21,12 +16,12 @@ variable "datacenter" {
     approle_mount_path           = string
     pki_connect_mount_path       = string
     consul_server_token = object({
-      bucket = string
-      key    = string
+      mount = string
+      name  = string
     })
-    consul_server_service_token = object({
-      bucket = string
-      key    = string
+    gossip_encryption = object({
+      mount = string
+      name  = string
     })
   })
 }
@@ -37,7 +32,7 @@ variable "vault_cluster" {
     ca_cert_file             = string
     address                  = string
     consul_static_mount_path = string
-    token                    = string
+    ca_cert                  = string
   })
 }
 
@@ -49,6 +44,13 @@ variable "root_cert" {
     organisation           = string
     ou                     = string
     pki_connect_mount_path = string
+  })
+}
+
+variable "app_cert" {
+  description = "App certificate object"
+  type = object({
+    common_name = string
   })
 }
 
@@ -72,28 +74,21 @@ variable "connect_ca_approle_secret_id" {
   type        = string
 }
 
-variable "gossip_key" {
-  description = "Gossip secret"
-  type        = string
-}
-
 variable "initial_run" {
   description = "Whether an init is alled"
   type        = bool
   default     = false
 }
 
-variable "docker_username" {
-  description = "SSH username to connect to docker host"
-  type        = string
-}
-
 variable "docker_host" {
-  description = "Docker host to connect to"
-  type        = string
-}
-
-variable "docker_ip" {
-  description = "IP Address of docker host"
-  type        = string
+  description = "Docker host"
+  type = object({
+    hostname     = string
+    username     = string
+    ip           = string
+    fqdn         = string
+    domain       = string
+    bastion_host = optional(string, null)
+    bastion_user = optional(string, null)
+  })
 }

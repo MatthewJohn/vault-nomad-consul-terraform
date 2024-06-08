@@ -58,7 +58,6 @@ module "consul_client" {
   datacenter    = var.consul_datacenter
   vault_cluster = var.vault_cluster
   root_cert     = var.consul_root_cert
-  gossip_key    = var.consul_gossip_key
 
   consul_version = var.consul_version
 

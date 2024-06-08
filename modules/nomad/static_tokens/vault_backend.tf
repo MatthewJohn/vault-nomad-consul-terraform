@@ -6,9 +6,9 @@ resource "vault_nomad_secret_backend" "this" {
   description               = "Manages the Nomad backend for ${var.region.name}"
   default_lease_ttl_seconds = "3600"
   max_lease_ttl_seconds     = "7200"
-  max_ttl                   = "240"
+  max_ttl                   = "300"
   address                   = var.region.address
   token                     = var.bootstrap.token
   ca_cert                   = var.root_cert.public_key
-  ttl                       = "120"
+  ttl                       = "300"
 }

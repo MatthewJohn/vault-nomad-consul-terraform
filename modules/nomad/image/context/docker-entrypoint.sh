@@ -69,7 +69,7 @@ then
     cat > /tmp/start_nomad.sh <<EOF
 #!/bin/bash
 
-$@
+exec $@
 EOF
     chmod +x /tmp/start_nomad.sh
 
@@ -77,5 +77,6 @@ EOF
     # @TODO Get nomad-template to trigger nomad reload
     consul-template \
       -config /nomad/config/templates/consul_template.hcl \
+      -exec-reload-signal=SIGHUP \
       -exec /tmp/start_nomad.sh
 fi

@@ -115,7 +115,7 @@ else
     cat > /tmp/start_consul.sh <<EOF
 #!/bin/bash
 
-$@
+exec $@
 EOF
     chmod +x /tmp/start_consul.sh
 
@@ -123,5 +123,6 @@ EOF
     # @TODO Get consul-template to trigger consul reload
     consul-template \
       -config /consul/config/templates/consul_template.hcl \
+      -exec-kill-timeout=30s \
       -exec /tmp/start_consul.sh
 fi

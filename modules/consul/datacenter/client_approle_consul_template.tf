@@ -4,7 +4,7 @@ resource "vault_policy" "consul_client_consul_template" {
 
   policy = <<EOF
 # Access CA certs
-path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.client.name}" {
+path "${var.root_cert.pki_mount_path}/issue/${vault_pki_secret_backend_role.client.name}" {
   capabilities = [ "read", "update" ]
 }
 
@@ -12,6 +12,16 @@ path "${vault_mount.this.path}/issue/${vault_pki_secret_backend_role.client.name
 path "${local.consul_engine_mount_path}/creds/consul-client-role"
 {
   capabilities = ["read"]
+}
+
+# Access to gossip token
+path "${var.vault_cluster.consul_static_mount_path}/data/${var.datacenter}/gossip"
+{
+  capabilities = [ "read" ]
+}
+path "${var.vault_cluster.consul_static_mount_path}/${var.datacenter}/gossip"
+{
+  capabilities = [ "read" ]
 }
 
 # Renew leases
